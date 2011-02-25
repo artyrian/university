@@ -5,6 +5,7 @@
 
 #include <unistd.h>
 
+#include <sys/times.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -61,25 +62,49 @@ private:
 
 
 /* */
-class Game{
+class Descriptor{
 	int fd;
+	char buf[1024];
+public:
+	DArray(){
+	}
+};
+
+
+/* */
+class Game{
+	int fd[2] = {0, 0};	// fd[0] - ls, fd[1] - keyboard.
+	Descriptor d1, d2;
 	char *nick;
 	int room;
+
+	int max(int a, int b){
+		if ( a > b){
+			return a;
+		} else {
+			return b;
+		}
+	}
 public:
-	Game(int d, char *n, int r);
+	Game(int desc, char *n, int r);
 private:
+	void iteration();
 	void login(char *nick, int room);
 };
 
 
 
 /* */
-Game::Game(int d, char *n, int r) 
-	: fd(d), nick(n), room(r)
+Game::Game(int ls, char *n, int r) 
+	: fd[0](ls), nick(n), room(r)
 {
 	printf("Nick:[%s]\nRoom:[%d]\n", nick, room);
+	
+	printf("Main cycle of wait data.\n");
+	for (;;){
+		iteration();
+	}
 
-	login(nick, room);
 
 	printf("If login are working, can PLAY.\n");
 }
@@ -87,8 +112,9 @@ Game::Game(int d, char *n, int r)
 
 
 /* */
-void Game::login(char *nick, int room)
+void Game::iteration()
 {
+<<<<<<< HEAD
 	printf("Method Game::login.\n");
 
 	char buf[5];
@@ -99,15 +125,40 @@ void Game::login(char *nick, int room)
 	printf("Now I read from fd[%d] str[%s]", fd, buf);
 	
 	char buf[20];
-	
-	sprintf(buf, "%s\n", nick);
-	write(fd, buf, strlen(buf) + 1);
-	//check nick
-	//repeat if wrong.
+=======
+	fd_set readfds;
 
+	FD_ZERO(&readfds)
+	FD_SET(fd[0], &readfds);
+	FD_SET(fd[1], &readfds);
+
+	max_d = max(fd[0], fd[1]);
+>>>>>>> 73a624fc927a7c69c63277dcaec0d572738811ab
+	
+	int res = select(max_d + 1, &readfds, NULL, NULL, NULL);
+	if (res < 1){
+		perror("Error select.\n");
+	}
+
+	for( int i = 0; i <= 1; i++) {
+		if ( FD_ISSET(fd[i], readfds) ) {
+			ReadToBuffer(fd[i]);
+		}
+	}
+}
+
+<<<<<<< HEAD
 	sprintf(buf, ".join %d", room);
 	write(fd, buf, strlen(buf) + 1);
 	//check room
+=======
+
+
+/* */
+void Game::login(char *nick, int room)
+{
+	printf("Method Game::login.\n");
+>>>>>>> 73a624fc927a7c69c63277dcaec0d572738811ab
 }
 
 
