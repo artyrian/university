@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <string.h>
+
 #include <unistd.h>
 
 #include <sys/types.h>
@@ -88,13 +90,17 @@ Game::Game(int d, char *n, int r)
 void Game::login(char *nick, int room)
 {
 	printf("Method Game::login.\n");
+	
+	char buf[20];
+	
+	sprintf(buf, "%s\n", nick);
+	write(fd, buf, strlen(buf) + 1);
+	//check nick
 
-	char buf[5];
+	sprintf(buf, ".join %d", room);
+	write(fd, buf, strlen(buf) + 1);
+	//check room
 
-	read(fd, buf, 5);
-	buf[5] = '\0';	
-
-	printf("Now I read from fd[%d] str[%s]", fd, buf);
 }
 
 
