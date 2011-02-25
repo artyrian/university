@@ -96,6 +96,7 @@ void Game::login(char *nick, int room)
 	sprintf(buf, "%s\n", nick);
 	write(fd, buf, strlen(buf) + 1);
 	//check nick
+	//repeat if wrong.
 
 	sprintf(buf, ".join %d", room);
 	write(fd, buf, strlen(buf) + 1);
