@@ -1,11 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-<<<<<<< HEAD
-=======
 #include <string.h>
 
->>>>>>> fc3d21cf1e0ca654320849872eca4a3d0b29cfb4
 #include <unistd.h>
 
 #include <sys/types.h>
@@ -13,11 +10,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-<<<<<<< HEAD
-/* UFO */
-=======
 
->>>>>>> fc3d21cf1e0ca654320849872eca4a3d0b29cfb4
 
 /* */
 class Socket{
@@ -97,7 +90,6 @@ Game::Game(int d, char *n, int r)
 void Game::login(char *nick, int room)
 {
 	printf("Method Game::login.\n");
-<<<<<<< HEAD
 
 	char buf[5];
 
@@ -105,7 +97,6 @@ void Game::login(char *nick, int room)
 	buf[5] = '\0';	
 
 	printf("Now I read from fd[%d] str[%s]", fd, buf);
-=======
 	
 	char buf[20];
 	
@@ -116,8 +107,6 @@ void Game::login(char *nick, int room)
 	sprintf(buf, ".join %d", room);
 	write(fd, buf, strlen(buf) + 1);
 	//check room
-
->>>>>>> fc3d21cf1e0ca654320849872eca4a3d0b29cfb4
 }
 
 
@@ -161,7 +150,3 @@ int main(int argc, char **argv)
 	printf("End program.\n");
 	return 0;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> fc3d21cf1e0ca654320849872eca4a3d0b29cfb4
