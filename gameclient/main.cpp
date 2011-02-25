@@ -11,7 +11,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include <fcntl.h>
 
+void copy (char*, char*, char);
+void cut (char*);
 
 /* */
 class Socket{
@@ -62,19 +65,17 @@ private:
 
 
 /* */
-class Descriptor{
+struct Cache{
 	int fd;
-	char buf[1024];
-public:
-	DArray(){
-	}
+	char msg[1024];
+	char ext[1024];
+	int cnt;	// cnt;
 };
 
 
 /* */
 class Game{
-	int fd[2] = {0, 0};	// fd[0] - ls, fd[1] - keyboard.
-	Descriptor d1, d2;
+	Cache ca[2];	// 0 - ls, 1 - keyboard;
 	char *nick;
 	int room;
 
@@ -86,19 +87,31 @@ class Game{
 		}
 	}
 public:
-	Game(int desc, char *n, int r);
+	Game(int ls, char *n, int r);
 private:
+	void login();
 	void iteration();
-	void login(char *nick, int room);
+	void readportion(int fd);
+	void parse();
 };
 
 
 
 /* */
 Game::Game(int ls, char *n, int r) 
-	: fd[0](ls), nick(n), room(r)
 {
+	ca[0].fd = ls; 
+	ca[1].fd = STDIN_FILENO;
+	ca[0].cnt = ca[1].cnt = 0;
+	ca[0].msg[0] = ca[1].msg[0] = '\0';
+	ca[0].ext[0] = ca[1].ext[0] = '\0';
+
+	nick = n;
+	room = r;
+
 	printf("Nick:[%s]\nRoom:[%d]\n", nick, room);
+
+	login();
 	
 	printf("Main cycle of wait data.\n");
 	for (;;){
@@ -112,36 +125,125 @@ Game::Game(int ls, char *n, int r)
 
 
 /* */
+void Game::login()
+{
+	char buf[1024];
+	read (ca[0].fd, buf, sizeof(buf) - 1);
+	buf[sizeof(buf)] = '\0';
+	printf ("Some text:[%s].\n", buf);
+
+	printf ("Try login to server with nick[%s].\n", nick);
+	nick[strlen(nick)] = '\n';
+
+	write (ca[0].fd, nick, strlen(nick));
+}
+
+
+
+/* */
 void Game::iteration()
 {
 	fd_set readfds;
 
-	FD_ZERO(&readfds)
-	FD_SET(fd[0], &readfds);
-	FD_SET(fd[1], &readfds);
+	FD_ZERO(&readfds);
+	FD_SET(ca[0].fd, &readfds);
+	FD_SET(ca[1].fd, &readfds);
 
-	max_d = max(fd[0], fd[1]);
+	int max_d = max(ca[0].fd, ca[1].fd);
 	
 	int res = select(max_d + 1, &readfds, NULL, NULL, NULL);
 	if (res < 1){
 		perror("Error select.\n");
 	}
 
-	for( int i = 0; i <= 1; i++) {
-		if ( FD_ISSET(fd[i], readfds) ) {
-			ReadToBuffer(fd[i]);
+	for( int i = 0; i <= 1; i++ ) {
+		if (FD_ISSET (ca[i].fd, &readfds)) {
+			readportion(i);
 		}
+		
+		if ( ca[i].msg[0] != '\0' ) {
+			// can parse ca[i].msg;
+			parse();
+			// return type, argc, argv.; 
+		}
+	}
+
+}
+
+
+
+/* */
+void Game::readportion(int idx)
+{
+	char buf[1024];
+
+	int rc = read (ca[idx].fd, buf, sizeof(buf) - 1); 
+	if ( rc == -1 ) {
+		perror("Error read().\n");
+	}
+	if ( rc == 0 ) {
+		printf("Server closed connection.\n");
+		exit(1);
+	}
+
+	buf[rc] = '\0';
+	for(int i = 0; i < rc; i++){
+		if ( buf[i] ) {
+			ca[idx].cnt++;
+		}
+	}
+
+	if ( ca[idx].cnt != 0 ) {
+		copy (ca[idx].ext, ca[idx].msg, '\n');
+		copy (buf, ca[idx].msg, '\n');
+		cut (buf);
+		ca[idx].cnt--;
+	} else {
+		copy (buf, ca[idx].ext, '\0');
 	}
 }
 
 
 
 /* */
-void Game::login(char *nick, int room)
+void Game::parse()
 {
-	printf("Method Game::login.\n");
+
 }
 
+
+
+/* */
+void cut (char* str)
+{
+	int i = 0;
+	while ( str[i++] != '\n' ); 
+
+	int k = 0;
+	while ( str[i] != '\0' ) {
+		str[k++] = str[i++];
+	}
+}
+
+
+
+/* */
+void copy (char* str1, char* str2, char stopsymbol)
+{
+
+ 	int k = 0;
+	// ATTENTION!!!
+	while ((str2[k] != stopsymbol) && (str2[k] != '\0')) {
+		k++;
+	}
+	k--;
+
+	int i = 0;
+	// ATTENTION!!!
+	while ((str1[i] != stopsymbol) && (str1[i] != '\0')) {
+		str2[k++] = str1[i++];
+	}
+}
 
 
 /* */
@@ -162,16 +264,68 @@ void ParseArguments(	int n, char** argv,
 
 
 /* */
+void ReadConf (char*& ip, int& port, char*& nick, int& room)
+{
+	FILE *f;
+	char strarg[32], strprm[32];
+	if ( (f = fopen("conf", "r")) == 0) {
+		perror ("Error reading conf");
+	}
+
+	int i, c = '\n';
+	for (int k = 0; k < 4; k++) {
+		i = 0;
+		while ( c != '=' ) {
+			c = fgetc (f);
+			strarg[i++] = c;
+		}
+		strarg[--i] = '\0';
+		printf ("Now i read [%s].\n", strarg);
+
+		i = 0;
+		while ( c != ';' ) {
+			c = fgetc (f);
+			strprm[i++] = c;
+		}
+		c = fgetc (f);
+		strprm[--i] = '\0';
+		printf ("Now i read [%s].\n", strprm);
+
+		switch (strarg[0]) { 
+			case 'I': strcpy(strprm, ip); break;
+			case 'P': port = atoi(strprm); break;
+			case 'N': strcpy(strprm, nick); break; 
+			case 'R': room = atoi(strprm); break;
+			default: perror("Mistake in conf.\n"); 
+		}	
+	}
+}
+
+
+
+/* */
 int main(int argc, char **argv)
 {	
 	printf("Start program.\n");
 	
-	char* ip;
+	char *ip;
 	int port;
 	char *nick;
 	int room;
-
-	ParseArguments(argc, argv, ip, port, nick, room);
+/*
+	if ( argc == 1) {
+		ReadConf (ip, port, nick, room);
+	} else {
+		ParseArguments (argc, argv, ip, port, nick, room);
+	}
+*/
+//	ParseArguments (argc, argv, ip, port, nick, room);
+	port = 4774;
+	room = 1;
+	ip = (char *) malloc(15);
+	nick = (char *) malloc(22);
+	strcpy (ip, "0");
+	strcpy (nick, "Bot");
 	
 	Socket link(ip, port);
 	int fd = link.get_sockfd();
@@ -179,6 +333,9 @@ int main(int argc, char **argv)
 		
 
 	Game g(fd, nick, room);
+
+	free (ip);
+	free (nick);
 
 	printf("End program.\n");
 	return 0;
