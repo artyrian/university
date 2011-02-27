@@ -14,8 +14,7 @@
 #include <fcntl.h>
 
 void pasteext (char*, char*);
-void pastebuf (char*, char*);
-void cutbuf (char*);
+void cutext (char*);
 void appendext (char*, char*);
 
 /* */
@@ -71,29 +70,20 @@ struct Cache{
 	int fd;
 	char buf[1024];
 	char msg[1024];
-	char ext[1024];
+	char ext[2048];
 	int cnt;	// cnt;
 	bool fmsg; 	// flag of ready message;
 	bool fprc;
 
-	void FlushBuf () {
-		buf[0] = '\0';
-	}
-
-	void FlushMsg() {
-		msg[0] = '\0';
-		fmsg = 0;
-	}
-	
-	void FlushExt () {
-		ext[0] = '\0';
+	void Flushstr(char *str) {
+		str[0] = '\0';
 	}
 
 	void Flush () {
 		cnt = 0;
-		FlushBuf ();
-		FlushMsg ();
-		FlushExt ();
+		Flushstr (buf);
+		Flushstr (msg);
+		Flushstr(ext);
 		fmsg = 0;
 		fprc = 0;
 	}
@@ -193,23 +183,12 @@ void Game::login (char *p) {
 /* */
 void Game::iteration()
 {
-	printf("Method Game::login.\n");
-
-	char buf[5];
-
-	read(fd, buf, 5);
-	buf[5] = '\0';	
-
-	printf("Now I read from fd[%d] str[%s]", fd, buf);
-	
-	char buf[20];
 	fd_set readfds;
 
 	FD_ZERO(&readfds);
 	FD_SET(ca[0].fd, &readfds);
 	FD_SET(ca[1].fd, &readfds);
 
-	max_d = max(fd[0], fd[1]);
 	int max_d = max(ca[0].fd, ca[1].fd);
 	
 	int res = select(max_d + 1, &readfds, NULL, NULL, NULL);
@@ -265,13 +244,16 @@ void Game::readportion(int idx)
 	}
 	else
 	{
-		pasteext (ca[idx].ext, ca[idx].msg);
-		pastebuf (ca[idx].buf, ca[idx].msg);
-		cutbuf (ca[idx].buf);
 		appendext (ca[idx].buf, ca[idx].ext);
+		ca[idx].Flushstr (ca[idx].buf);
+		pasteext (ca[idx].ext, ca[idx].msg);
+		cutext (ca[idx].ext);
 		ca[idx].cnt--;
-		ca[idx].fmsg = 1;
 	} 
+
+	if ( ca[idx].msg[0] != '\0' ) {
+		ca[idx].fmsg = 1;
+	}
 }
 
 
@@ -288,30 +270,16 @@ void Game::parse()
 void pasteext (char *str1, char *str2)
 {
 	int i = 0;
-	while ( str1[i] != '\0' ) {
+	while ( str1[i] != '\n' ) {
 		str2[i] = str1[i];
 		i++;
 	}
 }
 
-/* */
-void pastebuf (char *str1, char *str2)
-{
-	int i = 0;
-	while ( str2[i++] != '\0' );
-	i--;
-
-	int k = 0;
-	while ( str1[k] != '\n' && str1[k] != '\0' ) {
-		str2[i++] = str1[k++];	
-	}
->>>>>>> 9f9dab505c1cf1d8854ca5877a970488b3157f9b
-}
-
 
 
 /* */
-void cutbuf (char* str)
+void cutext (char* str)
 {
 	int i = 0;
 	while ( str[i++] != '\n' ); 
@@ -359,7 +327,7 @@ void ParseArguments(	int n, char** argv,
 void ReadConf (char*& ip, int& port, char*& nick, int& room)
 {
 	FILE *f;
-	char strarg[32], strprm[32];
+	char strprm[32];
 	if ( (f = fopen("conf", "r")) == 0) {
 		perror ("Error reading conf");
 	}
@@ -367,28 +335,18 @@ void ReadConf (char*& ip, int& port, char*& nick, int& room)
 	int i, c = '\n';
 	for (int k = 0; k < 4; k++) {
 		i = 0;
-		while ( c != '=' ) {
-			c = fgetc (f);
-			strarg[i++] = c;
-		}
-		strarg[--i] = '\0';
-		printf ("Now i read [%s].\n", strarg);
-
-		i = 0;
 		while ( c != ';' ) {
 			c = fgetc (f);
 			strprm[i++] = c;
 		}
 		c = fgetc (f);
 		strprm[--i] = '\0';
-		printf ("Now i read [%s].\n", strprm);
 
-		switch (strarg[0]) { 
-			case 'I': strcpy(strprm, ip); break;
-			case 'P': port = atoi(strprm); break;
-			case 'N': strcpy(strprm, nick); break; 
-			case 'R': room = atoi(strprm); break;
-			default: perror("Mistake in conf.\n"); 
+		switch (k) { 
+			case 0: strcpy(ip, strprm); break;
+			case 1: port = atoi(strprm); break;
+			case 2: strcpy(nick, strprm); break; 
+			case 3: room = atoi(strprm); break;
 		}	
 	}
 }
@@ -399,31 +357,28 @@ void ReadConf (char*& ip, int& port, char*& nick, int& room)
 int main(int argc, char **argv)
 {	
 	printf("Start program.\n");
+	const int conf = 0;
 	
-	char *ip;
+	char *ip = (char *) malloc(16);
 	int port;
-	char *nick;
+	char *nick = (char *) malloc(22);
 	int room;
-/*
-	if ( argc == 1) {
+
+	if ( conf == 1 ) {
 		ReadConf (ip, port, nick, room);
 	} else {
-		ParseArguments (argc, argv, ip, port, nick, room);
+	//	ParseArguments (argc, argv, ip, port, nick, room);
+
+		port = 4774;
+		room = 1;
+		strcpy (ip, "0");
+		strcpy (nick, "Bot0");
 	}
-*/
-//	ParseArguments (argc, argv, ip, port, nick, room);
-	port = 4774;
-	room = 1;
-	ip = (char *) malloc(15);
-	nick = (char *) malloc(22);
-	strcpy (ip, "0");
-	strcpy (nick, "Bot0");
 	
 	Socket link(ip, port);
 	int fd = link.get_sockfd();
 	printf("Listen socket:[%d].\n", fd);		
 		
-
 	Game g(fd, nick, room);
 
 	free (ip);
