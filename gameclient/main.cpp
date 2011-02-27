@@ -72,8 +72,8 @@ struct Cache{
 	char msg[1024];
 	char ext[2048];
 	int cnt;	// cnt;
-	bool fmsg; 	// flag of ready message;
-	bool fprc;
+	int fmsg; 	// flag of ready message;
+	int fprc;
 
 	void Flushstr(char *str) {
 		str[0] = '\0';
@@ -83,7 +83,7 @@ struct Cache{
 		cnt = 0;
 		Flushstr (buf);
 		Flushstr (msg);
-		Flushstr(ext);
+		Flushstr (ext);
 		fmsg = 0;
 		fprc = 0;
 	}
@@ -111,12 +111,16 @@ class Game{
 public:
 	Game(int ls, char *n, int r);
 private:
-	void login (char *);
+	void send (char *);
+	void waitsymbol (char);
+	void check (char *);
 	void iteration ();
 	void callread (int index);
 	void readportion (int index);
 	void readstr (int index);
 	void parse ();
+
+	void market ();
 };
 
 
@@ -132,6 +136,7 @@ void Game::readstr (int idx)
 	if ( ca[idx].msg[0] == '%' ) {
 		ca[idx].fprc = 1;
 	}
+
 }
 
 
@@ -139,41 +144,75 @@ void Game::readstr (int idx)
 /* */
 Game::Game(int ls, char *n, int r) 
 {
-	ca[0].Init (ls);
-	ca[1].Init (STDIN_FILENO);
-
-	nick = n;
+	ca[0].Init (ls),
+	ca[1].Init (STDIN_FILENO),
+	nick = n,
 	room = r;
 
-	char strroom[16];
-	sprintf (strroom, ".join %d\n", room);
-
-	login (nick);
-	login (strroom);
+	char str[32];
 	
+	send (nick);
+
+	sprintf (str, ".join %d", room);
+	send (str);
+
+	waitsymbol ('&');
+
+//
+	sprintf (str, "market");
+	send (str);
+
+	waitsymbol ('&');
+	printf ("Useful information: [%s].\n", ca[0].msg);
+
+
+
+	sleep (5);
+
+	sprintf (str, "buy 2 500");
+	send (str);
+//
+/*
 	printf("Main cycle of wait data.\n");
 	for (;;){
 		iteration();
 	}
+*/
+}
+
+
+
+
+/* */
+void Game::send (char *fn)
+{
+	char str[32];
+
+	sprintf (str, "%s\n", fn);
+	printf ("Now send:[%s] Lenght:%d.\n", str, strlen(str));
+	write (ca[0].fd, str, strlen(str));
+}
+
+
+
+
+/* */
+void Game::waitsymbol (char p)
+{
+	do {
+		ca[0].Flush ();
+		readstr (0);
+		printf ("* Now read:[%s].\n", ca[0].msg);
+	} while ( ca[0].msg[0] != p); 
 }
 
 
 
 /* */
-void Game::login (char *p) {
-	char str[32];
-
-	readstr (0);
-
-	ca[0].Flush ();
-
-	sprintf (str, "%s\n", p);
-	write (ca[0].fd, str, strlen(str));
-		
-	readstr (0);
-		
-	if ( ca[0].msg[1] == '-' ) {
-		printf ("Error in fn (%s)", p);
+void Game::check (char *fn)
+{
+	if ( ca[0].fprc == 1 && ca[0].msg[1] == '-' ) {
+		printf ("Error in fn (%s)", fn);
 		exit (1);
 	}
 }
@@ -198,16 +237,9 @@ void Game::iteration()
 
 	for( int i = 0; i <= 1; i++ ) {
 		if (FD_ISSET (ca[i].fd, &readfds)) {
-			if ( ca[i].fmsg == 0 ) {	// read if we havent msg.
-				readportion(i);
-			}
+			// here read.
 		}
-		
-		if ( ca[i].msg[0] != '\0' ) {
-			// can parse ca[i].msg;
-			parse();
-			// return type, argc, argv.; 
-		}
+		// here parse.
 	}
 
 }
@@ -217,7 +249,6 @@ void Game::iteration()
 void Game::callread (int idx)
 {
 	int rc = read (ca[idx].fd, ca[idx].buf, sizeof(ca[idx].buf) - 1); 
-
 	if ( rc == -1 ) {
 		perror("Error read().\n");
 	}
@@ -253,6 +284,8 @@ void Game::readportion(int idx)
 
 	if ( ca[idx].msg[0] != '\0' ) {
 		ca[idx].fmsg = 1;
+	} else {
+		ca[idx].fmsg = 0;
 	}
 }
 
@@ -274,6 +307,8 @@ void pasteext (char *str1, char *str2)
 		str2[i] = str1[i];
 		i++;
 	}
+
+	str2[i] = '\0';
 }
 
 
