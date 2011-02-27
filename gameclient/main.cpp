@@ -121,13 +121,14 @@ class Game{
 public:
 	Game(int ls, char *n, int r);
 private:
-	void login();
-	void iteration();
+	void login (char *);
+	void iteration ();
 	void callread (int index);
-	void readportion(int index);
+	void readportion (int index);
 	void readstr (int index);
-	void parse();
+	void parse ();
 };
+
 
 
 
@@ -154,10 +155,11 @@ Game::Game(int ls, char *n, int r)
 	nick = n;
 	room = r;
 
-	printf("Nick:[%s]\nRoom:[%d]\n", nick, room);
+	char strroom[16];
+	sprintf (strroom, ".join %d\n", room);
 
-
-	login();
+	login (nick);
+	login (strroom);
 	
 	printf("Main cycle of wait data.\n");
 	for (;;){
@@ -168,46 +170,22 @@ Game::Game(int ls, char *n, int r)
 
 
 /* */
-void Game::login()
-{
+void Game::login (char *p) {
 	char str[32];
+
 	readstr (0);
-	printf ("Now in msg:[%s], Must be (Please input nick: )\n", ca[0].msg);
 
 	ca[0].Flush ();
 
-	sprintf (str, "%s\n", nick);
-	printf ("Now str[%s]\n", str);
+	sprintf (str, "%s\n", p);
 	write (ca[0].fd, str, strlen(str));
 		
 	readstr (0);
-	printf ("ext:[%s],\nmsg[%s],\nfmsg[%d],\nfprc[%d].\n", ca[0].ext, ca[0].msg, ca[0].fmsg, ca[0].fprc);
 		
 	if ( ca[0].msg[1] == '-' ) {
-		perror ("This nick has already used, try other.\n");	
+		printf ("Error in fn (%s)", p);
 		exit (1);
 	}
-
-	ca[0].Flush ();
-	
-	// read info;
-	
-	sprintf (str, ".join %d\n", room);
-	printf ("Now str[%s]\n", str);
-	write (ca[0].fd, str, strlen(str)); 
-	
-	// check
-
-	readstr (0);
-
-	printf ("ext:[%s],\nmsg[%s],\nfmsg[%d],\nfprc[%d].\n", ca[0].ext, ca[0].msg, ca[0].fmsg, ca[0].fprc);
-		
-	if ( ca[0].msg[1] == '-' ) {
-		perror ("This room not exits, try other.\n");	
-		exit (1);
-	}
-
-	ca[0].Flush ();
 }
 
 
@@ -215,7 +193,6 @@ void Game::login()
 /* */
 void Game::iteration()
 {
-<<<<<<< HEAD
 	printf("Method Game::login.\n");
 
 	char buf[5];
@@ -226,19 +203,14 @@ void Game::iteration()
 	printf("Now I read from fd[%d] str[%s]", fd, buf);
 	
 	char buf[20];
-=======
 	fd_set readfds;
 
 	FD_ZERO(&readfds);
 	FD_SET(ca[0].fd, &readfds);
 	FD_SET(ca[1].fd, &readfds);
 
-<<<<<<< HEAD
 	max_d = max(fd[0], fd[1]);
->>>>>>> 73a624fc927a7c69c63277dcaec0d572738811ab
-=======
 	int max_d = max(ca[0].fd, ca[1].fd);
->>>>>>> 9f9dab505c1cf1d8854ca5877a970488b3157f9b
 	
 	int res = select(max_d + 1, &readfds, NULL, NULL, NULL);
 	if (res < 1){
@@ -302,21 +274,12 @@ void Game::readportion(int idx)
 	} 
 }
 
-<<<<<<< HEAD
-	sprintf(buf, ".join %d", room);
-	write(fd, buf, strlen(buf) + 1);
-	//check room
-=======
 
 
 /* */
 void Game::parse()
 {
-<<<<<<< HEAD
 	printf("Method Game::login.\n");
->>>>>>> 73a624fc927a7c69c63277dcaec0d572738811ab
-=======
-
 }
 
 
