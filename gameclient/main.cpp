@@ -13,8 +13,10 @@
 
 #include <fcntl.h>
 
-void copy (char*, char*, char);
-void cut (char*);
+void pasteext (char*, char*);
+void pastebuf (char*, char*);
+void cutbuf (char*);
+void appendext (char*, char*);
 
 /* */
 class Socket{
@@ -67,9 +69,39 @@ private:
 /* */
 struct Cache{
 	int fd;
+	char buf[1024];
 	char msg[1024];
 	char ext[1024];
 	int cnt;	// cnt;
+	bool fmsg; 	// flag of ready message;
+	bool fprc;
+
+	void FlushBuf () {
+		buf[0] = '\0';
+	}
+
+	void FlushMsg() {
+		msg[0] = '\0';
+		fmsg = 0;
+	}
+	
+	void FlushExt () {
+		ext[0] = '\0';
+	}
+
+	void Flush () {
+		cnt = 0;
+		FlushBuf ();
+		FlushMsg ();
+		FlushExt ();
+		fmsg = 0;
+		fprc = 0;
+	}
+	
+	void Init(int fd_p) {
+		fd = fd_p; 
+		Flush ();
+	}
 };
 
 
@@ -91,25 +123,39 @@ public:
 private:
 	void login();
 	void iteration();
-	void readportion(int fd);
+	void callread (int index);
+	void readportion(int index);
+	void readstr (int index);
 	void parse();
 };
 
 
 
 /* */
+void Game::readstr (int idx)
+{
+	while ( ca[idx].fmsg != 1 ) {
+		readportion (idx);
+	}
+
+	if ( ca[idx].msg[0] == '%' ) {
+		ca[idx].fprc = 1;
+	}
+}
+
+
+
+/* */
 Game::Game(int ls, char *n, int r) 
 {
-	ca[0].fd = ls; 
-	ca[1].fd = STDIN_FILENO;
-	ca[0].cnt = ca[1].cnt = 0;
-	ca[0].msg[0] = ca[1].msg[0] = '\0';
-	ca[0].ext[0] = ca[1].ext[0] = '\0';
+	ca[0].Init (ls);
+	ca[1].Init (STDIN_FILENO);
 
 	nick = n;
 	room = r;
 
 	printf("Nick:[%s]\nRoom:[%d]\n", nick, room);
+
 
 	login();
 	
@@ -117,9 +163,6 @@ Game::Game(int ls, char *n, int r)
 	for (;;){
 		iteration();
 	}
-
-
-	printf("If login are working, can PLAY.\n");
 }
 
 
@@ -127,15 +170,44 @@ Game::Game(int ls, char *n, int r)
 /* */
 void Game::login()
 {
-	char buf[1024];
-	read (ca[0].fd, buf, sizeof(buf) - 1);
-	buf[sizeof(buf)] = '\0';
-	printf ("Some text:[%s].\n", buf);
+	char str[32];
+	readstr (0);
+	printf ("Now in msg:[%s], Must be (Please input nick: )\n", ca[0].msg);
 
-	printf ("Try login to server with nick[%s].\n", nick);
-	nick[strlen(nick)] = '\n';
+	ca[0].Flush ();
 
-	write (ca[0].fd, nick, strlen(nick));
+	sprintf (str, "%s\n", nick);
+	printf ("Now str[%s]\n", str);
+	write (ca[0].fd, str, strlen(str));
+		
+	readstr (0);
+	printf ("ext:[%s],\nmsg[%s],\nfmsg[%d],\nfprc[%d].\n", ca[0].ext, ca[0].msg, ca[0].fmsg, ca[0].fprc);
+		
+	if ( ca[0].msg[1] == '-' ) {
+		perror ("This nick has already used, try other.\n");	
+		exit (1);
+	}
+
+	ca[0].Flush ();
+	
+	// read info;
+	
+	sprintf (str, ".join %d\n", room);
+	printf ("Now str[%s]\n", str);
+	write (ca[0].fd, str, strlen(str)); 
+	
+	// check
+
+	readstr (0);
+
+	printf ("ext:[%s],\nmsg[%s],\nfmsg[%d],\nfprc[%d].\n", ca[0].ext, ca[0].msg, ca[0].fmsg, ca[0].fprc);
+		
+	if ( ca[0].msg[1] == '-' ) {
+		perror ("This room not exits, try other.\n");	
+		exit (1);
+	}
+
+	ca[0].Flush ();
 }
 
 
@@ -175,7 +247,9 @@ void Game::iteration()
 
 	for( int i = 0; i <= 1; i++ ) {
 		if (FD_ISSET (ca[i].fd, &readfds)) {
-			readportion(i);
+			if ( ca[i].fmsg == 0 ) {	// read if we havent msg.
+				readportion(i);
+			}
 		}
 		
 		if ( ca[i].msg[0] != '\0' ) {
@@ -189,12 +263,10 @@ void Game::iteration()
 
 
 
-/* */
-void Game::readportion(int idx)
+void Game::callread (int idx)
 {
-	char buf[1024];
+	int rc = read (ca[idx].fd, ca[idx].buf, sizeof(ca[idx].buf) - 1); 
 
-	int rc = read (ca[idx].fd, buf, sizeof(buf) - 1); 
 	if ( rc == -1 ) {
 		perror("Error read().\n");
 	}
@@ -203,21 +275,31 @@ void Game::readportion(int idx)
 		exit(1);
 	}
 
-	buf[rc] = '\0';
+	ca[idx].buf[rc] = '\0';
 	for(int i = 0; i < rc; i++){
-		if ( buf[i] ) {
+		if ( ca[idx].buf[i] ) {
 			ca[idx].cnt++;
 		}
 	}
+}
 
-	if ( ca[idx].cnt != 0 ) {
-		copy (ca[idx].ext, ca[idx].msg, '\n');
-		copy (buf, ca[idx].msg, '\n');
-		cut (buf);
-		ca[idx].cnt--;
-	} else {
-		copy (buf, ca[idx].ext, '\0');
+
+
+/* */
+void Game::readportion(int idx)
+{
+	if ( ca[idx].cnt == 0 ) {
+		callread (idx);
 	}
+	else
+	{
+		pasteext (ca[idx].ext, ca[idx].msg);
+		pastebuf (ca[idx].buf, ca[idx].msg);
+		cutbuf (ca[idx].buf);
+		appendext (ca[idx].buf, ca[idx].ext);
+		ca[idx].cnt--;
+		ca[idx].fmsg = 1;
+	} 
 }
 
 <<<<<<< HEAD
@@ -240,7 +322,33 @@ void Game::parse()
 
 
 /* */
-void cut (char* str)
+void pasteext (char *str1, char *str2)
+{
+	int i = 0;
+	while ( str1[i] != '\0' ) {
+		str2[i] = str1[i];
+		i++;
+	}
+}
+
+/* */
+void pastebuf (char *str1, char *str2)
+{
+	int i = 0;
+	while ( str2[i++] != '\0' );
+	i--;
+
+	int k = 0;
+	while ( str1[k] != '\n' && str1[k] != '\0' ) {
+		str2[i++] = str1[k++];	
+	}
+>>>>>>> 9f9dab505c1cf1d8854ca5877a970488b3157f9b
+}
+
+
+
+/* */
+void cutbuf (char* str)
 {
 	int i = 0;
 	while ( str[i++] != '\n' ); 
@@ -249,26 +357,20 @@ void cut (char* str)
 	while ( str[i] != '\0' ) {
 		str[k++] = str[i++];
 	}
->>>>>>> 9f9dab505c1cf1d8854ca5877a970488b3157f9b
 }
 
 
 
 /* */
-void copy (char* str1, char* str2, char stopsymbol)
+void appendext (char *str1, char *str2)
 {
-
- 	int k = 0;
-	// ATTENTION!!!
-	while ((str2[k] != stopsymbol) && (str2[k] != '\0')) {
-		k++;
-	}
-	k--;
-
 	int i = 0;
-	// ATTENTION!!!
-	while ((str1[i] != stopsymbol) && (str1[i] != '\0')) {
-		str2[k++] = str1[i++];
+	while ( str2[i++] != '\0' );
+	i--;	
+
+	int k = 0;
+	while ( str1[k] != '\0' ) {
+		str2[i++] = str1[k++];
 	}
 }
 
@@ -352,7 +454,7 @@ int main(int argc, char **argv)
 	ip = (char *) malloc(15);
 	nick = (char *) malloc(22);
 	strcpy (ip, "0");
-	strcpy (nick, "Bot");
+	strcpy (nick, "Bot0");
 	
 	Socket link(ip, port);
 	int fd = link.get_sockfd();
