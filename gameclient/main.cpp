@@ -83,7 +83,7 @@ struct Cache{
 		cnt = 0;
 		Flushstr (buf);
 		Flushstr (msg);
-		Flushstr (ext);
+//		Flushstr (ext);
 		fmsg = 0;
 		fprc = 0;
 	}
@@ -126,20 +126,6 @@ private:
 
 
 
-/* */
-void Game::readstr (int idx)
-{
-	while ( ca[idx].fmsg != 1 ) {
-		readportion (idx);
-	}
-
-	if ( ca[idx].msg[0] == '%' ) {
-		ca[idx].fprc = 1;
-	}
-
-}
-
-
 
 /* */
 Game::Game(int ls, char *n, int r) 
@@ -152,19 +138,22 @@ Game::Game(int ls, char *n, int r)
 	char str[32];
 	
 	send (nick);
+	
 
 	sprintf (str, ".join %d", room);
 	send (str);
 
-	waitsymbol ('&');
+	printf ("I wait & for start.\n");
+	waitsymbol ('&');	
+	printf ("Done.\n");
 
 //
 	sprintf (str, "market");
 	send (str);
 
+	printf ("I wait & for market.\n");
 	waitsymbol ('&');
-	printf ("Useful information: [%s].\n", ca[0].msg);
-
+	printf ("Done.\n");
 
 
 	sleep (5);
@@ -189,7 +178,7 @@ void Game::send (char *fn)
 	char str[32];
 
 	sprintf (str, "%s\n", fn);
-	printf ("Now send:[%s] Lenght:%d.\n", str, strlen(str));
+	printf ("Now send:[%s].\n", str);
 	write (ca[0].fd, str, strlen(str));
 }
 
@@ -199,10 +188,9 @@ void Game::send (char *fn)
 /* */
 void Game::waitsymbol (char p)
 {
+	ca[0].Flush ();
 	do {
-		ca[0].Flush ();
 		readstr (0);
-		printf ("* Now read:[%s].\n", ca[0].msg);
 	} while ( ca[0].msg[0] != p); 
 }
 
@@ -259,7 +247,7 @@ void Game::callread (int idx)
 
 	ca[idx].buf[rc] = '\0';
 	for(int i = 0; i < rc; i++){
-		if ( ca[idx].buf[i] ) {
+		if ( ca[idx].buf[i] == '\n' ) {
 			ca[idx].cnt++;
 		}
 	}
@@ -268,33 +256,22 @@ void Game::callread (int idx)
 
 
 /* */
-void Game::readportion(int idx)
+void Game::readstr (int idx)
 {
 	if ( ca[idx].cnt == 0 ) {
 		callread (idx);
 	}
-	else
-	{
+
+	while ( ca[idx].cnt != 0 ) {
 		appendext (ca[idx].buf, ca[idx].ext);
 		ca[idx].Flushstr (ca[idx].buf);
 		pasteext (ca[idx].ext, ca[idx].msg);
 		cutext (ca[idx].ext);
 		ca[idx].cnt--;
-	} 
 
-	if ( ca[idx].msg[0] != '\0' ) {
-		ca[idx].fmsg = 1;
-	} else {
-		ca[idx].fmsg = 0;
+		printf ("while cnt::\nbuf[%s]\next[%s]\nmsg[%s]\ncnt:%d", ca[idx].buf, ca[idx].ext, ca[idx].msg, ca[idx].cnt);
 	}
-}
-
-
-
-/* */
-void Game::parse()
-{
-	printf("Method Game::login.\n");
+	
 }
 
 
@@ -320,9 +297,9 @@ void cutext (char* str)
 	while ( str[i++] != '\n' ); 
 
 	int k = 0;
-	while ( str[i] != '\0' ) {
+	do {
 		str[k++] = str[i++];
-	}
+	} while ( str[k-1] != '\0');
 }
 
 
@@ -335,9 +312,9 @@ void appendext (char *str1, char *str2)
 	i--;	
 
 	int k = 0;
-	while ( str1[k] != '\0' ) {
+	do {
 		str2[i++] = str1[k++];
-	}
+	} while ( str2[k-1] != '\0' );
 }
 
 
