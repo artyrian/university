@@ -17,52 +17,80 @@ void pasteext (char*, char*);
 void cutext (char*);
 void appendext (char*, char*);
 
-/* */
+
+/*
+ * Module SOCKET
+ */
 class Socket{
 	struct sockaddr_in addr;
 	char* ip;
 	int port;
 	int sockfd;
 public:
-	Socket(char* i, int p) : ip(i), port(p) {
-		sockfd = createsocket();
-		addr.sin_family = AF_INET;
-		init_port(port);
-		init_ip(ip);
-		connecting(sockfd);
-	}
-	int get_sockfd(){
-		return sockfd;	
-	}
+	Socket(char* i, int p);
+	int get_sockfd();
 private:
-	int createsocket(){
-		int ls;
-		if ( -1 == (ls = socket(AF_INET, SOCK_STREAM, 0)) ){
-			perror("Error create socket.\n");
-		}
-		return ls;
-	}
-	void init_ip(char *arg){
-		ip = arg;
-		if ( !inet_aton(ip, &(addr.sin_addr)) ){
-			printf("IP:[%s]", ip);
-			perror ("Invalid IP address!\n");
-			exit(1);
-		}
-	}
-	void init_port(int arg){
-		port = arg;
-		addr.sin_port = htons(port);
-	}
-	void connecting(int sockfd){
-		if ( 0 != connect(sockfd, (struct sockaddr *)&addr, 
-							sizeof(addr)) ){
-			perror ("Connect error.");
-			exit(1);
-		}
-	}
+	int createsocket();
+	void init_ip(char *arg);
+	void init_port(int arg);
+	void connecting(int sockfd);
 };
 
+
+Socket::Socket(char* i, int p) : ip(i), port(p)
+{
+	sockfd = createsocket();
+	addr.sin_family = AF_INET;
+	init_port(port);
+	init_ip(ip);
+	connecting(sockfd);
+}
+
+
+int Socket::get_sockfd()
+{
+	return sockfd;	
+}
+
+int Socket::createsocket()
+{
+	int ls;
+	if ( -1 == (ls = socket(AF_INET, SOCK_STREAM, 0)) ){
+		perror("Error create socket.\n");
+	}
+	return ls;
+}
+
+
+void Socket::init_ip(char *arg)
+{
+	ip = arg;
+	if ( !inet_aton(ip, &(addr.sin_addr)) ){
+		printf("IP:[%s]", ip);
+		perror ("Invalid IP address!\n");
+		exit(1);
+	}
+}
+
+
+void Socket::init_port(int arg)
+{
+	port = arg;
+	addr.sin_port = htons(port);
+}
+
+
+void Socket::connecting(int sockfd)
+{
+	if ( 0 != connect(sockfd, (struct sockaddr *)&addr, sizeof(addr)) ){
+		perror ("Connect error.");
+		exit(1);
+	}
+}
+
+/*
+ * End of module SOCKET;
+ */
 
 
 /* */
@@ -72,25 +100,17 @@ struct Cache{
 	char msg[1024];
 	char ext[2048];
 	int cnt;	// cnt;
-	int fmsg; 	// flag of ready message;
-	int fprc;
 
 	void Flushstr(char *str) {
 		str[0] = '\0';
 	}
-
-	void Flush () {
-		cnt = 0;
-		Flushstr (buf);
-		Flushstr (msg);
-//		Flushstr (ext);
-		fmsg = 0;
-		fprc = 0;
-	}
 	
 	void Init(int fd_p) {
 		fd = fd_p; 
-		Flush ();
+		cnt = 0;
+		Flushstr (buf);
+		Flushstr (msg);
+		Flushstr (ext);
 	}
 };
 
