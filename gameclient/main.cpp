@@ -110,17 +110,13 @@ class Game{
 	}
 public:
 	Game(int ls, char *n, int r);
-private:
+
 	void send (char *);
-	void waitsymbol (char);
-	void check (char *);
+	void waitsymbol (int, char);
+private:
 	void iteration ();
 	void callread (int index);
 	void readportion (int index);
-	void readstr (int index);
-	void parse ();
-
-	void market ();
 };
 
 
@@ -144,23 +140,11 @@ Game::Game(int ls, char *n, int r)
 	send (str);
 
 	printf ("I wait & for start.\n");
-	waitsymbol ('&');	
-	printf ("Done.\n");
-
-//
-	sprintf (str, "market");
-	send (str);
-
-	printf ("I wait & for market.\n");
-	waitsymbol ('&');
-	printf ("Done.\n");
+	waitsymbol (0, '&');	
+	
+	printf ("Done.My str [%s].\n", ca[0].msg);
 
 
-	sleep (5);
-
-	sprintf (str, "buy 2 500");
-	send (str);
-//
 /*
 	printf("Main cycle of wait data.\n");
 	for (;;){
@@ -186,23 +170,27 @@ void Game::send (char *fn)
 
 
 /* */
-void Game::waitsymbol (char p)
+void Game::waitsymbol (int idx, char p)
 {
-	ca[0].Flush ();
-	do {
-		readstr (0);
-	} while ( ca[0].msg[0] != p); 
-}
+	ca[idx].Flushstr (ca[idx].msg);
 
-
-
-/* */
-void Game::check (char *fn)
-{
-	if ( ca[0].fprc == 1 && ca[0].msg[1] == '-' ) {
-		printf ("Error in fn (%s)", fn);
-		exit (1);
+	while ( ca[idx].msg[0] != p ) {
+		if ( ca[idx].cnt == 0) {
+			callread (idx);	
+		} else {
+			appendext (ca[idx].buf, ca[idx].ext);
+			ca[idx].Flushstr (ca[idx].buf);
+			pasteext (ca[idx].ext, ca[idx].msg);
+			cutext (ca[idx].ext);
+			ca[idx].cnt--;
+		}
 	}
+
+	printf ("while cnt::\nbuf[%s]\next[%s]\nmsg[%s]\ncnt:%d.\n", 
+		ca[idx].buf, 
+		ca[idx].ext, 
+		ca[idx].msg, 
+		ca[idx].cnt);
 }
 
 
@@ -251,27 +239,6 @@ void Game::callread (int idx)
 			ca[idx].cnt++;
 		}
 	}
-}
-
-
-
-/* */
-void Game::readstr (int idx)
-{
-	if ( ca[idx].cnt == 0 ) {
-		callread (idx);
-	}
-
-	while ( ca[idx].cnt != 0 ) {
-		appendext (ca[idx].buf, ca[idx].ext);
-		ca[idx].Flushstr (ca[idx].buf);
-		pasteext (ca[idx].ext, ca[idx].msg);
-		cutext (ca[idx].ext);
-		ca[idx].cnt--;
-
-		printf ("while cnt::\nbuf[%s]\next[%s]\nmsg[%s]\ncnt:%d", ca[idx].buf, ca[idx].ext, ca[idx].msg, ca[idx].cnt);
-	}
-	
 }
 
 
@@ -336,62 +303,47 @@ void ParseArguments(	int n, char** argv,
 
 
 /* */
-void ReadConf (char*& ip, int& port, char*& nick, int& room)
-{
-	FILE *f;
-	char strprm[32];
-	if ( (f = fopen("conf", "r")) == 0) {
-		perror ("Error reading conf");
-	}
-
-	int i, c = '\n';
-	for (int k = 0; k < 4; k++) {
-		i = 0;
-		while ( c != ';' ) {
-			c = fgetc (f);
-			strprm[i++] = c;
-		}
-		c = fgetc (f);
-		strprm[--i] = '\0';
-
-		switch (k) { 
-			case 0: strcpy(ip, strprm); break;
-			case 1: port = atoi(strprm); break;
-			case 2: strcpy(nick, strprm); break; 
-			case 3: room = atoi(strprm); break;
-		}	
-	}
-}
-
-
-
-/* */
 int main(int argc, char **argv)
 {	
 	printf("Start program.\n");
-	const int conf = 0;
 	
 	char *ip = (char *) malloc(16);
 	int port;
 	char *nick = (char *) malloc(22);
 	int room;
 
-	if ( conf == 1 ) {
-		ReadConf (ip, port, nick, room);
-	} else {
-	//	ParseArguments (argc, argv, ip, port, nick, room);
+//	ParseArguments (argc, argv, ip, port, nick, room);
+	port = 4774; room = 1; strcpy (ip, "0"); strcpy (nick, "Bot0"); 
 
-		port = 4774;
-		room = 1;
-		strcpy (ip, "0");
-		strcpy (nick, "Bot0");
-	}
-	
 	Socket link(ip, port);
-	int fd = link.get_sockfd();
-	printf("Listen socket:[%d].\n", fd);		
+	int sd = link.get_sockfd();
+	printf("Listen socket:[%d].\n", sd);		
 		
-	Game g(fd, nick, room);
+	Game g(sd, nick, room);
+
+	for (;;) {
+		printf ("Here a loop where i send cmd every 5 sec.\n");
+
+		char str [32];
+		Cache ca;
+
+		sprintf (str, "market");
+		g.send (str);
+	
+
+		printf ("I wait & for market.\n");
+		g.waitsymbol (0, '&');
+		printf ("Done. My str [%s].\n", ca.msg);
+
+		sprintf (str, "buy 2 500");
+		g.send (str);
+
+		printf ("I wait & for buy.\n");
+		g.waitsymbol (0, '&');
+		printf ("Done. My str [%s].\n", ca.msg);
+
+		sleep (5);
+	}
 
 	free (ip);
 	free (nick);
