@@ -86,6 +86,7 @@ int Game::waitendturn ()
 	char msg[80];
 	do {
 		strcpy (msg, ch.getmsg ());
+		// HERE some analyze.
 	} while ( strncmp (msg, "& ENDTURN", 9) != 0 );
 
 	printf ("NEXT TURN.\n");
