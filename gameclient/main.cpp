@@ -2,181 +2,194 @@
 #include <stdlib.h>
 
 #include <string.h>
-
 #include <unistd.h>
 
-#include <sys/times.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+#include "cache.hpp"
 
-#include <fcntl.h>
-
-void pasteext (char*, char*);
-void cutext (char*);
-void appendext (char*, char*);
-
-
-/*
- * Module SOCKET
- */
-class Socket{
-	struct sockaddr_in addr;
-	char *ip;
-	int port;
-	int sd;
-public:
-	Socket (char* i, int p);
-	int connecting ();
-private:
-	int createsocket();
-	void init_ip(char *arg);
-	void init_port(int arg);
+struct Market {
+	int row_cost;
+	int row_count;
+	int prod_cost;
+	int prod_count;
 };
-
-
-Socket::Socket(char* i, int p) : ip(i), port(p)
-{
-	addr.sin_family = AF_INET;
-	init_port (port);
-	init_ip (ip);
-}
-
-
-void Socket::init_ip(char *arg)
-{
-	ip = arg;
-	if ( !inet_aton(ip, &(addr.sin_addr)) ){
-		printf("IP:[%s]", ip);
-		perror ("Invalid IP address!\n");
-		exit(1);
-	}
-}
-
-
-void Socket::init_port(int arg)
-{
-	port = arg;
-	addr.sin_port = htons(port);
-}
-
-
-int Socket::createsocket()
-{
-	int ls;
-	if ( -1 == (ls = socket(AF_INET, SOCK_STREAM, 0)) ){
-		perror("Error create socket.\n");
-	}
-	return ls;
-}
-
-
-int Socket::connecting ()
-{
-	int sd = createsocket();
-
-	if ( 0 != connect(sd, (struct sockaddr *)&addr, sizeof(addr)) ){
-		perror ("Connect error.");
-		exit(1);
-	}
-
-	return sd;
-}
-
-/*
- * End of module SOCKET;
- */
-
-
-/* */
-class Cache{
-	Socket link;
-public:
-	int sd;			// MUST BE HIDDEN!
-	char buf[1024];		// must be hidden!
-	char msg[1024];		// must be hidden!
-	char ext[2048];		// must be hidden!
-	int cnt;	// cnt \n;
-
-	Cache (char *ip, int port) 
-		: link (ip, port), cnt(0)
-	{
-		sd = link.connecting ();
-		Flushstr (buf);
-		Flushstr (msg);
-		Flushstr (ext);
-	}
-
-	void Flushstr(char *str) {	// maybe shoud be hidden??
-		str[0] = '\0';
-	}
-};
-
 
 /* */
 class Game {
 	Cache ch;
+	Market mrk;
 	char *nick;
 	int room;
 public:
-	Game (char *ip, int port, char *n, int r);
+	Game (char *ip, int port);
+	int setnick (char *nick);
+	int joinroom (int room);
+	int waitstart ();
+	int waitendturn ();
 
-	void send (char *);
-	void waitsymbol (int, char);
-private:
-	void callread (int index);	// this
-	void readportion (int index);	// and this must be in Cache !!!
+	void market ();
+	void info ();
+	void buy (int count, int cost);
+	void sell (int count, int cost);
+	void prod (int count);
+	void build ();
+	void turn ();
+
 };
 
 
 
-
-
 /* */
-Game::Game (char *ip, int port, char *n, int r)
-	: ch (ip, port), nick (n), room (r)
+Game::Game (char *ip, int port)
+	: ch (ip, port)
 {
+}
+
+
+
+int Game::setnick (char *n)
+{
+	nick = n;
+
+	ch.sendstr (nick);
+
+	return 0;
+}
+
+
+int Game::joinroom (int r)
+{
+	room = r;
 	char str[32];
 	
-	send (nick);
-
 	sprintf (str, ".join %d", room);
-	send (str);
-
-	printf ("I wait & for start.\n");
-	waitsymbol (0, '&');	
+	ch.sendstr (str);
 	
-	printf ("Done.My str [%s].\n", ch.msg);
+	return 0;
 }
 
 
-
-
-/* */
-void Game::send (char *fn)
+int Game::waitstart ()
 {
-	char str[32];
+	char msg[80];
+	do {
+		strcpy (msg, ch.getmsg ());
+	} while ( strncmp (msg, "& START", 7) != 0 );
 
-	sprintf (str, "%s\n", fn);
-	printf ("Now send:[%s].\n", str);
-	write (ch.sd, str, strlen(str));
+	printf ("GAME START!\n");
+	
+	return 0;
 }
 
 
+int Game::waitendturn ()
+{
+	char msg[80];
+	do {
+		strcpy (msg, ch.getmsg ());
+	} while ( strncmp (msg, "& ENDTURN", 9) != 0 );
+
+	printf ("NEXT TURN.\n");
+	
+	return 0;
+}
 
 
-/* */
+void Game::market ()
+{
+	char str[10] = "market";
+
+	ch.sendstr (str);
+
+	char msg[80];
+	do {
+		strcpy (msg, ch.getmsg ());
+	} while ( strncmp (msg, "& MARKET", 8) != 0 );
+
+	char prs[4][10];
+	int i = 0;
+	for (int j = 0; j < 10; j++) {
+		prs[0][j] = msg[i+10];
+		prs[1][j] = msg[i+20];
+		prs[2][j] = msg[i+30];
+		prs[3][j] = msg[i+40];
+		i++;
+	}
+
+	mrk.row_count = atoi (prs[0]);
+	mrk.row_cost = atoi (prs[1]);
+	mrk.prod_count = atoi (prs[2]);
+	mrk.prod_cost = atoi (prs[3]);
+}
+
+void Game::info ()
+{
+	char str[10] = "info";
+
+	ch.sendstr (str);
+
+}
+
+void Game::buy (int count, int cost)
+{
+	char *str = (char *) malloc (20);
+
+//	
+	cost = mrk.raw_cost;
+//
+
+	sprintf (str, "buy %d %d", count, cost);
+
+	ch.sendstr (str);
+}
+
+void Game::sell (int count, int cost)
+{
+	char *str = (char *) malloc (20);
+
+//	
+	cost = mrk.prod_cost;
+//
+
+	sprintf (str, "sell %d %d", count, cost);
+
+	ch.sendstr (str);
+}
+
+void Game::prod (int count)
+{
+	char *str = (char *)  malloc (20);
+	sprintf (str, "prod %d", count);
+
+	ch.sendstr (str);
+}
+
+
+void Game::build ()
+{
+	char str[10] = "build";
+
+	ch.sendstr (str);
+
+}
+
+void Game::turn ()
+{
+	char str[10] = "turn";
+	ch.sendstr (str);
+}
+	
+
+
+
+/* 
 void Game::waitsymbol (int idx, char p)
 {
-	ch.Flushstr (ch.msg);
 
 	while ( ch.msg[0] != p ) {
 		if ( ch.cnt == 0) {
 			callread (idx);	
 		} else {
 			appendext (ch.buf, ch.ext);
-			ch.Flushstr (ch.buf);
 			pasteext (ch.ext, ch.msg);
 			cutext (ch.ext);
 			ch.cnt--;
@@ -189,70 +202,13 @@ void Game::waitsymbol (int idx, char p)
 		ch.msg, 
 		ch.cnt);
 }
+*/
 
 
+/*
+ * ===================   M A I N   ================ *
+ */
 
-void Game::callread (int idx)
-{
-	int rc = read (ch.sd, ch.buf, sizeof(ch.buf) - 1); 
-	if ( rc == -1 ) {
-		perror("Error read().\n");
-	}
-	if ( rc == 0 ) {
-		printf("Server closed connection.\n");
-		exit(1);
-	}
-
-	ch.buf[rc] = '\0';
-	for(int i = 0; i < rc; i++){
-		if ( ch.buf[i] == '\n' ) {
-			ch.cnt++;
-		}
-	}
-}
-
-
-
-/* */
-void pasteext (char *str1, char *str2)
-{
-	int i = 0;
-	while ( str1[i] != '\n' ) {
-		str2[i] = str1[i];
-		i++;
-	}
-
-	str2[i] = '\0';
-}
-
-
-
-/* */
-void cutext (char* str)
-{
-	int i = 0;
-	while ( str[i++] != '\n' ); 
-
-	int k = 0;
-	do {
-		str[k++] = str[i++];
-	} while ( str[k-1] != '\0');
-}
-
-
-
-/* */
-void appendext (char *str1, char *str2)
-{
-	int i = 0;
-	while ( str2[i++] != '\0' );
-	i--;	
-
-	int k = 0;
-	do {
-		str2[i++] = str1[k++];
-	} while ( str2[k-1] != '\0' );
-}
 
 
 /* */
@@ -287,30 +243,23 @@ int main(int argc, char **argv)
 
 	ParseArguments (argc, argv, ip, port, nick, room);
 	
-	Game g(ip, port, nick, room);
+	Game g(ip, port);
+	
+	g.setnick (nick);
+	g.joinroom (room);
+	g.waitstart ();
 
 	for (;;) {
-		printf ("Here a loop where i send cmd every 5 sec.\n");
+		printf ("Here a loop where I send cmds every turn.\n");
+		
+		g.market ();
+		g.buy (2, -1);
+		g.sell (2, -1);
+		g.prod (2);
 
-/*
-		char str [32];
+		g.turn ();
 
-		sprintf (str, "market");
-		g.send (str);
-	
-
-		printf ("I wait & for market.\n");
-		g.waitsymbol (0, '&');
-		printf ("Done. My str [%s].\n", ch.msg);
-
-		sprintf (str, "buy 2 500");
-		g.send (str);
-
-		printf ("I wait & for buy.\n");
-		g.waitsymbol (0, '&');
-		printf ("Done. My str [%s].\n", ch.msg);
-*/
-		sleep (5);
+		g.waitendturn ();
 	}
 
 	free (ip);
