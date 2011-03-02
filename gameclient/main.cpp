@@ -23,42 +23,24 @@ void appendext (char*, char*);
  */
 class Socket{
 	struct sockaddr_in addr;
-	char* ip;
+	char *ip;
 	int port;
-	int sockfd;
+	int sd;
 public:
-	Socket(char* i, int p);
-	int get_sockfd();
+	Socket (char* i, int p);
+	int connecting ();
 private:
 	int createsocket();
 	void init_ip(char *arg);
 	void init_port(int arg);
-	void connecting(int sockfd);
 };
 
 
 Socket::Socket(char* i, int p) : ip(i), port(p)
 {
-	sockfd = createsocket();
 	addr.sin_family = AF_INET;
-	init_port(port);
-	init_ip(ip);
-	connecting(sockfd);
-}
-
-
-int Socket::get_sockfd()
-{
-	return sockfd;	
-}
-
-int Socket::createsocket()
-{
-	int ls;
-	if ( -1 == (ls = socket(AF_INET, SOCK_STREAM, 0)) ){
-		perror("Error create socket.\n");
-	}
-	return ls;
+	init_port (port);
+	init_ip (ip);
 }
 
 
@@ -80,12 +62,26 @@ void Socket::init_port(int arg)
 }
 
 
-void Socket::connecting(int sockfd)
+int Socket::createsocket()
 {
-	if ( 0 != connect(sockfd, (struct sockaddr *)&addr, sizeof(addr)) ){
+	int ls;
+	if ( -1 == (ls = socket(AF_INET, SOCK_STREAM, 0)) ){
+		perror("Error create socket.\n");
+	}
+	return ls;
+}
+
+
+int Socket::connecting ()
+{
+	int sd = createsocket();
+
+	if ( 0 != connect(sd, (struct sockaddr *)&addr, sizeof(addr)) ){
 		perror ("Connect error.");
 		exit(1);
 	}
+
+	return sd;
 }
 
 /*
@@ -94,49 +90,43 @@ void Socket::connecting(int sockfd)
 
 
 /* */
-struct Cache{
-	int fd;
-	char buf[1024];
-	char msg[1024];
-	char ext[2048];
-	int cnt;	// cnt;
+class Cache{
+	Socket link;
+public:
+	int sd;			// MUST BE HIDDEN!
+	char buf[1024];		// must be hidden!
+	char msg[1024];		// must be hidden!
+	char ext[2048];		// must be hidden!
+	int cnt;	// cnt \n;
 
-	void Flushstr(char *str) {
-		str[0] = '\0';
-	}
-	
-	void Init(int fd_p) {
-		fd = fd_p; 
-		cnt = 0;
+	Cache (char *ip, int port) 
+		: link (ip, port), cnt(0)
+	{
+		sd = link.connecting ();
 		Flushstr (buf);
 		Flushstr (msg);
 		Flushstr (ext);
 	}
+
+	void Flushstr(char *str) {	// maybe shoud be hidden??
+		str[0] = '\0';
+	}
 };
 
 
 /* */
-class Game{
-	Cache ca[2];	// 0 - ls, 1 - keyboard;
+class Game {
+	Cache ch;
 	char *nick;
 	int room;
-
-	int max(int a, int b){
-		if ( a > b){
-			return a;
-		} else {
-			return b;
-		}
-	}
 public:
-	Game(int ls, char *n, int r);
+	Game (char *ip, int port, char *n, int r);
 
 	void send (char *);
 	void waitsymbol (int, char);
 private:
-	void iteration ();
-	void callread (int index);
-	void readportion (int index);
+	void callread (int index);	// this
+	void readportion (int index);	// and this must be in Cache !!!
 };
 
 
@@ -144,17 +134,12 @@ private:
 
 
 /* */
-Game::Game(int ls, char *n, int r) 
+Game::Game (char *ip, int port, char *n, int r)
+	: ch (ip, port), nick (n), room (r)
 {
-	ca[0].Init (ls),
-	ca[1].Init (STDIN_FILENO),
-	nick = n,
-	room = r;
-
 	char str[32];
 	
 	send (nick);
-	
 
 	sprintf (str, ".join %d", room);
 	send (str);
@@ -162,15 +147,7 @@ Game::Game(int ls, char *n, int r)
 	printf ("I wait & for start.\n");
 	waitsymbol (0, '&');	
 	
-	printf ("Done.My str [%s].\n", ca[0].msg);
-
-
-/*
-	printf("Main cycle of wait data.\n");
-	for (;;){
-		iteration();
-	}
-*/
+	printf ("Done.My str [%s].\n", ch.msg);
 }
 
 
@@ -183,7 +160,7 @@ void Game::send (char *fn)
 
 	sprintf (str, "%s\n", fn);
 	printf ("Now send:[%s].\n", str);
-	write (ca[0].fd, str, strlen(str));
+	write (ch.sd, str, strlen(str));
 }
 
 
@@ -192,59 +169,32 @@ void Game::send (char *fn)
 /* */
 void Game::waitsymbol (int idx, char p)
 {
-	ca[idx].Flushstr (ca[idx].msg);
+	ch.Flushstr (ch.msg);
 
-	while ( ca[idx].msg[0] != p ) {
-		if ( ca[idx].cnt == 0) {
+	while ( ch.msg[0] != p ) {
+		if ( ch.cnt == 0) {
 			callread (idx);	
 		} else {
-			appendext (ca[idx].buf, ca[idx].ext);
-			ca[idx].Flushstr (ca[idx].buf);
-			pasteext (ca[idx].ext, ca[idx].msg);
-			cutext (ca[idx].ext);
-			ca[idx].cnt--;
+			appendext (ch.buf, ch.ext);
+			ch.Flushstr (ch.buf);
+			pasteext (ch.ext, ch.msg);
+			cutext (ch.ext);
+			ch.cnt--;
 		}
 	}
 
 	printf ("while cnt::\nbuf[%s]\next[%s]\nmsg[%s]\ncnt:%d.\n", 
-		ca[idx].buf, 
-		ca[idx].ext, 
-		ca[idx].msg, 
-		ca[idx].cnt);
-}
-
-
-
-/* */
-void Game::iteration()
-{
-	fd_set readfds;
-
-	FD_ZERO(&readfds);
-	FD_SET(ca[0].fd, &readfds);
-	FD_SET(ca[1].fd, &readfds);
-
-	int max_d = max(ca[0].fd, ca[1].fd);
-	
-	int res = select(max_d + 1, &readfds, NULL, NULL, NULL);
-	if (res < 1){
-		perror("Error select.\n");
-	}
-
-	for( int i = 0; i <= 1; i++ ) {
-		if (FD_ISSET (ca[i].fd, &readfds)) {
-			// here read.
-		}
-		// here parse.
-	}
-
+		ch.buf, 
+		ch.ext, 
+		ch.msg, 
+		ch.cnt);
 }
 
 
 
 void Game::callread (int idx)
 {
-	int rc = read (ca[idx].fd, ca[idx].buf, sizeof(ca[idx].buf) - 1); 
+	int rc = read (ch.sd, ch.buf, sizeof(ch.buf) - 1); 
 	if ( rc == -1 ) {
 		perror("Error read().\n");
 	}
@@ -253,10 +203,10 @@ void Game::callread (int idx)
 		exit(1);
 	}
 
-	ca[idx].buf[rc] = '\0';
+	ch.buf[rc] = '\0';
 	for(int i = 0; i < rc; i++){
-		if ( ca[idx].buf[i] == '\n' ) {
-			ca[idx].cnt++;
+		if ( ch.buf[i] == '\n' ) {
+			ch.cnt++;
 		}
 	}
 }
@@ -306,12 +256,15 @@ void appendext (char *str1, char *str2)
 
 
 /* */
-void ParseArguments(	int n, char** argv, 
+void ParseArguments(	int n, char **argv, 
 			char*& ip, int& port, char*& nick, int& room)
 {
 	if ( n != 5 ){
-		perror("Too few arguments!\n");
-		exit(1);
+		printf ("WARNING!!! Enabled debug mode.\nStatic parametrs (ip, port, nick, room).\n");
+		port = 4774; 
+		room = 1; 
+		strcpy (ip, "0"); 
+		strcpy (nick, "Bot0"); 
 	} else { 
 		ip = argv[1];
 		port = atoi(argv[2]);
@@ -332,20 +285,15 @@ int main(int argc, char **argv)
 	char *nick = (char *) malloc(22);
 	int room;
 
-//	ParseArguments (argc, argv, ip, port, nick, room);
-	port = 4774; room = 1; strcpy (ip, "0"); strcpy (nick, "Bot0"); 
-
-	Socket link(ip, port);
-	int sd = link.get_sockfd();
-	printf("Listen socket:[%d].\n", sd);		
-		
-	Game g(sd, nick, room);
+	ParseArguments (argc, argv, ip, port, nick, room);
+	
+	Game g(ip, port, nick, room);
 
 	for (;;) {
 		printf ("Here a loop where i send cmd every 5 sec.\n");
 
+/*
 		char str [32];
-		Cache ca;
 
 		sprintf (str, "market");
 		g.send (str);
@@ -353,15 +301,15 @@ int main(int argc, char **argv)
 
 		printf ("I wait & for market.\n");
 		g.waitsymbol (0, '&');
-		printf ("Done. My str [%s].\n", ca.msg);
+		printf ("Done. My str [%s].\n", ch.msg);
 
 		sprintf (str, "buy 2 500");
 		g.send (str);
 
 		printf ("I wait & for buy.\n");
 		g.waitsymbol (0, '&');
-		printf ("Done. My str [%s].\n", ca.msg);
-
+		printf ("Done. My str [%s].\n", ch.msg);
+*/
 		sleep (5);
 	}
 
