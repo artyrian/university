@@ -180,31 +180,6 @@ void Game::turn ()
 	
 
 
-
-/* 
-void Game::waitsymbol (int idx, char p)
-{
-
-	while ( ch.msg[0] != p ) {
-		if ( ch.cnt == 0) {
-			callread (idx);	
-		} else {
-			appendext (ch.buf, ch.ext);
-			pasteext (ch.ext, ch.msg);
-			cutext (ch.ext);
-			ch.cnt--;
-		}
-	}
-
-	printf ("while cnt::\nbuf[%s]\next[%s]\nmsg[%s]\ncnt:%d.\n", 
-		ch.buf, 
-		ch.ext, 
-		ch.msg, 
-		ch.cnt);
-}
-*/
-
-
 /*
  * ===================   M A I N   ================ *
  */

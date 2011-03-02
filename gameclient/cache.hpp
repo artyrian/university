@@ -7,7 +7,10 @@ class Cache{
 	Socket link;
 
 	int sd;
-	
+	char buf[1024];		// must be hidden!
+	char msg[1024];		// must be hidden!
+	char ext[2048];		// must be hidden!
+
 	int cnt;
 
 	void callread ();
@@ -15,10 +18,6 @@ class Cache{
 	void appendext (char *, char *);
 	void cutext (char *);
 public:
-	char buf[1024];		// must be hidden!
-	char msg[1024];		// must be hidden!
-	char ext[2048];		// must be hidden!
-
 	Cache (char *ip, int port);
 
 	char *getmsg ();
