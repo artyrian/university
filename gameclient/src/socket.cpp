@@ -3,8 +3,7 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-
-#include <fcntl.h>
+#include <unistd.h>
 
 #include <stdio.h>		// but it while not CATCH!!!
 #include <stdlib.h>		// but it while not CATCH!!!
@@ -42,15 +41,13 @@ int Socket::createsocket()
 		perror("Error create socket.\n");
 	}
 
-//	fcntl (sd, O_NONBLOCK);
-
 	return sd;
 }
 
 
 int Socket::connecting ()
 {
-	int sd = createsocket();
+	sd = createsocket();
 
 	if ( 0 != connect(sd, (struct sockaddr *)&addr, sizeof(addr)) ){
 		perror ("Connect error.");
@@ -58,4 +55,11 @@ int Socket::connecting ()
 	}
 
 	return sd;
+}
+
+
+Socket::~Socket ()
+{
+	shutdown (sd, 2);
+	close (sd);
 }

@@ -37,14 +37,6 @@ void ParseArguments(	int n, char **argv,
 			}
 		}
 	}
-/*
-	printf ("WARNING!!! Enabled debug mode.\nStatic parametrs (ip, port, nick, room).\n");
-	port = 4774; 
-	room = 1; 
-	strcpy (ip, "0"); 
-	strcpy (nick, "Bot0"); 
-*/
-
 }
 
 

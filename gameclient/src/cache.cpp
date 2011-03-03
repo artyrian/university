@@ -109,3 +109,8 @@ void Cache::appendext (char *str1, char *str2)
 	str1[0] = '\0';
 }
 
+
+Cache::~Cache ()
+{
+}
+

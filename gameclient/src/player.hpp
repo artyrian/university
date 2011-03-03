@@ -11,6 +11,7 @@ class Player {
 	int autoplants;
 public:
 	Player (char *n, int r, int pr, int m, int pl, int apl);
+	~Player ();
 };
 
 
@@ -35,6 +36,8 @@ public:
 	int getplayercnt ();	
 
 	Player * parse (char *str);
+
+	~ListPlayer ();
 };
 
 

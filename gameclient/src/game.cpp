@@ -203,3 +203,7 @@ void Game::turn ()
 	ch.sendstr (str);
 }
 	
+Game::~Game ()
+{
+	delete lp;
+}

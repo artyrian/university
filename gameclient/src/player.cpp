@@ -9,6 +9,11 @@ Player::Player (char *n, int r, int pr, int m, int pl, int apl)
 {
 }
 
+Player::~Player ()
+{
+	delete [] nick;
+}
+
 
 
 
@@ -100,3 +105,14 @@ Player * ListPlayer::parse (char *str)
 	return new Player (nick, raw, prod, money, plant, autoplant);
 }
 
+
+
+ListPlayer::~ListPlayer() 
+{
+	while ( first != 0 ) {
+		struct ListElem *cur = first;
+		first = first->next;
+		delete cur->p;
+		delete cur;
+	}
+}

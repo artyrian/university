@@ -22,6 +22,8 @@ public:
 
 	char *getmsg ();
 	void sendstr (char *);
+
+	~Cache ();
 };
 
 #endif

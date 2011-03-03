@@ -12,14 +12,16 @@ class Game {
 		int raw_count;
 		int prod_cost;
 		int prod_count;
-	} mrk;
+	};
 
+	Market mrk;
 	Cache ch;
 	ListPlayer *lp;
 	char *nick;
 	int room;
 public:
 	Game (char *ip, int port);
+
 	int setnick (char *nick);
 	int joinroom (int room);
 	int create ();
@@ -35,6 +37,8 @@ public:
 	void prod (int count);
 	void build ();
 	void turn ();
+
+	~Game ();
 };
 
 #endif
