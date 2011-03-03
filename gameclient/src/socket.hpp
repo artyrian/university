@@ -9,9 +9,9 @@ class Socket {
 	int port;
 	int sd;
 	
-	int createsocket();
 	void init_ip(char *arg);
 	void init_port(int arg);
+	int createsocket();
 public:
 	Socket (char* i, int p);
 	int connecting ();
