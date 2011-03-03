@@ -26,16 +26,16 @@ class ListPlayer {
 	int cnt;
 
 	ListElem * newplayer (Player *pl);
-	ListElem * findlast ();
+	ListElem * findlast () const;
 public:
 	ListPlayer ();
 
-	void add (Player *pl, ListPlayer *lp);
+	void add (Player *pl);
 	void search ();
 	void remove ();
-	int getplayercnt ();	
+	int getplayercnt () const;	
 
-	Player * parse (char *str);
+	Player * parse (char *str) const;
 
 	~ListPlayer ();
 };

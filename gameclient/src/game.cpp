@@ -92,7 +92,7 @@ int Game::getinfo ()
 		if ( strncmp (msg, "& INFO", 6) == 0 ) {
 			struct Player *pl;
 			pl = lp->parse (msg);
-			lp->add (pl, lp);
+			lp->add (pl);
 		}
 	} while ( strncmp (msg, "& PLAYERS", 9) != 0 );
 

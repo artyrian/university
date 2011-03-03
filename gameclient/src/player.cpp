@@ -34,7 +34,7 @@ ListPlayer::ListElem * ListPlayer:: newplayer (Player *pl)
 	return elem;
 }
 
-ListPlayer::ListElem * ListPlayer::findlast ()
+ListPlayer::ListElem * ListPlayer::findlast () const
 {
 	class ListElem *cur = first;
 	class ListElem *last = first;
@@ -49,7 +49,7 @@ ListPlayer::ListElem * ListPlayer::findlast ()
 
 
 
-void ListPlayer::add (Player *pl, ListPlayer *lp)
+void ListPlayer::add (Player *pl)
 {
 	ListElem *elem = newplayer (pl);
 	ListElem *last = findlast ();
@@ -72,25 +72,25 @@ void ListPlayer::remove ()
 }
 
 
-int ListPlayer::getplayercnt ()
+int ListPlayer::getplayercnt () const
 {
 	return cnt;
 }
 
 
 
-Player * ListPlayer::parse (char *str)
+Player * ListPlayer::parse (char *str) const
 {
-	char *cmd, *nick;
+	char *trash, *nick;
 	int raw, prod, money, plant, autoplant;
 
 	raw = prod = money = plant = autoplant = -1; 
-	cmd = new char [6];
+	trash = new char [6];
 	nick = new char [20];
 
 	printf ("Start parse.\n");
 	sscanf(	str, "%s%s%s%d%d%d%d%d", 
-		cmd, cmd, nick, &raw, &prod, &money, &plant, &autoplant);
+		trash, trash,  nick, &raw, &prod, &money, &plant, &autoplant);
 
 	if ( 	(raw == -1) || (prod == -1) || 
 		(money == -1) || (plant == -1) ||
@@ -100,7 +100,7 @@ Player * ListPlayer::parse (char *str)
 		exit (1);
 	}
 
-	delete [] cmd;
+	delete [] trash;
 
 	return new Player (nick, raw, prod, money, plant, autoplant);
 }
