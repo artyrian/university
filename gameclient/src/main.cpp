@@ -5,99 +5,8 @@
 #include <unistd.h>
 
 #include "cache.hpp"
+#include "player.hpp"
 
-class Player {
-	char *nick;
-	int raw;
-	int prod;
-	int money;
-	int plants;
-	int autoplants;
-public:
-	Player (char *n, int r, int pr, int m, int pl, int apl)
-		: nick(n), raw(r), prod(pr), money(m), plants(pl), autoplants(apl)	
-	{
-	}
-};
-
-
-class ListPlayer {
-	struct ListElem {
-		Player *p;
-		ListElem *next;
-	};
-
-	ListElem *first;
-	int cnt;
-
-
-	ListElem * newplayer (Player *pl) {
-		class ListElem *elem = (ListElem*) malloc (sizeof(ListElem));
-
-		elem->p = pl;  
-		elem->next = 0;
-
-		return elem;
-	}
-	
-	ListElem * findlast () {
-		class ListElem *cur = first;
-		class ListElem *last= first;
-
-		while ( cur != 0 ) {
-				last = cur;
-				cur = cur->next;
-		}
-
-		return last;
-	}
-public: 
-	ListPlayer ()
-		: first (0), cnt (0)
-	{
-	}
-
-	void add (Player *pl) {
-		ListElem *elem = newplayer (pl);
-		ListElem *last = findlast ();
-
-		last->next = elem;
-		cnt++;
-	}
-	void search ();
-	void remove ();
-	
-	int getplayercnt () {
-		return cnt;
-	}
-	
-	Player parse (char *str) {
-		char *cmd, *nick;
-		int raw, prod, money, plant, autoplant;
-
-		raw = prod = money = plant = autoplant = -1;
-		
-		cmd = (char *) malloc (6);
-		nick = (char *) malloc (20);
-
-		sscanf(str, "%s%s%d%d%d%d%d", cmd, nick, &raw, &prod, &money, &plant, &autoplant);
-		printf ("I parsed:\ncmd[%s]\nnick[%s]\nraw[%d]\nprod[%d]\nmoney[%d]\nplant[%d]\nautoplant[%d].\n",
-			cmd, nick, raw, prod, money, plant, autoplant);
-	
-		if ( 	(raw != -1) && 
-			(prod != -1) && 
-			(money != -1) && 
-			(plant = -1) && 
-			(autoplant != -1) )
-		{
-			perror ("Syntax error in parse '& INFO'.\n");
-			exit (1);
-		}
-
-		free (cmd);
-		return Player(nick, raw, prod, money, plant, autoplant);
-	}
-};
 
 /* */
 class Game {
@@ -134,8 +43,9 @@ public:
 
 /* */
 Game::Game (char *ip, int port)
-	: ch (ip, port)
+	: ch (ip, port) 
 {
+	lp = new ListPlayer;
 }
 
 
@@ -178,15 +88,19 @@ int Game::waitstart ()
 int Game::getinfo ()
 {
 	char msg[80];
+
+	info ();
+
 	do {
 		strcpy (msg, ch.getmsg ());
-		if ( strncpy (msg, "& INFO", 6) == 0 ) {
+		if ( strncmp (msg, "& INFO", 6) == 0 ) {
 			struct Player *pl;
-			pl = (Player *) malloc (sizeof(Player));
-			pl = lp.parse (msg);
-			lp.add (pl);
+			pl = lp->parse (msg);
+			lp->add (pl, lp);
 		}
-	} while ( strncmp (msg, "& PLAYERS", 7) != 0 );
+	} while ( strncmp (msg, "& PLAYERS", 9) != 0 );
+
+	printf ("In game %d players.\n", lp->getplayercnt ());
 
 	return 0;
 }
