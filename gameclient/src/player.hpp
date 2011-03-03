@@ -19,9 +19,6 @@ class ListPlayer {
 	struct ListElem {
 		Player *p;
 		ListElem *next;
-
-		ListElem () {
-		}
 	};
 
 	ListElem *first;
@@ -43,5 +40,3 @@ public:
 
 
 #endif
-
-

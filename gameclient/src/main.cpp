@@ -2,232 +2,49 @@
 #include <stdlib.h>
 
 #include <string.h>
+
 #include <unistd.h>
 
-#include "cache.hpp"
-#include "player.hpp"
-
-
-/* */
-class Game {
-	struct Market {
-		int raw_cost;
-		int raw_count;
-		int prod_cost;
-		int prod_count;
-	} mrk;
-
-	Cache ch;
-	ListPlayer *lp;
-	char *nick;
-	int room;
-public:
-	Game (char *ip, int port);
-	int setnick (char *nick);
-	int joinroom (int room);
-	int waitstart ();
-	int getinfo ();
-	int waitendturn ();
-
-	void market ();
-	void info ();
-	void buy (int count, int cost);
-	void sell (int count, int cost);
-	void prod (int count);
-	void build ();
-	void turn ();
-
-};
-
-
-
-/* */
-Game::Game (char *ip, int port)
-	: ch (ip, port) 
-{
-	lp = new ListPlayer;
-}
-
-
-
-int Game::setnick (char *n)
-{
-	nick = n;
-
-	ch.sendstr (nick);
-
-	return 0;
-}
-
-
-int Game::joinroom (int r)
-{
-	room = r;
-	char str[32];
-	
-	sprintf (str, ".join %d", room);
-	ch.sendstr (str);
-	
-	return 0;
-}
-
-
-int Game::waitstart ()
-{
-	char msg[80];
-	do {
-		strcpy (msg, ch.getmsg ());
-	} while ( strncmp (msg, "& START", 7) != 0 );
-
-	printf ("GAME START!\n");
-	
-	return 0;
-}
-
-
-int Game::getinfo ()
-{
-	char msg[80];
-
-	info ();
-
-	do {
-		strcpy (msg, ch.getmsg ());
-		if ( strncmp (msg, "& INFO", 6) == 0 ) {
-			struct Player *pl;
-			pl = lp->parse (msg);
-			lp->add (pl, lp);
-		}
-	} while ( strncmp (msg, "& PLAYERS", 9) != 0 );
-
-	printf ("In game %d players.\n", lp->getplayercnt ());
-
-	return 0;
-}
-
-
-int Game::waitendturn ()
-{
-	char msg[80];
-	do {
-		strcpy (msg, ch.getmsg ());
-		// HERE some analyze.
-	} while ( strncmp (msg, "& ENDTURN", 9) != 0 );
-
-	printf ("NEXT TURN.\n");
-	
-	return 0;
-}
-
-
-void Game::market ()
-{
-	char str[10] = "market";
-
-	ch.sendstr (str);
-
-	char msg[80];
-	do {
-		strcpy (msg, ch.getmsg ());
-	} while ( strncmp (msg, "& MARKET", 8) != 0 );
-
-	char prs[4][10];
-	int i = 0;
-	for (int j = 0; j < 10; j++) {
-		prs[0][j] = msg[i+10];
-		prs[1][j] = msg[i+20];
-		prs[2][j] = msg[i+30];
-		prs[3][j] = msg[i+40];
-		i++;
-	}
-
-	mrk.raw_count = atoi (prs[0]);
-	mrk.raw_cost = atoi (prs[1]);
-	mrk.prod_count = atoi (prs[2]);
-	mrk.prod_cost = atoi (prs[3]);
-}
-
-void Game::info ()
-{
-	char str[10] = "info";
-
-	ch.sendstr (str);
-
-}
-
-void Game::buy (int count, int cost)
-{
-	char *str = (char *) malloc (20);
-
-//	
-	cost = mrk.raw_cost;
-//
-
-	sprintf (str, "buy %d %d", count, cost);
-
-	ch.sendstr (str);
-}
-
-void Game::sell (int count, int cost)
-{
-	char *str = (char *) malloc (20);
-
-//	
-	cost = mrk.prod_cost;
-//
-
-	sprintf (str, "sell %d %d", count, cost);
-
-	ch.sendstr (str);
-}
-
-void Game::prod (int count)
-{
-	char *str = (char *)  malloc (20);
-	sprintf (str, "prod %d", count);
-
-	ch.sendstr (str);
-}
-
-
-void Game::build ()
-{
-	char str[10] = "build";
-
-	ch.sendstr (str);
-
-}
-
-void Game::turn ()
-{
-	char str[10] = "turn";
-	ch.sendstr (str);
-}
-	
-
-
-/*
- * ===================   M A I N   ================ *
- */
-
+#include "game.hpp"
 
 
 /* */
 void ParseArguments(	int n, char **argv, 
-			char*& ip, int& port, char*& nick, int& room)
+			char*& ip, int& port, char*& nick, int& room, int& maxpl)
 {
-	if ( n != 5 ){
-		printf ("WARNING!!! Enabled debug mode.\nStatic parametrs (ip, port, nick, room).\n");
-		port = 4774; 
-		room = 1; 
-		strcpy (ip, "0"); 
-		strcpy (nick, "Bot0"); 
-	} else { 
+	if ( n >= 5 ) {
+		port = room = -1;
+
 		ip = argv[1];
-		port = atoi(argv[2]);
+
+		sscanf (argv[2], "%d", &port);
+		if ( port == -1 ) {
+			perror ("Syntax error in parse port.\n");
+		}
+		
 		nick = argv[3];
-		room = atoi(argv[4]);
+
+		sscanf (argv[4], "%d", &room);
+		if ( room == -1 ) {
+			perror ("Syntax error in parse room.\n");
+		}
+
+		if ( n == 6 ) {
+			maxpl = -1;
+			sscanf (argv[5], "%d", &maxpl);
+			if ( maxpl == -1 ) {
+				perror ("Syntax error in parse max players to start.\n");
+			}
+		}
 	}
+/*
+	printf ("WARNING!!! Enabled debug mode.\nStatic parametrs (ip, port, nick, room).\n");
+	port = 4774; 
+	room = 1; 
+	strcpy (ip, "0"); 
+	strcpy (nick, "Bot0"); 
+*/
+
 }
 
 
@@ -237,18 +54,26 @@ int main(int argc, char **argv)
 {	
 	printf("Start program.\n");
 	
-	char *ip = (char *) malloc(16);
+	char *ip = new char [16];
 	int port;
-	char *nick = (char *) malloc(22);
+	char *nick = new char [22];
 	int room;
+	int maxpl;
 
-	ParseArguments (argc, argv, ip, port, nick, room);
+	ParseArguments (argc, argv, ip, port, nick, room, maxpl);
 	
 	Game g(ip, port);
 	
 	g.setnick (nick);
-	g.joinroom (room);
-	g.waitstart ();
+
+	if ( argc == 6 ) {
+		g.create ();
+		g.waitplayers (maxpl);
+	} else {
+		g.joinroom (room);
+		g.waitstart ();
+	}
+
 	g.getinfo ();
 
 	for (;;) {
@@ -264,8 +89,8 @@ int main(int argc, char **argv)
 		g.waitendturn ();
 	}
 
-	free (ip);
-	free (nick);
+	delete [] ip;
+	delete [] nick;
 
 	printf("End program.\n");
 	return 0;

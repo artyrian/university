@@ -42,7 +42,7 @@ int Socket::createsocket()
 		perror("Error create socket.\n");
 	}
 
-	fcntl (sd, O_NONBLOCK);
+//	fcntl (sd, O_NONBLOCK);
 
 	return sd;
 }

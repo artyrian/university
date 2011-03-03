@@ -1,8 +1,7 @@
 #include "player.hpp"
 
 #include <stdio.h>
-
-
+#include <stdlib.h>
 
 
 Player::Player (char *n, int r, int pr, int m, int pl, int apl)
@@ -18,7 +17,9 @@ ListPlayer::ListPlayer ()
 {
 }
 
-LastElem * ListPlayer::newplayer (Player *pl)
+
+
+ListPlayer::ListElem * ListPlayer:: newplayer (Player *pl)
 {
 	class ListElem *elem = new ListElem;
 
@@ -28,7 +29,7 @@ LastElem * ListPlayer::newplayer (Player *pl)
 	return elem;
 }
 
-LastElem * ListPlayer::findlast ()
+ListPlayer::ListElem * ListPlayer::findlast ()
 {
 	class ListElem *cur = first;
 	class ListElem *last = first;
@@ -71,19 +72,20 @@ int ListPlayer::getplayercnt ()
 	return cnt;
 }
 
-ListPlayer::Player * parse (char *str)
+
+
+Player * ListPlayer::parse (char *str)
 {
 	char *cmd, *nick;
 	int raw, prod, money, plant, autoplant;
 
 	raw = prod = money = plant = autoplant = -1; 
-	cmd = (char *) malloc (6);
-	nick = (char *) malloc (20);
+	cmd = new char [6];
+	nick = new char [20];
 
 	printf ("Start parse.\n");
-	sscanf(str, "%s%s%s%d%d%d%d%d", cmd, cmd,  nick, &raw, &prod, &money, &plant, &autoplant);
-	printf ("I parsed:\ncmd[%s]\nnick[%s]\nraw[%d]\nprod[%d]\nmoney[%d]\nplant[%d]\nautoplant[%d].\n",
-		cmd, nick, raw, prod, money, plant, autoplant);
+	sscanf(	str, "%s%s%s%d%d%d%d%d", 
+		cmd, cmd, nick, &raw, &prod, &money, &plant, &autoplant);
 
 	if ( 	(raw == -1) || (prod == -1) || 
 		(money == -1) || (plant == -1) ||
@@ -93,7 +95,7 @@ ListPlayer::Player * parse (char *str)
 		exit (1);
 	}
 
-	free (cmd);
+	delete [] cmd;
 
 	return new Player (nick, raw, prod, money, plant, autoplant);
 }
