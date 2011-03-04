@@ -21,7 +21,7 @@ public:
 	Cache (char *ip, int port);
 
 	char *getmsg ();
-	void sendstr (char *);
+	void sendstr (char *) const;
 
 	~Cache ();
 };

@@ -34,7 +34,7 @@ int Game::joinroom (int r)
 }
 
 
-int Game::create ()
+int Game::create () const
 {
 	char str[16];
 
@@ -106,6 +106,7 @@ int Game::waitendturn ()
 {
 	do {
 		// HERE some analyze.
+		// and add to str mb.
 	} while ( strncmp (ch.getmsg(), "& ENDTURN", 9) != 0 );
 
 	printf ("NEXT TURN.\n");
@@ -140,7 +141,7 @@ void Game::market ()
 	delete [] cmd;
 }
 
-void Game::info ()
+void Game::info () const
 {
 	char str[10] = "info";
 
@@ -148,7 +149,7 @@ void Game::info ()
 
 }
 
-void Game::buy (int count, int cost)
+void Game::buy (int count, int cost) const
 {
 	char *str = new char [20];
 
@@ -163,7 +164,7 @@ void Game::buy (int count, int cost)
 	delete [] str;
 }
 
-void Game::sell (int count, int cost)
+void Game::sell (int count, int cost) const
 {
 	char *str = new char [20];
 
@@ -178,7 +179,7 @@ void Game::sell (int count, int cost)
 	delete [] str;
 }
 
-void Game::prod (int count)
+void Game::prod (int count) const
 {
 	char *str = new char [20];
 	sprintf (str, "prod %d", count);
@@ -189,7 +190,7 @@ void Game::prod (int count)
 }
 
 
-void Game::build ()
+void Game::build () const
 {
 	char str[10] = "build";
 
@@ -197,7 +198,7 @@ void Game::build ()
 
 }
 
-void Game::turn ()
+void Game::turn () const
 {
 	char str[10] = "turn";
 	ch.sendstr (str);

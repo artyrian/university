@@ -57,7 +57,7 @@ char *Cache::getmsg ()
 	return msg;
 }
 
-void Cache::sendstr (char *str)
+void Cache::sendstr (char *str) const
 {
 	char strn[32];
 

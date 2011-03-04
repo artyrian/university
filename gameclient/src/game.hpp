@@ -24,19 +24,19 @@ public:
 
 	int setnick (char *nick);
 	int joinroom (int room);
-	int create ();
+	int create () const;
 	int waitplayers (int maxpl);
 	int waitstart ();
 	int getinfo ();
-	int waitendturn ();
+	int waitendturn ();	// now its const but no always.
 
 	void market ();
-	void info ();
-	void buy (int count, int cost);
-	void sell (int count, int cost);
-	void prod (int count);
-	void build ();
-	void turn ();
+	void info () const;
+	void buy (int count, int cost) const;
+	void sell (int count, int cost) const;
+	void prod (int count) const;
+	void build () const;
+	void turn () const;
 
 	~Game ();
 };
