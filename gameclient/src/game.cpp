@@ -133,10 +133,13 @@ void Game::market ()
 	sscanf (msg, "%s%s%d%d%d%d", cmd, cmd, &mrk.raw_count, &mrk.raw_cost, &mrk.prod_count, &mrk.prod_cost); 
 	
 	if ( 	(mrk.raw_count == -1) || (mrk.raw_cost == -1) ||
-		(mrk.prod_count == -1) || (mrk.prod_cost = -1) )
+		(mrk.prod_count == -1) || (mrk.prod_cost == -1) )
 	{ 
 		perror ("Syntax error in parse '& MARKET'.\n");
 	}
+
+	
+	printf ("rp%d.rc%d.pp%d.pc%d.", mrk.raw_count, mrk.raw_cost, mrk.prod_count, mrk.prod_cost); 
 
 	delete [] cmd;
 }
