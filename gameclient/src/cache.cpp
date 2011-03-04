@@ -51,8 +51,10 @@ char *Cache::getmsg ()
 		cutext (ext);
 		cnt--;
 	}
-
-	printf ("Now read msg:[%s].\n", msg);
+	
+	if ( msg[0] == '*' || msg[0] == '#' ) {
+		printf ("Now read msg:[%s].\n", msg);
+	}
 
 	return msg;
 }

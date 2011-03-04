@@ -5,7 +5,7 @@
 
 
 Player::Player (char *n, int r, int pr, int m, int pl, int apl)
-	: nick(n), raw(r), prod(pr), money(m), plants(pl), autoplants(apl)	
+	: nick(n), raw(r), prod(pr), money(m), plants(pl), autoplants(apl)
 {
 }
 

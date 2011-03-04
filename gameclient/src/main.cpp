@@ -45,7 +45,7 @@ void ParseArguments(	int n, char **argv,
 int main(int argc, char **argv)
 {	
 	printf("Start program.\n");
-	
+
 	char *ip = new char [16];
 	int port;
 	char *nick = new char [22];
@@ -53,9 +53,9 @@ int main(int argc, char **argv)
 	int maxpl;
 
 	ParseArguments (argc, argv, ip, port, nick, room, maxpl);
-	
+
 	Game g(ip, port);
-	
+
 	g.setnick (nick);
 
 	if ( argc == 6 ) {
@@ -66,11 +66,12 @@ int main(int argc, char **argv)
 		g.waitstart ();
 	}
 
-	g.getinfo ();
 
 	for (;;) {
+		g.getinfo ();
+
 		printf ("Here a loop where I send cmds every turn.\n");
-		
+
 		g.market ();
 		g.buy (2, -1);
 		g.sell (2, -1);
