@@ -52,7 +52,7 @@ char *Cache::getmsg ()
 		cnt--;
 	}
 	
-	if ( msg[0] == '*' || msg[0] == '#' ) {
+	if ( msg[0] != '*' && msg[0] != '#' ) {
 		printf ("Now read msg:[%s].\n", msg);
 	}
 

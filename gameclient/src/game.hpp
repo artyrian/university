@@ -19,6 +19,7 @@ class Game {
 	ListPlayer *lp;
 	char *nick;
 	int room;
+	int month;
 public:
 	Game (char *ip, int port);
 

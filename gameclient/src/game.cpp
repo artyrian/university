@@ -5,7 +5,7 @@
 
 
 Game::Game (char *ip, int port)
-	: ch (ip, port) 
+	: ch (ip, port), month (1)
 {
 	lp = new ListPlayer;
 }
@@ -109,7 +109,9 @@ int Game::waitendturn ()
 		// and add to str mb.
 	} while ( strncmp (ch.getmsg(), "& ENDTURN", 9) != 0 );
 
-	printf ("NEXT TURN.\n");
+	month++;
+
+	printf ("NEXT TURN. Now will start %dth month.\n", month);
 	
 	return 0;
 }
@@ -138,9 +140,6 @@ void Game::market ()
 		perror ("Syntax error in parse '& MARKET'.\n");
 	}
 
-	
-	printf ("rp%d.rc%d.pp%d.pc%d.", mrk.raw_count, mrk.raw_cost, mrk.prod_count, mrk.prod_cost); 
-
 	delete [] cmd;
 }
 
@@ -163,6 +162,7 @@ void Game::buy (int count, int cost) const
 	sprintf (str, "buy %d %d", count, cost);
 
 	ch.sendstr (str);
+
 
 	delete [] str;
 }
