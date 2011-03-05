@@ -28,6 +28,7 @@ public:
 
 	char * gettype (int type = 0);
 	char * readqueue ();
+	void deletemsgq ();
 	int getcount () const;
 
 	void sendstr (char *str) const;

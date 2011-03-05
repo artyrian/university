@@ -8,6 +8,41 @@
 #include "game.hpp"
 
 
+
+void login (Game &g, int argc, char *nick, int room, int maxpl)
+{
+	g.setnick (nick);
+
+	if ( argc == 6 ) {
+		g.create ();
+		g.waitplayers (maxpl);
+	} else {
+		g.joinroom (room);
+		g.waitstart ();
+	}
+}
+
+void play (Game &g)
+{
+	for (;;) {
+		g.market ();
+
+		g.buy (2, -1);
+		g.checkok ();
+
+		g.sell (2, -1);
+		g.checkok ();
+
+		g.prod (2);
+		g.checkok ();
+
+		g.turn ();
+		g.waitendturn ();
+		g.queue ();
+	}
+
+}
+
 /* */
 void ParseArguments(	int n, char **argv, 
 			char*& ip, int& port, char*& nick, int& room, int& maxpl)
@@ -56,38 +91,16 @@ int main(int argc, char **argv)
 
 	Game g(ip, port);
 
-	g.setnick (nick);
-
-	if ( argc == 6 ) {
-		g.create ();
-		g.waitplayers (maxpl);
-	} else {
-		g.joinroom (room);
-		g.waitstart ();
-	}
-
-
+	login (g, argc, nick, room, maxpl);
+	
 	g.getinfo ();
 
-	for (;;) {
-
-		printf ("Here a loop where I send cmds every turn.\n");
-
-		g.market ();
-		g.buy (2, -1);
-		g.sell (2, -1);
-		g.prod (2);
-
-		g.turn ();
-
-		g.waitendturn ();
-
-		g.queue ();
-	}
+	play (g);
 
 	delete [] ip;
 	delete [] nick;
 
 	printf("End program.\n");
+
 	return 0;
 }

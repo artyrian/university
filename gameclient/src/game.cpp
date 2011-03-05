@@ -104,42 +104,41 @@ int Game::getinfo ()
 
 int Game::waitendturn ()
 {
-	char msg[80];
+	char *msg;
 
 	do {
 		msg = q.gettype ('&');
-		if ( strncmp (msg, "& BOUGHT", 8) ) {
+
+		if ( strncmp (msg, "& BOUGHT", 8) == 0) {
 			printf ("Call 'BOUGHT'.\n");
-		}
-		if ( strncmp (msg, "& SOLD", 6) ) {
+		} else if ( strncmp (msg, "& SOLD", 6) == 0) {
 			printf ("Call 'SOLD'.\n");
-		}
-		if ( strncmp (msg, "& BANKRUPT", 10) ) {
+		} else if ( strncmp (msg, "& BANKRUPT", 10) == 0) {
 			printf ("Call 'BANKRUPT'.\n");
 		}
 		
-	} while ( strncmp (q.gettype('&'), "& ENDTURN", 9) != 0 );
+	} while ( strncmp (msg, "& ENDTURN", 9) != 0 );
 
 	month++;
 
 	printf ("NEXT TURN. Now will start %dth month.\n", month);
-	
+
 	return 0;
 }
 
 
 int Game::queue ()
 {
-	char *msg;
+	char *msgq;
 
 	while ( q.getcount () != 0 ) {
-		msg = q.readqueue ();	
+		msgq = q.readqueue ();	
 
 		char str1[30] = "", str2[30] = "", str3[30] = "";
-		printf ("I read from queue:[%s].\n", msg);	
-		sscanf (msg, "%s%s%s", str1, str2, str3);
+		printf ("I read from queue:[%s].\n", msgq);	
+		sscanf (msgq, "%s%s%s", str1, str2, str3);
 		if ( strcpy (str1, "@-") == 0 && strcpy (str2, "LEFT") ) {
-			pl.remove (str3);
+			lp->remove (str3);
 		}
 	}
 
@@ -184,18 +183,15 @@ void Game::info () const
 void Game::buy (int count, int cost) const
 {
 	char *str = new char [20];
-
 //	
 	cost = mrk.raw_cost;
 //
-
 	sprintf (str, "buy %d %d", count, cost);
 
 	q.sendstr (str);
-
-
 	delete [] str;
 }
+
 
 void Game::sell (int count, int cost) const
 {
@@ -236,6 +232,22 @@ void Game::turn () const
 	char str[10] = "turn";
 	q.sendstr (str);
 }
+
+
+void Game::checkok ()
+{
+	char *str;
+
+	do {
+		str = q.gettype ('&');
+		if ( strncpy (str, "&-", 2) == 0 ) {
+			perror ("THROW. Buy wrong.\n");	
+			break;
+		}
+	} while ( strncpy (str, "& OK", 4) == 0 );
+}
+
+
 	
 Game::~Game ()
 {

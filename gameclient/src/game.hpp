@@ -32,6 +32,9 @@ public:
 	int waitendturn ();	// now its const but no always.
 	int queue ();
 
+	void checkok ();
+	
+
 	void market ();
 	void info () const;
 	void buy (int count, int cost) const;

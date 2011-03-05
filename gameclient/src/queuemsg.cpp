@@ -72,7 +72,6 @@ QueueMsg::QueueMsg (char *ip, int port)
 
 char * QueueMsg::gettype (int type)
 {
-	msg = new char [80];	
 	msg[0] = '\0';
 
 	do {
@@ -99,6 +98,11 @@ char * QueueMsg::readqueue ()
 }
 
 
+void QueueMsg::deletemsgq ()
+{
+	delete []msgq;
+}
+
 
 QueueMsg::~QueueMsg ()
 {
@@ -124,4 +128,5 @@ int QueueMsg::getcount () const
 {
 	return cnt;
 }
+
 
