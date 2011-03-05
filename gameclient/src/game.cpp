@@ -5,7 +5,7 @@
 
 
 Game::Game (char *ip, int port)
-	: ch (ip, port), month (1)
+	: q(ip, port), month (1)
 {
 	lp = new ListPlayer;
 }
@@ -16,7 +16,7 @@ int Game::setnick (char *n)
 {
 	nick = n;
 
-	ch.sendstr (nick);
+	q.sendstr (nick);
 
 	return 0;
 }
@@ -28,7 +28,7 @@ int Game::joinroom (int r)
 	char str[32];
 	
 	sprintf (str, ".join %d", room);
-	ch.sendstr (str);
+	q.sendstr (str);
 	
 	return 0;
 }
@@ -39,7 +39,7 @@ int Game::create () const
 	char str[16];
 
 	sprintf (str, ".create");
-	ch.sendstr (str);		
+	q.sendstr (str);		
 
 	return 0;
 }
@@ -52,7 +52,7 @@ int Game::waitplayers (int maxpl)
 	int i = 0;
 
 	do {
-		strcpy (msg, ch.getmsg ());
+		strcpy (msg, q.gettype ('&'));
 		if ( strncmp (msg, "@+", 2) == 0 ) {
 			i++;
 		}
@@ -64,7 +64,7 @@ int Game::waitplayers (int maxpl)
 
 	
 	sprintf (str, "start");
-	ch.sendstr (str);
+	q.sendstr (str);
 
 	return 0;
 }
@@ -73,7 +73,7 @@ int Game::waitplayers (int maxpl)
 int Game::waitstart ()
 {
 	do {
-	} while ( strncmp (ch.getmsg (), "& START", 7) != 0 );
+	} while ( strncmp (q.gettype ('&'), "& START", 7) != 0 );
 
 	printf ("GAME START!\n");
 	
@@ -88,7 +88,7 @@ int Game::getinfo ()
 	info ();
 
 	do {
-		strcpy (msg, ch.getmsg ());
+		strcpy (msg, q.gettype('&'));
 		if ( strncmp (msg, "& INFO", 6) == 0 ) {
 			struct Player *pl;
 			pl = lp->parse (msg);
@@ -107,7 +107,7 @@ int Game::waitendturn ()
 	do {
 		// HERE some analyze.
 		// and add to str mb.
-	} while ( strncmp (ch.getmsg(), "& ENDTURN", 9) != 0 );
+	} while ( strncmp (q.gettype('&'), "& ENDTURN", 9) != 0 );
 
 	month++;
 
@@ -117,15 +117,28 @@ int Game::waitendturn ()
 }
 
 
+int Game::queue ()
+{
+	char *msg;
+
+	while ( q.getcount () != 0 ) {
+		msg = q.readqueue ();	
+		printf ("I read from queue:[%s].\n", msg);	
+	}
+
+	return 0;
+}
+
+
 void Game::market ()
 {
 	char str[10] = "market";
 
-	ch.sendstr (str);
+	q.sendstr (str);
 
 	char msg[80];
 	do {
-		strcpy (msg, ch.getmsg ());
+		strcpy (msg, q.gettype ('&'));
 	} while ( strncmp (msg, "& MARKET", 8) != 0 );
 
 	char *cmd = new char [8];
@@ -147,7 +160,7 @@ void Game::info () const
 {
 	char str[10] = "info";
 
-	ch.sendstr (str);
+	q.sendstr (str);
 
 }
 
@@ -161,7 +174,7 @@ void Game::buy (int count, int cost) const
 
 	sprintf (str, "buy %d %d", count, cost);
 
-	ch.sendstr (str);
+	q.sendstr (str);
 
 
 	delete [] str;
@@ -177,7 +190,7 @@ void Game::sell (int count, int cost) const
 
 	sprintf (str, "sell %d %d", count, cost);
 
-	ch.sendstr (str);
+	q.sendstr (str);
 
 	delete [] str;
 }
@@ -187,7 +200,7 @@ void Game::prod (int count) const
 	char *str = new char [20];
 	sprintf (str, "prod %d", count);
 
-	ch.sendstr (str);
+	q.sendstr (str);
 
 	delete [] str;
 }
@@ -197,14 +210,14 @@ void Game::build () const
 {
 	char str[10] = "build";
 
-	ch.sendstr (str);
+	q.sendstr (str);
 
 }
 
 void Game::turn () const
 {
 	char str[10] = "turn";
-	ch.sendstr (str);
+	q.sendstr (str);
 }
 	
 Game::~Game ()

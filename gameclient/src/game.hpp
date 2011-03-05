@@ -15,7 +15,7 @@ class Game {
 	};
 
 	Market mrk;
-	Cache ch;
+	QueueMsg q;
 	ListPlayer *lp;
 	char *nick;
 	int room;
@@ -30,6 +30,7 @@ public:
 	int waitstart ();
 	int getinfo ();
 	int waitendturn ();	// now its const but no always.
+	int queue ();
 
 	void market ();
 	void info () const;

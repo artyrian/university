@@ -2,11 +2,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <string.h>
 
 
-Cache::Cache (char *ip, int port) 
+QueueMsg::Cache::Cache (char *ip, int port) 
 	: link (ip, port), cnt(0)
 {
 	sd = link.connecting ();
@@ -18,7 +19,7 @@ Cache::Cache (char *ip, int port)
 
 
 
-void Cache::callread ()
+void QueueMsg::Cache::callread ()
 {
 	int rc = read (sd, buf, sizeof(buf) - 1); 
 	if ( rc == -1 ) {
@@ -39,7 +40,7 @@ void Cache::callread ()
 
 
 
-char *Cache::getmsg () 
+char *QueueMsg::Cache::getmsg () 
 {
 	if ( cnt == 0) {
 		callread ();
@@ -52,14 +53,12 @@ char *Cache::getmsg ()
 		cnt--;
 	}
 	
-	if ( msg[0] != '*' && msg[0] != '#' ) {
-		printf ("Now read msg:[%s].\n", msg);
-	}
-
 	return msg;
 }
 
-void Cache::sendstr (char *str) const
+
+
+void QueueMsg::Cache::sendstr (char *str) const
 {
 	char strn[32];
 
@@ -68,8 +67,10 @@ void Cache::sendstr (char *str) const
 	write (sd, strn, strlen(strn));
 }
 
+
+
 /* */
-void Cache::pasteext (char *str1, char *str2)
+void QueueMsg::Cache::pasteext (char *str1, char *str2)
 {
 	int i = 0;
 	while ( str1[i] != '\n' ) {
@@ -83,7 +84,7 @@ void Cache::pasteext (char *str1, char *str2)
 
 
 /* */
-void Cache::cutext (char* str)
+void QueueMsg::Cache::cutext (char* str)
 {
 	int i = 0;
 	while ( str[i++] != '\n' ); 
@@ -97,7 +98,7 @@ void Cache::cutext (char* str)
 
 
 /* */
-void Cache::appendext (char *str1, char *str2)
+void QueueMsg::Cache::appendext (char *str1, char *str2)
 {
 	int i = 0;
 	while ( str2[i++] != '\0' );
@@ -112,7 +113,136 @@ void Cache::appendext (char *str1, char *str2)
 }
 
 
-Cache::~Cache ()
+
+QueueMsg::Cache:: ~Cache ()
 {
 }
 
+
+
+QueueMsg::QueueElem * QueueMsg::create (char *str)
+{
+	QueueElem *item = new QueueElem;
+	item->str = new char [strlen(str)];
+	strcpy (item->str, str);
+	item->type = str[0]; 
+	item->next = 0;
+
+	return item;
+}
+
+
+
+void QueueMsg::add (char *str)
+{
+	QueueElem *item = create (str);	
+
+	if ( last == 0 ) {
+		last = item;
+		first = item;
+	} else {
+		last->next = item;
+		last = item;
+	}
+	
+	cnt++;
+}
+
+
+
+void QueueMsg::remove ()
+{
+	QueueElem *next = first->next;
+	if ( first == last ) {
+		last = next;
+	}
+	delete [] first->str; 
+	delete first;
+	first = next;
+
+	cnt--;
+}
+
+
+
+int QueueMsg::comment (const char c) const
+{
+	int r = 0;
+	if (c != '@') {
+		r = 1;
+	}
+	return r;
+}
+
+
+
+QueueMsg::QueueMsg (char *ip, int port)
+	: ch (ip, port), first (0), last (0), cnt (0)
+{
+}
+
+
+
+char * QueueMsg::gettype (int type)
+{
+	msg = new char [80];	
+	msg[0] = '\0';
+
+	do {
+		msg = ch.getmsg ();
+		if ( (msg[0] != type) && (comment (msg[0]) == 0)) {
+			printf ("Put to queue:[%s].\n", msg);
+			add (msg);	
+		}
+	} while ( msg[0] != type );
+
+	printf ("Return with type [%c]:[%s].\n", type, msg);
+	return msg;
+}
+
+
+
+char * QueueMsg::readqueue ()
+{
+	printf ("============.\n");
+	QueueElem * f = first;
+	while ( f != 0 ) {
+		printf ("msg:[%s]\n", f->str);
+		f = f->next;
+	}
+	
+	printf ("============.\n");
+	msgq = new char [strlen(first->str)];
+	strcpy (msgq, first->str);
+	remove ();
+
+
+	return msgq;
+}
+
+
+
+QueueMsg::~QueueMsg ()
+{
+	QueueElem *cur = first;	
+	while ( cur != 0 ) {
+		delete [] cur->str;
+		cur = first->next;
+		delete first;
+	}
+	delete [] msg;
+	delete [] msgq;
+}
+
+
+
+void QueueMsg::sendstr (char *str) const
+{
+	ch.sendstr (str);
+}
+
+
+int QueueMsg::getcount () const 
+{
+	return cnt;
+}

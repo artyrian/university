@@ -41,7 +41,7 @@ ListPlayer::ListElem * ListPlayer::findlast () const
 
 	while ( cur != 0 ) {
 		last = cur;
-			cur = cur->next;
+		cur = cur->next;
 	}
 
 	return last;
@@ -51,10 +51,7 @@ ListPlayer::ListElem * ListPlayer::findlast () const
 
 void ListPlayer::add (Player *pl)
 {
-	ListElem *elem = newplayer (pl);
-	ListElem *last = findlast ();
-
-	if ( first == 0 ) {
+	printf ("Add to ListPlayer new.\n"); ListElem *elem = newplayer (pl); ListElem *last = findlast (); if ( first == 0 ) {
 		first = elem;
 	} else {
 		last->next = elem;

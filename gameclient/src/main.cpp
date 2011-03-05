@@ -67,8 +67,9 @@ int main(int argc, char **argv)
 	}
 
 
+	g.getinfo ();
+
 	for (;;) {
-		g.getinfo ();
 
 		printf ("Here a loop where I send cmds every turn.\n");
 
@@ -80,6 +81,8 @@ int main(int argc, char **argv)
 		g.turn ();
 
 		g.waitendturn ();
+
+		g.queue ();
 	}
 
 	delete [] ip;
