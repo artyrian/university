@@ -2,7 +2,7 @@
 #define _GAME_HPP_
 
 
-#include "cache.hpp"
+#include "queuemsg.hpp"
 #include "player.hpp"
 
 
