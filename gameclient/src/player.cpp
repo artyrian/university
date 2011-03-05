@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 Player::Player (char *n, int r, int pr, int m, int pl, int apl)
@@ -14,6 +15,11 @@ Player::~Player ()
 	delete [] nick;
 }
 
+
+char * Player::getnick ()
+{
+	return nick;	
+}
 
 
 
@@ -59,13 +65,33 @@ void ListPlayer::add (Player *pl)
 	cnt++;
 }
 
-void ListPlayer::search ()
-{
-}
 
-
-void ListPlayer::remove ()
+void ListPlayer::remove (char *str)
 {
+	ListElem * cur = first;
+	ListElem * last = first; 
+	ListElem * prev;
+
+	while ( cur != 0 ) {
+		if ( strcpy (str, cur->p->getnick ()) == 0 ) {
+			break;
+		}
+		cur = cur->next;
+	}
+
+	last = first;
+	while ( last != 0 ) {
+		prev = last;
+		last = last->next;
+	}
+	
+	last = prev->next;
+	cur->p = last->p;
+
+	delete last->p;
+
+	prev->next = 0;
+	
 }
 
 

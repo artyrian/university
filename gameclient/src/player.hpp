@@ -11,6 +11,7 @@ class Player {
 	int autoplants;
 public:
 	Player (char *n, int r, int pr, int m, int pl, int apl);
+	char * getnick ();
 	~Player ();
 };
 
@@ -31,8 +32,7 @@ public:
 	ListPlayer ();
 
 	void add (Player *pl);
-	void search ();
-	void remove ();
+	void remove (char *);
 	int getplayercnt () const;	
 
 	Player * parse (char *str) const;

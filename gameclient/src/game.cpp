@@ -104,9 +104,20 @@ int Game::getinfo ()
 
 int Game::waitendturn ()
 {
+	char msg[80];
+
 	do {
-		// HERE some analyze.
-		// and add to str mb.
+		msg = q.gettype ('&');
+		if ( strncmp (msg, "& BOUGHT", 8) ) {
+			printf ("Call 'BOUGHT'.\n");
+		}
+		if ( strncmp (msg, "& SOLD", 6) ) {
+			printf ("Call 'SOLD'.\n");
+		}
+		if ( strncmp (msg, "& BANKRUPT", 10) ) {
+			printf ("Call 'BANKRUPT'.\n");
+		}
+		
 	} while ( strncmp (q.gettype('&'), "& ENDTURN", 9) != 0 );
 
 	month++;
@@ -123,7 +134,13 @@ int Game::queue ()
 
 	while ( q.getcount () != 0 ) {
 		msg = q.readqueue ();	
+
+		char str1[30] = "", str2[30] = "", str3[30] = "";
 		printf ("I read from queue:[%s].\n", msg);	
+		sscanf (msg, "%s%s%s", str1, str2, str3);
+		if ( strcpy (str1, "@-") == 0 && strcpy (str2, "LEFT") ) {
+			pl.remove (str3);
+		}
 	}
 
 	return 0;
