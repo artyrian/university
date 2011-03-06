@@ -10,6 +10,24 @@ Game::Game (char *ip, int port)
 	lp = new ListPlayer;
 }
 
+void Game::bought (char *nick, int bought, int price)
+{
+	Player *pl = lp->find (nick);
+	pl->bought = bought;
+	pl->bought_price = price;
+}
+
+void Game::sold (char *nick, int sold, int price)
+{
+	Player *pl = lp->find (nick);
+	pl->sold = sold;
+	pl->sold_price = price;
+}
+
+void Game::bankrupt (char *nick)
+{
+	lp->remove (nick);
+}
 
 
 int Game::setnick (char *n)
@@ -90,9 +108,20 @@ int Game::getinfo ()
 	do {
 		strcpy (msg, q.gettype('&'));
 		if ( strncmp (msg, "& INFO", 6) == 0 ) {
-			struct Player *pl;
-			pl = lp->parse (msg);
-			lp->add (pl);
+			struct Player *parsed_pl, *pl;
+			parsed_pl = lp->parse (msg);
+			pl = lp->find (parsed_pl->nick); 
+			if ( pl == 0 ) {
+				lp->add (parsed_pl);
+			} else {
+				pl->raw = parsed_pl->raw;
+				pl->prod = parsed_pl->prod;
+				pl->money = parsed_pl->money;
+				pl->plants = parsed_pl->plants;
+				pl->autoplants = parsed_pl->autoplants;
+				pl->last_prod = pl->prod - pl->last_prod;
+				delete parsed_pl;
+			}
 		}
 	} while ( strncmp (msg, "& PLAYERS", 9) != 0 );
 	
@@ -124,7 +153,7 @@ int Game::waitendturn ()
 			if ( amount == - 1 || price == -1 ) {
 				perror ("Syntax error in BOUGHT.\n");
 			}
-			bought (nick, amount);
+			bought (nick, amount, price);
 		} else if ( strncmp (msg, "& SOLD", 6) == 0) {
 			char trash[10];
 			char nick[20];
@@ -134,7 +163,7 @@ int Game::waitendturn ()
 			if ( amount == - 1 || price == -1 ) {
 				perror ("Syntax error in SOLD.\n");
 			}
-			sold (nick, amount);
+			sold (nick, amount, price);
 		} else if ( strncmp (msg, "& BANKRUPT", 10) == 0) {
 			char trash[10];
 			char nick[20];

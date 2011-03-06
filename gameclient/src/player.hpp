@@ -10,9 +10,12 @@ struct Player {
 	int plants;
 	int autoplants;
 	int bought;
+	int bought_price;
 	int sold;
+	int sold_price;
+	int last_prod;
 
-	Player (char *n, int r, int pr, int m, int pl, int apl);
+	Player (char *n, int r, int pr, int m, int pl, int apl, int l_prod);
 	~Player ();
 };
 

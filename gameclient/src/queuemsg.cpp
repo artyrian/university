@@ -82,7 +82,6 @@ char * QueueMsg::gettype (int type)
 		}
 	} while ( msg[0] != type );
 
-	printf ("Return with type [%c]:[%s].\n", type, msg);
 	return msg;
 }
 

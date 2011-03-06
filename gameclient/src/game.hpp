@@ -24,24 +24,14 @@ class Game {
 	char *nick;
 	int room;
 	int month;
+
+	void info () const;
+	void bought (char *nick, int bought, int price);
+	void sold (char *nick, int sold, int price);
+	void bankrupt (char *nick);
 public:
 	Game (char *ip, int port);
 
-	void bought (char *nick, int bought)
-	{
-		Player *pl = lp->find (nick);
-		pl->bought = bought;
-	}
-
-	void sold (char *nick, int sold)
-	{
-		Player *pl = lp->find (nick);
-		pl->sold = sold;
-	}
-
-	void bankrupt (char *nick)
-	{
-	}
 	int setnick (char *nick);
 	int joinroom (int room);
 	int create () const;
@@ -54,7 +44,6 @@ public:
 	void checkok ();
 
 	void market ();
-	void info () const;
 
 	void buy (int count, int cost) const;
 	void sell (int count, int cost) const;
@@ -62,7 +51,6 @@ public:
 	void build () const;
 	void turn () const;
 
-//
 	char* _my_id () const
 	{
 		return nick;
@@ -70,7 +58,8 @@ public:
 
 	int _month () const
 	{
-		return month;
+		// because month is WAS!!!
+		return month - 1;
 	}
 	int _players () const
 	{
@@ -123,30 +112,31 @@ public:
 	}
 	int _manufactured (char *nick) const
 	{
-		int manufactured;
+		Player *pl = lp->find (nick);
+		int manufactured = pl->prod - pl->last_prod + pl->sold;
 		return manufactured;
 	}
 	int _result_raw_sold (char *nick) const
 	{
-		int result_raw_sold;
-		return result_raw_sold;
+		Player *pl = lp->find (nick);
+		return pl->bought;
 	}
 	int _result_raw_price (char *nick) const
 	{
-		int result_raw_price;
-		return result_raw_price;
+		Player *pl = lp->find (nick);
+		return pl->bought_price;
 	}
 	int _result_prod_bought (char *nick) const
 	{
-		int result_prod_bought;
-		return result_prod_bought;
+		Player *pl = lp->find (nick);
+		return pl->sold;
 	}
 	int _result_prod_price (char *nick) const
 	{
-		int result_prod_price;
-		return result_prod_price;
+		Player *pl = lp->find (nick);
+		return pl->sold_price;
 	}
-//
+
 	~Game ();
 };
 

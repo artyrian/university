@@ -5,8 +5,8 @@
 #include <string.h>
 
 
-Player::Player (char *n, int r, int pr, int m, int pl, int apl)
-	: nick(n), raw(r), prod(pr), money(m), plants(pl), autoplants(apl)
+Player::Player (char *n, int r, int pr, int m, int pl, int apl, int l_prod)
+	: nick(n), raw(r), prod(pr), money(m), plants(pl), autoplants(apl), last_prod (l_prod)
 {
 }
 
@@ -97,6 +97,8 @@ Player * ListPlayer::find (char *nick)
 		}
 		cur = cur->next;
 	}
+
+	printf ("Not found.\n");
 	return 0;
 }
 
@@ -111,9 +113,10 @@ int ListPlayer::getplayercnt () const
 Player * ListPlayer::parse (char *str) const
 {
 	char *trash, *nick;
-	int raw, prod, money, plant, autoplant;
+	int raw, prod, money, plant, autoplant, l_prod;
 
 	raw = prod = money = plant = autoplant = -1; 
+	l_prod = 0;
 	trash = new char [6];
 	nick = new char [20];
 
@@ -131,7 +134,7 @@ Player * ListPlayer::parse (char *str) const
 
 	delete [] trash;
 
-	return new Player (nick, raw, prod, money, plant, autoplant);
+	return new Player (nick, raw, prod, money, plant, autoplant, l_prod);
 }
 
 
