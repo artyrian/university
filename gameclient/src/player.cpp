@@ -16,13 +16,6 @@ Player::~Player ()
 }
 
 
-char * Player::getnick ()
-{
-	return nick;	
-}
-
-
-
 ListPlayer::ListPlayer ()
 	: first (0), cnt (0)
 {
@@ -73,7 +66,7 @@ void ListPlayer::remove (char *str)
 	ListElem * prev;
 
 	while ( cur != 0 ) {
-		if ( strcpy (str, cur->p->getnick ()) == 0 ) {
+		if ( strcpy (str, cur->p->nick ) == 0 ) {
 			break;
 		}
 		cur = cur->next;
@@ -92,6 +85,19 @@ void ListPlayer::remove (char *str)
 
 	prev->next = 0;
 	
+}
+
+
+Player * ListPlayer::find (char *nick)
+{
+	ListElem *cur = first;
+	while ( cur != 0 ) {
+		if ( strcmp (nick, cur->p->nick) == 0 ) {
+			return cur->p;
+		}
+		cur = cur->next;
+	}
+	return 0;
 }
 
 

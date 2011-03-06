@@ -2,16 +2,17 @@
 #define _PLAYER_HPP_
 
 
-class Player {
+struct Player {
 	char *nick;
 	int raw;
 	int prod;
 	int money;
 	int plants;
 	int autoplants;
-public:
+	int bought;
+	int sold;
+
 	Player (char *n, int r, int pr, int m, int pl, int apl);
-	char * getnick ();
 	~Player ();
 };
 
@@ -33,6 +34,8 @@ public:
 
 	void add (Player *pl);
 	void remove (char *);
+	Player * find (char *nick);
+
 	int getplayercnt () const;	
 
 	Player * parse (char *str) const;

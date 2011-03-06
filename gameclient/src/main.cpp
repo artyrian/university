@@ -8,7 +8,6 @@
 #include "game.hpp"
 
 
-
 void login (Game &g, int argc, char *nick, int room, int maxpl)
 {
 	g.setnick (nick);
@@ -21,6 +20,7 @@ void login (Game &g, int argc, char *nick, int room, int maxpl)
 		g.waitstart ();
 	}
 }
+
 
 void play (Game &g)
 {

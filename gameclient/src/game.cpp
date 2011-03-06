@@ -95,8 +95,14 @@ int Game::getinfo ()
 			lp->add (pl);
 		}
 	} while ( strncmp (msg, "& PLAYERS", 9) != 0 );
-
-	printf ("In game %d players.\n", lp->getplayercnt ());
+	
+	char trash[10];
+	inf.players = inf.active_players = -1;
+	sscanf (msg, "%s%s%d%s%d", trash, trash, 
+		&inf.players, trash, &inf.active_players);
+	if ( inf.players == -1 || inf.active_players == -1 ) {
+		perror ("Syntax error in info about count of players.\n");
+	}
 
 	return 0;
 }
@@ -110,11 +116,30 @@ int Game::waitendturn ()
 		msg = q.gettype ('&');
 
 		if ( strncmp (msg, "& BOUGHT", 8) == 0) {
-			printf ("Call 'BOUGHT'.\n");
+			char trash[10];
+			char nick[20];
+			int amount = -1;
+			int price = -1;
+			sscanf (msg, "%s%s%s%d%d", trash, trash, nick, &amount, &price);
+			if ( amount == - 1 || price == -1 ) {
+				perror ("Syntax error in BOUGHT.\n");
+			}
+			bought (nick, amount);
 		} else if ( strncmp (msg, "& SOLD", 6) == 0) {
-			printf ("Call 'SOLD'.\n");
+			char trash[10];
+			char nick[20];
+			int amount = -1;
+			int price = -1;
+			sscanf (msg, "%s%s%s%d%d", trash, trash, nick, &amount, &price);
+			if ( amount == - 1 || price == -1 ) {
+				perror ("Syntax error in SOLD.\n");
+			}
+			sold (nick, amount);
 		} else if ( strncmp (msg, "& BANKRUPT", 10) == 0) {
-			printf ("Call 'BANKRUPT'.\n");
+			char trash[10];
+			char nick[20];
+			sscanf (msg, "%s%s%s", trash, trash, nick);
+			bankrupt (nick);
 		}
 		
 	} while ( strncmp (msg, "& ENDTURN", 9) != 0 );
