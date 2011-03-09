@@ -87,7 +87,7 @@ char * QueueMsg::gettype (int type)
 
 
 
-char * QueueMsg::readqueue ()
+char * QueueMsg::getmsgq()
 {
 	msgq = new char [strlen(first->str)];
 	strcpy (msgq, first->str);
@@ -96,11 +96,6 @@ char * QueueMsg::readqueue ()
 	return msgq;
 }
 
-
-void QueueMsg::deletemsgq ()
-{
-	delete []msgq;
-}
 
 
 QueueMsg::~QueueMsg ()

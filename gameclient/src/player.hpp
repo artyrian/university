@@ -15,6 +15,8 @@ struct Player {
 	int sold_price;
 	int last_prod;
 
+	int factive;
+
 	Player (char *n, int r, int pr, int m, int pl, int apl, int l_prod);
 	~Player ();
 };

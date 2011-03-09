@@ -6,7 +6,7 @@
 
 
 Player::Player (char *n, int r, int pr, int m, int pl, int apl, int l_prod)
-	: nick(n), raw(r), prod(pr), money(m), plants(pl), autoplants(apl), last_prod (l_prod)
+	: nick(n), raw(r), prod(pr), money(m), plants(pl), autoplants(apl), last_prod (l_prod), factive (1)
 {
 }
 
@@ -58,7 +58,9 @@ void ListPlayer::add (Player *pl)
 	cnt++;
 }
 
-
+/*
+ * WARNING!! DONT WORK!
+ */
 void ListPlayer::remove (char *str)
 {
 	ListElem * cur = first;
@@ -73,12 +75,15 @@ void ListPlayer::remove (char *str)
 	}
 
 	last = first;
-	while ( last != 0 ) {
+	while ( last->next != 0 ) {
 		prev = last;
 		last = last->next;
 	}
-	
+
+// HERNYA!!! last = prev->next;
+//
 	last = prev->next;
+// its also hernya
 	cur->p = last->p;
 
 	delete last->p;

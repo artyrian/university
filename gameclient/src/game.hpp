@@ -39,7 +39,7 @@ public:
 	int waitstart ();
 	int getinfo ();
 	int waitendturn ();	// now its const but no always.
-	int queue ();
+	int readqueue ();
 
 	void checkok ();
 
@@ -59,7 +59,7 @@ public:
 	int _month () const
 	{
 		// because month is WAS!!!
-		return month - 1;
+		return month;
 	}
 	int _players () const
 	{

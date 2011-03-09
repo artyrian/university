@@ -25,6 +25,8 @@ void login (Game &g, int argc, char *nick, int room, int maxpl)
 void play (Game &g)
 {
 	for (;;) {
+		g.getinfo ();
+
 		g.market ();
 
 		g.buy (2, -1);
@@ -38,8 +40,11 @@ void play (Game &g)
 
 		g.turn ();
 		g.waitendturn ();
-		g.queue ();
+		g.readqueue ();
+	}
+}
 
+/*
 		printf ("==================  Check data: =============\n");
 		printf ("my_id:%s.\nmonth:%d.\nplayers:%d.\nact_pl:%d.\nsullpy:%d.\nraw_price:%d.\ndemand:%d.\nprod_price:%d.\nmoney(n):%d.\nraw(n):%d\nprod(n):%d\n.factories(n):%d.\nauto_factories(n):%d.\nmanufactured(n):%d\n.sold(n):%d.\nsold_price(n)%d.\nbought(n)%d.\nbought_price(n)%d.\n", 
 		g._my_id (), 
@@ -62,9 +67,9 @@ void play (Game &g)
 		g._result_prod_price (g._my_id ()) 
 		);
 		printf ("=================     E N D     =============\n");
-	}
+*/
 
-}
+
 
 /* */
 void ParseArguments(	int n, char **argv, 
@@ -72,7 +77,6 @@ void ParseArguments(	int n, char **argv,
 {
 	if ( n >= 5 ) {
 		port = room = -1;
-
 		ip = argv[1];
 
 		sscanf (argv[2], "%d", &port);
@@ -94,6 +98,8 @@ void ParseArguments(	int n, char **argv,
 				perror ("Syntax error in parse max players to start.\n");
 			}
 		}
+	} else {
+		perror ("Not enough parametrs.\n");
 	}
 }
 
@@ -115,8 +121,6 @@ int main(int argc, char **argv)
 	Game g(ip, port);
 
 	login (g, argc, nick, room, maxpl);
-	
-	g.getinfo ();
 
 	play (g);
 

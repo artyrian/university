@@ -53,6 +53,8 @@ char *Cache::getmsg ()
 		cnt--;
 	}
 	
+	printf ("R:[%s].\n", msg);
+	
 	return msg;
 }
 

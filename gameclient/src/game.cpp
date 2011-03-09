@@ -26,7 +26,9 @@ void Game::sold (char *nick, int sold, int price)
 
 void Game::bankrupt (char *nick)
 {
-	lp->remove (nick);
+	//lp->remove (nick);
+	Player *pl = lp->find (nick);
+	pl->factive = 0;
 }
 
 
@@ -70,7 +72,7 @@ int Game::waitplayers (int maxpl)
 	int i = 0;
 
 	do {
-		strcpy (msg, q.gettype ('&'));
+		strcpy (msg, q.gettype ('@'));
 		if ( strncmp (msg, "@+", 2) == 0 ) {
 			i++;
 		}
@@ -181,12 +183,12 @@ int Game::waitendturn ()
 }
 
 
-int Game::queue ()
+int Game::readqueue ()
 {
 	char *msgq;
 
 	while ( q.getcount () != 0 ) {
-		msgq = q.readqueue ();	
+		msgq = q.getmsgq ();	
 
 		char str1[30] = "", str2[30] = "", str3[30] = "";
 		printf ("I read from queue:[%s].\n", msgq);	

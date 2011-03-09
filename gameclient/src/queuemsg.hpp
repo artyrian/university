@@ -26,9 +26,9 @@ class QueueMsg {
 public:
 	QueueMsg (char *ip, int port);
 
-	char * gettype (int type = 0);
-	char * readqueue ();
-	void deletemsgq ();
+	char * gettype (int type);
+
+	char * getmsgq ();
 	int getcount () const;
 
 	void sendstr (char *str) const;
