@@ -26,6 +26,12 @@ void play (Game &g)
 {
 	for (;;) {
 		g.getinfo ();
+/*
+		printf ("Money = %d;\n", g._money (g._my_id ()) );
+		if ( g._money (g._my_id ()) < 0 ) {
+			break;
+		}
+*/
 
 		g.market ();
 
@@ -41,6 +47,7 @@ void play (Game &g)
 		g.turn ();
 		g.waitendturn ();
 		g.readqueue ();
+
 	}
 }
 
@@ -123,6 +130,8 @@ int main(int argc, char **argv)
 	login (g, argc, nick, room, maxpl);
 
 	play (g);
+
+	printf ("Game is end for you ;-).\n");
 
 	delete [] ip;
 	delete [] nick;

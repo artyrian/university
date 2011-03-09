@@ -211,6 +211,10 @@ void Game::market ()
 	char msg[80];
 	do {
 		strcpy (msg, q.gettype ('&'));
+		if ( strncmp (msg, "&-", 2) == 0 ) {
+			perror ("Clearly, end of game.\n");
+			break;
+		}
 	} while ( strncmp (msg, "& MARKET", 8) != 0 );
 
 	char *cmd = new char [8];
@@ -297,7 +301,7 @@ void Game::checkok ()
 	do {
 		str = q.gettype ('&');
 		if ( strncpy (str, "&-", 2) == 0 ) {
-			perror ("THROW. Buy wrong.\n");	
+			perror ("THROW.\n");	
 			break;
 		}
 	} while ( strncpy (str, "& OK", 4) == 0 );
