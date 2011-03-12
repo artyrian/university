@@ -42,6 +42,7 @@ void play (Game &g)
 		g.waitendturn ();
 		g.readqueue ();
 
+		g.getinfo ();
 		printf ("Active players = %d.\n", g._active_players ());
 	} while ( g._checkactive (g._my_id ()) != 0 && g._active_players () != 1 );
 }
