@@ -107,7 +107,7 @@ int Game::waitstart ()
 }
 
 
-int Game:starinfo ()
+int Game::startinfo ()
 {
 	char msg[80];
 
@@ -145,6 +145,7 @@ int Game::getinfo ()
 	do {
 		strcpy (msg, q.gettype('&'));
 		if ( strncmp (msg, "& INFO", 6) == 0 ) {
+			/*
 			struct Player *parsed_pl, *pl;
 			parsed_pl = lp->parse (msg);
 			pl = lp->find (parsed_pl->nick); 
@@ -156,6 +157,7 @@ int Game::getinfo ()
 			pl->autoplants = parsed_pl->autoplants;
 			pl->last_prod = pl->prod - pl->last_prod;
 			delete parsed_pl;
+			*/
 		}
 	} while ( strncmp (msg, "& PLAYERS", 9) != 0 );
 	
@@ -176,10 +178,10 @@ int Game::getinfo ()
 
 int Game::waitendturn ()
 {
-	char *msg;
+	char msg[1024];
 
 	do {
-		msg = q.gettype ('&');
+		strcpy (msg, q.gettype ('&'));
 
 		if ( strncmp (msg, "& BOUGHT", 8) == 0) {
 			char trash[10];
@@ -220,17 +222,18 @@ int Game::waitendturn ()
 
 int Game::readqueue ()
 {
-	char *msgq;
+	char msgq[1024];
 
 	while ( q.getcount () != 0 ) {
 		printf ("Now in queue %d message.\n", q.getcount ());
-		msgq = q.getmsgq ();	
+		strcpy (msgq, q.getmsgq ());	
 
-		char str1[30] = "", str2[30] = "", str3[30] = "";
+		char str1[30], str2[30], str3[30];
 		printf ("I read from queue:[%s].\n", msgq);	
 		sscanf (msgq, "%s%s%s", str1, str2, str3);
-		if ( strcpy (str1, "@-") == 0 && strcpy (str2, "LEFT") ) {
-			lp->remove (str3);
+		if ( strcpy (str1, "@-") == 0 && strcpy (str2, "LEFT") == 0 ) {
+			Player *pl = lp->find (str3);
+			pl->factive = 0;
 		}
 	}
 
@@ -253,19 +256,17 @@ void Game::market ()
 		}
 	} while ( strncmp (msg, "& MARKET", 8) != 0 );
 
-	char *cmd = new char [8];
+	char trash [10];
 	
 	mrk.raw_count = mrk.raw_cost = mrk.prod_count = mrk.prod_cost = -1;
 
-	sscanf (msg, "%s%s%d%d%d%d", cmd, cmd, &mrk.raw_count, &mrk.raw_cost, &mrk.prod_count, &mrk.prod_cost); 
+	sscanf (msg, "%s%s%d%d%d%d", trash, trash, &mrk.raw_count, &mrk.raw_cost, &mrk.prod_count, &mrk.prod_cost); 
 	
 	if ( 	(mrk.raw_count == -1) || (mrk.raw_cost == -1) ||
 		(mrk.prod_count == -1) || (mrk.prod_cost == -1) )
 	{ 
 		perror ("Syntax error in parse '& MARKET'.\n");
 	}
-
-	delete [] cmd;
 }
 
 void Game::info () const
@@ -278,20 +279,19 @@ void Game::info () const
 
 void Game::buy (int count, int cost) const
 {
-	char *str = new char [50];
+	char str[20];
 //	
 	cost = mrk.raw_cost;
 //
 	sprintf (str, "buy %d %d", count, cost);
 
 	q.sendstr (str);
-	delete [] str;
 }
 
 
 void Game::sell (int count, int cost) const
 {
-	char *str = new char [20];
+	char str[20];
 
 //	
 	cost = mrk.prod_cost;
@@ -300,18 +300,14 @@ void Game::sell (int count, int cost) const
 	sprintf (str, "sell %d %d", count, cost);
 
 	q.sendstr (str);
-
-	delete [] str;
 }
 
 void Game::prod (int count) const
 {
-	char *str = new char [20];
+	char str[20];
 	sprintf (str, "prod %d", count);
 
 	q.sendstr (str);
-
-	delete [] str;
 }
 
 

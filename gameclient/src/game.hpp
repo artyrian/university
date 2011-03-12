@@ -37,6 +37,7 @@ public:
 	int create () const;
 	int waitplayers (int maxpl);
 	int waitstart ();
+	int startinfo ();
 	int getinfo ();
 	int waitendturn ();	// now its const but no always.
 	int readqueue ();

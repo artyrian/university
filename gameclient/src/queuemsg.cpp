@@ -46,7 +46,7 @@ void QueueMsg::remove ()
 		last = next;
 	}
 	printf ("Now delete [%s].\n", first->str);
-	delete [] first->str; 
+	delete [] first->str;
 	delete first;
 	first = next;
 
@@ -75,10 +75,8 @@ QueueMsg::QueueMsg (char *ip, int port)
 
 char * QueueMsg::gettype (int type)
 {
-	msg[0] = '\0';
-
 	do {
-		msg = ch.getmsg ();
+		strcpy (msg, ch.getmsg ());
 		if ( (msg[0] != type) && (comment (msg[0]) == 0)) {
 			printf ("Put to queue:[%s].\n", msg);
 			add (msg);	
@@ -92,7 +90,6 @@ char * QueueMsg::gettype (int type)
 
 char * QueueMsg::getmsgq()
 {
-	msgq = new char [strlen(first->str)];
 	strcpy (msgq, first->str);
 	remove ();
 

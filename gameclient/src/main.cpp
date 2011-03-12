@@ -41,8 +41,9 @@ void play (Game &g)
 		g.turn ();
 		g.waitendturn ();
 		g.readqueue ();
+
 		printf ("Active players = %d.\n", g._active_players ());
-	} while ( g._checkactive (g._my_id ()) != 0 );
+	} while ( g._checkactive (g._my_id ()) != 0 && g._active_players () != 1 );
 }
 
 /*
@@ -78,14 +79,14 @@ void ParseArguments(	int n, char **argv,
 {
 	if ( n >= 5 ) {
 		port = room = -1;
-		ip = argv[1];
+		strcpy (ip, argv[1]);
 
 		sscanf (argv[2], "%d", &port);
 		if ( port == -1 ) {
 			perror ("Syntax error in parse port.\n");
 		}
 		
-		nick = argv[3];
+		strcpy (nick, argv[3]);
 
 		sscanf (argv[4], "%d", &room);
 		if ( room == -1 ) {
@@ -111,9 +112,9 @@ int main(int argc, char **argv)
 {	
 	printf("Start program.\n");
 
-	char *ip;
+	char *ip = new char [strlen (argv[1])];
 	int port;
-	char *nick;
+	char *nick = new char [strlen (argv[3])];
 	int room;
 	int maxpl;
 
@@ -123,9 +124,14 @@ int main(int argc, char **argv)
 
 	login (g, argc, nick, room, maxpl);
 
+	g.startinfo ();
+
 	play (g);
 
 	printf ("Game is end for you ;-).\n");
+
+	delete [] ip;
+	delete [] nick;
 
 	printf("End program.\n");
 
