@@ -24,14 +24,8 @@ void login (Game &g, int argc, char *nick, int room, int maxpl)
 
 void play (Game &g)
 {
-	for (;;) {
+	do {	
 		g.getinfo ();
-/*
-		printf ("Money = %d;\n", g._money (g._my_id ()) );
-		if ( g._money (g._my_id ()) < 0 ) {
-			break;
-		}
-*/
 
 		g.market ();
 
@@ -47,8 +41,8 @@ void play (Game &g)
 		g.turn ();
 		g.waitendturn ();
 		g.readqueue ();
-
-	}
+		printf ("Active players = %d.\n", g._active_players ());
+	} while ( g._checkactive (g._my_id ()) != 0 );
 }
 
 /*
@@ -117,9 +111,9 @@ int main(int argc, char **argv)
 {	
 	printf("Start program.\n");
 
-	char *ip = new char [16];
+	char *ip;
 	int port;
-	char *nick = new char [22];
+	char *nick;
 	int room;
 	int maxpl;
 
@@ -132,9 +126,6 @@ int main(int argc, char **argv)
 	play (g);
 
 	printf ("Game is end for you ;-).\n");
-
-	delete [] ip;
-	delete [] nick;
 
 	printf("End program.\n");
 

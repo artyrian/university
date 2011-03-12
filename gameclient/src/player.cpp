@@ -122,7 +122,7 @@ Player * ListPlayer::parse (char *str) const
 
 	raw = prod = money = plant = autoplant = -1; 
 	l_prod = 0;
-	trash = new char [6];
+	trash = new char [15];
 	nick = new char [20];
 
 	printf ("Start parse.\n");

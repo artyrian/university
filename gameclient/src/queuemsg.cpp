@@ -10,7 +10,7 @@
 QueueMsg::QueueElem * QueueMsg::create (char *str)
 {
 	QueueElem *item = new QueueElem;
-	item->str = new char [strlen(str)];
+	item->str = new char [strlen(str) + 1];
 	strcpy (item->str, str);
 	item->type = str[0]; 
 	item->next = 0;
@@ -37,12 +37,15 @@ void QueueMsg::add (char *str)
 
 
 
+/* remove first from queue
+ */
 void QueueMsg::remove ()
 {
 	QueueElem *next = first->next;
 	if ( first == last ) {
 		last = next;
 	}
+	printf ("Now delete [%s].\n", first->str);
 	delete [] first->str; 
 	delete first;
 	first = next;
@@ -106,8 +109,6 @@ QueueMsg::~QueueMsg ()
 		cur = first->next;
 		delete first;
 	}
-	delete [] msg;
-	delete [] msgq;
 }
 
 

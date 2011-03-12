@@ -26,9 +26,15 @@ void Game::sold (char *nick, int sold, int price)
 
 void Game::bankrupt (char *nick)
 {
-	//lp->remove (nick);
 	Player *pl = lp->find (nick);
 	pl->factive = 0;
+}
+
+
+int Game::_checkactive (char *nick)
+{
+	Player *pl = lp->find (nick);
+	return pl->factive;
 }
 
 
@@ -101,6 +107,35 @@ int Game::waitstart ()
 }
 
 
+int Game:starinfo ()
+{
+	char msg[80];
+
+	info ();
+
+	do {
+		strcpy (msg, q.gettype('&'));
+		if ( strncmp (msg, "& INFO", 6) == 0 ) {
+			struct Player *pl = lp->parse (msg);
+			lp->add (pl);
+		}
+	} while ( strncmp (msg, "& PLAYERS", 9) != 0 );
+	
+	char trash[10];
+	int watchers;
+	inf.players = inf.active_players = watchers = -1;
+
+	sscanf (msg, "%s%s%d%s%d", trash, trash, 
+		&inf.active_players, trash, &watchers);
+	inf.players = watchers + inf.active_players;
+	if ( inf.active_players == -1 || watchers == -1 ) {
+		perror ("Syntax error in info about count of players.\n");
+	}
+
+	return 0;
+}
+
+
 int Game::getinfo ()
 {
 	char msg[80];
@@ -113,25 +148,25 @@ int Game::getinfo ()
 			struct Player *parsed_pl, *pl;
 			parsed_pl = lp->parse (msg);
 			pl = lp->find (parsed_pl->nick); 
-			if ( pl == 0 ) {
-				lp->add (parsed_pl);
-			} else {
-				pl->raw = parsed_pl->raw;
-				pl->prod = parsed_pl->prod;
-				pl->money = parsed_pl->money;
-				pl->plants = parsed_pl->plants;
-				pl->autoplants = parsed_pl->autoplants;
-				pl->last_prod = pl->prod - pl->last_prod;
-				delete parsed_pl;
-			}
+
+			pl->raw = parsed_pl->raw;
+			pl->prod = parsed_pl->prod;
+			pl->money = parsed_pl->money;
+			pl->plants = parsed_pl->plants;
+			pl->autoplants = parsed_pl->autoplants;
+			pl->last_prod = pl->prod - pl->last_prod;
+			delete parsed_pl;
 		}
 	} while ( strncmp (msg, "& PLAYERS", 9) != 0 );
 	
 	char trash[10];
-	inf.players = inf.active_players = -1;
+	int watchers;
+	inf.players = inf.active_players = watchers = -1;
+
 	sscanf (msg, "%s%s%d%s%d", trash, trash, 
-		&inf.players, trash, &inf.active_players);
-	if ( inf.players == -1 || inf.active_players == -1 ) {
+		&inf.active_players, trash, &watchers);
+	inf.players = watchers + inf.active_players;
+	if ( inf.active_players == -1 || watchers == -1 ) {
 		perror ("Syntax error in info about count of players.\n");
 	}
 
@@ -188,6 +223,7 @@ int Game::readqueue ()
 	char *msgq;
 
 	while ( q.getcount () != 0 ) {
+		printf ("Now in queue %d message.\n", q.getcount ());
 		msgq = q.getmsgq ();	
 
 		char str1[30] = "", str2[30] = "", str3[30] = "";
@@ -242,7 +278,7 @@ void Game::info () const
 
 void Game::buy (int count, int cost) const
 {
-	char *str = new char [20];
+	char *str = new char [50];
 //	
 	cost = mrk.raw_cost;
 //

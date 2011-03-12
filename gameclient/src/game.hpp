@@ -41,6 +41,8 @@ public:
 	int waitendturn ();	// now its const but no always.
 	int readqueue ();
 
+	int _checkactive (char *);
+
 	void checkok ();
 
 	void market ();
