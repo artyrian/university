@@ -19,8 +19,10 @@ class Cache{
 	void cutext (char *);
 public:
 	Cache (char *ip, int port);
+
 	char *getmsg ();
 	void sendstr (char *) const;
+
 	~Cache ();
 };
 

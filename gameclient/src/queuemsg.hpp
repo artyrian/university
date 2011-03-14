@@ -16,8 +16,8 @@ class QueueMsg {
 
 	int cnt;
 
+	char msg [1024];
 	char msgq [1024];
-	char msg[1024];
 
 	QueueElem * create (char *str);
 	void add (char *str);
