@@ -39,11 +39,7 @@ public:
 	ListPlayer ();
 
 	void add (Player *pl);
-	void remove (char *);
 	Player * find (char *nick);
-
-	int getplayercnt () const;	
-
 	Player * parse (char *str) const;
 
 	~ListPlayer ();

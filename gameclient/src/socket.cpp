@@ -5,9 +5,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include <stdio.h>		// but it while not CATCH!!!
-#include <stdlib.h>		// but it while not CATCH!!!
-				// OR MAYBE IT'S NORMAL BECAUSE CRITITCAL ERRORS.
+#include <stdio.h>
+#include <stdlib.h>
 
 Socket::Socket(char* i, int p) : ip(i), port(p)
 {
@@ -20,7 +19,7 @@ Socket::Socket(char* i, int p) : ip(i), port(p)
 void Socket::init_ip(char *arg)
 {
 	ip = arg;
-	if ( !inet_aton(ip, &(addr.sin_addr)) ){
+	if ( !inet_aton(ip, &(addr.sin_addr)) ) {
 		perror ("Invalid IP address!\n");
 		exit(1);
 	}
@@ -37,7 +36,7 @@ void Socket::init_port(int arg)
 int Socket::createsocket()
 {
 	int sd;
-	if ( -1 == (sd = socket(AF_INET, SOCK_STREAM, 0)) ){
+	if ( -1 == (sd = socket(AF_INET, SOCK_STREAM, 0)) ) {
 		perror("Error create socket.\n");
 	}
 
@@ -49,7 +48,7 @@ int Socket::connecting ()
 {
 	sd = createsocket();
 
-	if ( 0 != connect(sd, (struct sockaddr *)&addr, sizeof(addr)) ){
+	if ( 0 != connect(sd, (struct sockaddr *)&addr, sizeof(addr)) ) {
 		perror ("Connect error.");
 		exit(1);
 	}

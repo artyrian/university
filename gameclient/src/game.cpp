@@ -105,22 +105,26 @@ void Game::startinfo ()
 
 	do {
 		strcpy (msg, q.gettype('&'));
+
 		if ( strncmp (msg, "& INFO", 6) == 0 ) {
 			struct Player *pl = lp->parse (msg);
 			lp->add (pl);
 		}
+
 	} while ( strncmp (msg, "& PLAYERS", 9) != 0 );
 	
 	char trash[10];
 	int watchers;
+
 	inf.players = inf.active_players = watchers = -1;
 
 	sscanf (msg, "%s%s%d%s%d", trash, trash, 
 		&inf.active_players, trash, &watchers);
-	inf.players = watchers + inf.active_players;
 	if ( inf.active_players == -1 || watchers == -1 ) {
 		perror ("Syntax error in info about count of players.\n");
 	}
+
+	inf.players = watchers + inf.active_players;
 }
 
 
@@ -132,24 +136,28 @@ void Game::getinfo ()
 
 	do {
 		strcpy (msg, q.gettype('&'));
+
 		if ( strncmp (msg, "& INFO", 6) == 0 ) {
-			struct Player * parsed_pl = lp->parse (msg);
-			struct Player * pl = lp->find (parsed_pl->nick); 
+			struct Player * parsed_pl (lp->parse (msg));
+			struct Player * pl (lp->find (parsed_pl->nick)); 
 			pl = parsed_pl;
 			delete parsed_pl;
 		}
+
 	} while ( strncmp (msg, "& PLAYERS", 9) != 0 );
 	
 	char trash[10];
 	int watchers;
+
 	inf.players = inf.active_players = watchers = -1;
 
 	sscanf (msg, "%s%s%d%s%d", trash, trash, 
 		&inf.active_players, trash, &watchers);
-	inf.players = watchers + inf.active_players;
 	if ( inf.active_players == -1 || watchers == -1 ) {
 		perror ("Syntax error in info about count of players.\n");
 	}
+
+	inf.players = watchers + inf.active_players;
 }
 
 
@@ -157,32 +165,29 @@ void Game::waitendturn ()
 {
 	char msg[1024];
 
+	char trash[10];
+	char nick[20];
+	int amount = -1;
+	int price = -1;
+
 	do {
 		strcpy (msg, q.gettype ('&'));
 
 		if ( strncmp (msg, "& BOUGHT", 8) == 0) {
-			char trash[10];
-			char nick[20];
-			int amount = -1;
-			int price = -1;
-			sscanf (msg, "%s%s%s%d%d", trash, trash, nick, &amount, &price);
+			sscanf ( msg, "%s%s%s%d%d", trash, trash, 
+					nick, &amount, &price);
 			if ( amount == - 1 || price == -1 ) {
 				perror ("Syntax error in BOUGHT.\n");
 			}
 			bought (nick, amount, price);
 		} else if ( strncmp (msg, "& SOLD", 6) == 0) {
-			char trash[10];
-			char nick[20];
-			int amount = -1;
-			int price = -1;
-			sscanf (msg, "%s%s%s%d%d", trash, trash, nick, &amount, &price);
+			sscanf ( msg, "%s%s%s%d%d", trash, trash, 
+					nick, &amount, &price);
 			if ( amount == - 1 || price == -1 ) {
 				perror ("Syntax error in SOLD.\n");
 			}
 			sold (nick, amount, price);
 		} else if ( strncmp (msg, "& BANKRUPT", 10) == 0) {
-			char trash[10];
-			char nick[20];
 			sscanf (msg, "%s%s%s", trash, trash, nick);
 			bankrupt (nick);
 		}
@@ -201,12 +206,16 @@ void Game::readqueue ()
 
 	while ( q.getcount () != 0 ) {
 		printf ("Now in queue %d message.\n", q.getcount ());
+
 		strcpy (msgq, q.getmsgq ());	
 
-		char str1[30], str2[30], str3[30];
-		printf ("I read from queue:[%s].\n", msgq);	
+		char str1[30] = "", str2[30] = "", str3[30] = "";
+
 		sscanf (msgq, "%s%s%s", str1, str2, str3);
-		if ( strcpy (str1, "@-") == 0 && strcpy (str2, "LEFT") == 0 ) {
+		if ( 	strcpy (str1, "@-") == 0 &&
+			strcpy (str2, "LEFT") == 0 &&
+			strcpy (str3, "") == 0)
+		{
 			Player *pl = lp->find (str3);
 			pl->factive = 0;
 		}
@@ -233,7 +242,10 @@ void Game::market ()
 	
 	mrk.raw_count = mrk.raw_cost = mrk.prod_count = mrk.prod_cost = -1;
 
-	sscanf (msg, "%s%s%d%d%d%d", trash, trash, &mrk.raw_count, &mrk.raw_cost, &mrk.prod_count, &mrk.prod_cost); 
+	sscanf ( msg, "%s%s%d%d%d%d", trash, trash, 
+			&mrk.raw_count, &mrk.raw_cost,
+			&mrk.prod_count, &mrk.prod_cost
+		); 
 	
 	if ( 	(mrk.raw_count == -1) || (mrk.raw_cost == -1) ||
 		(mrk.prod_count == -1) || (mrk.prod_cost == -1) )
@@ -247,7 +259,6 @@ void Game::info () const
 	char str[10] = "info";
 
 	q.sendstr (str);
-
 }
 
 void Game::buy (int count, int cost) const
@@ -286,25 +297,24 @@ void Game::prod (int count) const
 
 void Game::build () const
 {
-	char str[10] = "build";
-
+	char str [10] = "build";
 	q.sendstr (str);
-
 }
 
 void Game::turn () const
 {
-	char str[10] = "turn";
+	char str [10] = "turn";
+
 	q.sendstr (str);
 }
 
 
 void Game::checkok ()
 {
-	char *str;
+	char str[80];
 
 	do {
-		str = q.gettype ('&');
+		strcpy (str, q.gettype ('&'));
 		if ( strncpy (str, "&-", 2) == 0 ) {
 			perror ("THROW.\n");	
 			break;

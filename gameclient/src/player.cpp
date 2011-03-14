@@ -6,7 +6,14 @@
 
 
 Player::Player (char *n, int r, int pr, int m, int pl, int apl, int l_prod)
-	: nick(n), raw(r), prod(pr), money(m), plants(pl), autoplants(apl), last_prod (l_prod), factive (1)
+	: 	nick(n), 
+		raw(r),
+		prod(pr),
+		money(m),
+		plants(pl),
+		autoplants(apl),
+		last_prod (l_prod),
+		factive (1)
 {
 }
 
@@ -63,7 +70,9 @@ ListPlayer::ListElem * ListPlayer::findlast () const
 
 void ListPlayer::add (Player *pl)
 {
-	printf ("Add to ListPlayer new.\n"); ListElem *elem = newplayer (pl); ListElem *last = findlast (); if ( first == 0 ) {
+	ListElem *elem = newplayer (pl); 
+	ListElem *last = findlast (); 
+	if ( first == 0 ) {
 		first = elem;
 	} else {
 		last->next = elem;
@@ -71,39 +80,6 @@ void ListPlayer::add (Player *pl)
 	cnt++;
 }
 
-/*
- * WARNING!! DONT WORK!
- */
-void ListPlayer::remove (char *str)
-{
-	ListElem * cur = first;
-	ListElem * last = first; 
-	ListElem * prev;
-
-	while ( cur != 0 ) {
-		if ( strcpy (str, cur->p->nick ) == 0 ) {
-			break;
-		}
-		cur = cur->next;
-	}
-
-	last = first;
-	while ( last->next != 0 ) {
-		prev = last;
-		last = last->next;
-	}
-
-// HERNYA!!! last = prev->next;
-//
-	last = prev->next;
-// its also hernya
-	cur->p = last->p;
-
-	delete last->p;
-
-	prev->next = 0;
-	
-}
 
 
 Player * ListPlayer::find (char *nick)
@@ -121,11 +97,6 @@ Player * ListPlayer::find (char *nick)
 }
 
 
-int ListPlayer::getplayercnt () const
-{
-	return cnt;
-}
-
 
 
 Player * ListPlayer::parse (char *str) const
@@ -139,8 +110,10 @@ Player * ListPlayer::parse (char *str) const
 	nick = new char [20];
 
 	printf ("Start parse.\n");
-	sscanf(	str, "%s%s%s%d%d%d%d%d", 
-		trash, trash,  nick, &raw, &prod, &money, &plant, &autoplant);
+	sscanf ( str, "%s%s%s%d%d%d%d%d", 
+			trash, trash, 
+			nick, &raw, &prod, &money, &plant, &autoplant
+		);
 
 	if ( 	(raw == -1) || (prod == -1) || 
 		(money == -1) || (plant == -1) ||

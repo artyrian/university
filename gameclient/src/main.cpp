@@ -43,7 +43,9 @@ void play (Game &g)
 		g.readqueue ();
 
 		g.getinfo ();
+
 		printf ("Active players = %d.\n", g._active_players ());
+
 	} while ( g._checkactive (g._my_id ()) != 0 && g._active_players () != 1 );
 }
 
@@ -74,10 +76,12 @@ void play (Game &g)
 
 
 /* */
-void ParseArguments(	int n, char **argv, 
-			char*& ip, int& port, char*& nick, int& room, int& maxpl)
+void ParseArguments (	int argc, char **argv, 
+			char*& ip, int& port, 
+			char*& nick, int& room, int& maxpl
+			)
 {
-	if ( n >= 5 ) {
+	if ( argc >= 5 ) {
 		port = room = -1;
 		strcpy (ip, argv[1]);
 
@@ -93,7 +97,7 @@ void ParseArguments(	int n, char **argv,
 			perror ("Syntax error in parse room.\n");
 		}
 
-		if ( n == 6 ) {
+		if ( argc == 6 ) {
 			maxpl = -1;
 			sscanf (argv[5], "%d", &maxpl);
 			if ( maxpl == -1 ) {
