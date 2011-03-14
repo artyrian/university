@@ -18,6 +18,7 @@ struct Player {
 	int factive;
 
 	Player (char *n, int r, int pr, int m, int pl, int apl, int l_prod);
+	void operator= (Player *);
 	~Player ();
 };
 

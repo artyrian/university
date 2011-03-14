@@ -10,6 +10,19 @@ Player::Player (char *n, int r, int pr, int m, int pl, int apl, int l_prod)
 {
 }
 
+
+/* This operator only for parsed copy!!!
+ */
+void Player::operator= (Player *p)
+{
+	raw = p->raw;
+	prod = p->prod;
+	money = p->money;
+	plants = p->plants;
+	autoplants = p->autoplants;
+	last_prod = prod - last_prod;
+}
+
 Player::~Player ()
 {
 	delete [] nick;

@@ -38,40 +38,34 @@ int Game::_checkactive (char *nick)
 }
 
 
-int Game::setnick (char *n)
+void Game::setnick (char *n)
 {
 	nick = n;
 
 	q.sendstr (nick);
-
-	return 0;
 }
 
 
-int Game::joinroom (int r)
+void Game::joinroom (int r)
 {
 	room = r;
 	char str[32];
 	
 	sprintf (str, ".join %d", room);
 	q.sendstr (str);
-	
-	return 0;
 }
 
 
-int Game::create () const
+void Game::create () const
 {
 	char str[16];
 
 	sprintf (str, ".create");
 	q.sendstr (str);		
-
-	return 0;
 }
 
 
-int Game::waitplayers (int maxpl)
+void Game::waitplayers (int maxpl)
 {
 	char str[16];
 	char msg[1024];
@@ -91,23 +85,19 @@ int Game::waitplayers (int maxpl)
 	
 	sprintf (str, "start");
 	q.sendstr (str);
-
-	return 0;
 }
 
 
-int Game::waitstart ()
+void Game::waitstart ()
 {
 	do {
 	} while ( strncmp (q.gettype ('&'), "& START", 7) != 0 );
 
 	printf ("GAME START!\n");
-	
-	return 0;
 }
 
 
-int Game::startinfo ()
+void Game::startinfo ()
 {
 	char msg[80];
 
@@ -131,12 +121,10 @@ int Game::startinfo ()
 	if ( inf.active_players == -1 || watchers == -1 ) {
 		perror ("Syntax error in info about count of players.\n");
 	}
-
-	return 0;
 }
 
 
-int Game::getinfo ()
+void Game::getinfo ()
 {
 	char msg[80];
 
@@ -145,19 +133,10 @@ int Game::getinfo ()
 	do {
 		strcpy (msg, q.gettype('&'));
 		if ( strncmp (msg, "& INFO", 6) == 0 ) {
-			/*
-			struct Player *parsed_pl, *pl;
-			parsed_pl = lp->parse (msg);
-			pl = lp->find (parsed_pl->nick); 
-
-			pl->raw = parsed_pl->raw;
-			pl->prod = parsed_pl->prod;
-			pl->money = parsed_pl->money;
-			pl->plants = parsed_pl->plants;
-			pl->autoplants = parsed_pl->autoplants;
-			pl->last_prod = pl->prod - pl->last_prod;
+			struct Player * parsed_pl = lp->parse (msg);
+			struct Player * pl = lp->find (parsed_pl->nick); 
+			pl = parsed_pl;
 			delete parsed_pl;
-			*/
 		}
 	} while ( strncmp (msg, "& PLAYERS", 9) != 0 );
 	
@@ -171,12 +150,10 @@ int Game::getinfo ()
 	if ( inf.active_players == -1 || watchers == -1 ) {
 		perror ("Syntax error in info about count of players.\n");
 	}
-
-	return 0;
 }
 
 
-int Game::waitendturn ()
+void Game::waitendturn ()
 {
 	char msg[1024];
 
@@ -215,12 +192,10 @@ int Game::waitendturn ()
 	month++;
 
 	printf ("NEXT TURN. Now will start %dth month.\n", month);
-
-	return 0;
 }
 
 
-int Game::readqueue ()
+void Game::readqueue ()
 {
 	char msgq[1024];
 
@@ -236,8 +211,6 @@ int Game::readqueue ()
 			pl->factive = 0;
 		}
 	}
-
-	return 0;
 }
 
 
@@ -337,6 +310,92 @@ void Game::checkok ()
 			break;
 		}
 	} while ( strncpy (str, "& OK", 4) == 0 );
+}
+
+
+char* Game::_my_id () const
+{
+	return nick;
+}
+
+int Game::_month () const
+{
+	return month;
+}
+int Game::_players () const
+{
+	return inf.players;
+}
+int Game::_active_players () const 
+{
+	return inf.active_players;
+}
+int Game::_supply () const
+{
+	return mrk.raw_count;
+}
+int Game::_raw_price () const
+{
+	return mrk.raw_cost;
+}
+int Game::_demand () const 
+{
+	return mrk.prod_count;
+}
+int Game::_production_price () const
+{
+	return mrk.prod_cost;
+}
+int Game::_money (char *nick) const
+{
+	Player *pl = lp->find (nick);
+	return pl->money;
+}
+int Game::_raw (char *nick) const
+{
+	Player *pl = lp->find (nick);
+	return pl->raw;
+}
+int Game::_production (char *nick) const
+{
+	Player *pl = lp->find (nick);
+	return pl->prod;	
+}
+int Game::_factories (char *nick) const 
+{
+	Player *pl = lp->find (nick);
+	return pl->plants;
+}
+int Game::_auto_factories (char *nick) const 
+{
+	Player *pl = lp->find (nick);
+	return pl->autoplants;
+}
+int Game::_manufactured (char *nick) const
+{
+	Player *pl = lp->find (nick);
+	int manufactured = pl->prod - pl->last_prod + pl->sold;
+	return manufactured;
+}
+int Game::_result_raw_sold (char *nick) const
+{
+	Player *pl = lp->find (nick);
+	return pl->bought;
+}
+int Game::_result_raw_price (char *nick) const
+{
+	Player *pl = lp->find (nick);
+	return pl->bought_price;
+}
+int Game::_result_prod_bought (char *nick) const
+{
+	Player *pl = lp->find (nick);
+	return pl->sold;
+}
+int Game::_result_prod_price (char *nick) const
+{
+	Player *pl = lp->find (nick);
+	return pl->sold_price;
 }
 
 

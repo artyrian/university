@@ -32,15 +32,15 @@ class Game {
 public:
 	Game (char *ip, int port);
 
-	int setnick (char *nick);
-	int joinroom (int room);
-	int create () const;
-	int waitplayers (int maxpl);
-	int waitstart ();
-	int startinfo ();
-	int getinfo ();
-	int waitendturn ();	// now its const but no always.
-	int readqueue ();
+	void setnick (char *nick);
+	void joinroom (int room);
+	void create () const;
+	void waitplayers (int maxpl);
+	void waitstart ();
+	void startinfo ();
+	void getinfo ();
+	void waitendturn ();
+	void readqueue ();
 
 	int _checkactive (char *);
 
@@ -54,91 +54,24 @@ public:
 	void build () const;
 	void turn () const;
 
-	char* _my_id () const
-	{
-		return nick;
-	}
-
-	int _month () const
-	{
-		// because month is WAS!!!
-		return month;
-	}
-	int _players () const
-	{
-		return inf.players;
-	}
-	int _active_players () const 
-	{
-		return inf.active_players;
-	}
-	int _supply () const
-	{
-		return mrk.raw_count;
-	}
-	int _raw_price () const
-	{
-		return mrk.raw_cost;
-	}
-	int _demand () const 
-	{
-		return mrk.prod_count;
-	}
-	int _production_price () const
-	{
-		return mrk.prod_cost;
-	}
-	int _money (char *nick) const
-	{
-		Player *pl = lp->find (nick);
-		return pl->money;
-	}
-	int _raw (char *nick) const
-	{
-		Player *pl = lp->find (nick);
-		return pl->raw;
-	}
-	int _production (char *nick) const
-	{
-		Player *pl = lp->find (nick);
-		return pl->prod;	
-	}
-	int _factories (char *nick) const 
-	{
-		Player *pl = lp->find (nick);
-		return pl->plants;
-	}
-	int _auto_factories (char *nick) const 
-	{
-		Player *pl = lp->find (nick);
-		return pl->autoplants;
-	}
-	int _manufactured (char *nick) const
-	{
-		Player *pl = lp->find (nick);
-		int manufactured = pl->prod - pl->last_prod + pl->sold;
-		return manufactured;
-	}
-	int _result_raw_sold (char *nick) const
-	{
-		Player *pl = lp->find (nick);
-		return pl->bought;
-	}
-	int _result_raw_price (char *nick) const
-	{
-		Player *pl = lp->find (nick);
-		return pl->bought_price;
-	}
-	int _result_prod_bought (char *nick) const
-	{
-		Player *pl = lp->find (nick);
-		return pl->sold;
-	}
-	int _result_prod_price (char *nick) const
-	{
-		Player *pl = lp->find (nick);
-		return pl->sold_price;
-	}
+	char* _my_id () const;
+	int _month () const;
+	int _players () const;
+	int _active_players () const;
+	int _supply () const;
+	int _raw_price () const;
+	int _demand () const;
+	int _production_price () const;
+	int _money (char *nick) const;
+	int _raw (char *nick) const;
+	int _production (char *nick) const;
+	int _factories (char *nick) const;
+	int _auto_factories (char *nick) const;
+	int _manufactured (char *nick) const;
+	int _result_raw_sold (char *nick) const;
+	int _result_raw_price (char *nick) const;
+	int _result_prod_bought (char *nick) const;
+	int _result_prod_price (char *nick) const;
 
 	~Game ();
 };
