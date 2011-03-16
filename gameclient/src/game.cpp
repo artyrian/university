@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 
 Game::Game (char *ip, int port)
@@ -43,6 +44,13 @@ void Game::setnick (char *n)
 	nick = n;
 
 	q.sendstr (nick);
+
+	char msg[100];
+	strcpy (msg, q.gettype ('%'));
+	if ( msg[1] == '-' ) {
+		perror ("Bad nick.\n");
+		exit (1);
+	}
 }
 
 
@@ -53,6 +61,13 @@ void Game::joinroom (int r)
 	
 	sprintf (str, ".join %d", room);
 	q.sendstr (str);
+	
+	char msg[100];
+	strcpy (msg, q.gettype ());
+	if ( msg[0] == '%' ) {
+		perror ("Bad room.\n");
+		exit (1);
+	}
 }
 
 
@@ -94,6 +109,14 @@ void Game::waitstart ()
 	} while ( strncmp (q.gettype ('&'), "& START", 7) != 0 );
 
 	printf ("GAME START!\n");
+}
+
+
+void Game::quit ()
+{
+	char str[10];
+	sprintf (str, ".quit");
+	q.sendstr (str);
 }
 
 
@@ -261,7 +284,7 @@ void Game::info () const
 	q.sendstr (str);
 }
 
-void Game::buy (int count, int cost) const
+void Game::buy (int count, int cost)
 {
 	char str[20];
 //	
@@ -270,10 +293,12 @@ void Game::buy (int count, int cost) const
 	sprintf (str, "buy %d %d", count, cost);
 
 	q.sendstr (str);
+
+	checkok ();
 }
 
 
-void Game::sell (int count, int cost) const
+void Game::sell (int count, int cost)
 {
 	char str[20];
 
@@ -284,14 +309,18 @@ void Game::sell (int count, int cost) const
 	sprintf (str, "sell %d %d", count, cost);
 
 	q.sendstr (str);
+
+	checkok ();
 }
 
-void Game::prod (int count) const
+void Game::prod (int count)
 {
 	char str[20];
 	sprintf (str, "prod %d", count);
 
 	q.sendstr (str);
+	
+	checkok ();
 }
 
 
@@ -316,7 +345,7 @@ void Game::checkok ()
 	do {
 		strcpy (str, q.gettype ('&'));
 		if ( strncpy (str, "&-", 2) == 0 ) {
-			perror ("THROW.\n");	
+			perror ("Error in reading OK.\n");	
 			break;
 		}
 	} while ( strncpy (str, "& OK", 4) == 0 );

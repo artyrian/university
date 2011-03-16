@@ -71,6 +71,12 @@ QueueMsg::QueueMsg (char *ip, int port)
 {
 }
 
+char * QueueMsg::gettype ()
+{
+	strcpy (msg, ch.getmsg ());
+
+	return msg;
+}
 
 
 char * QueueMsg::gettype (int type)

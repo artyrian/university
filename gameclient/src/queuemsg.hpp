@@ -26,6 +26,7 @@ class QueueMsg {
 public:
 	QueueMsg (char *ip, int port);
 
+	char * gettype ();
 	char * gettype (int type);
 
 	char * getmsgq ();

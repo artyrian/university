@@ -29,6 +29,8 @@ class Game {
 	void bought (char *nick, int bought, int price);
 	void sold (char *nick, int sold, int price);
 	void bankrupt (char *nick);
+
+	void checkok ();
 public:
 	Game (char *ip, int port);
 
@@ -41,16 +43,15 @@ public:
 	void getinfo ();
 	void waitendturn ();
 	void readqueue ();
+	void quit ();
 
 	int _checkactive (char *);
 
-	void checkok ();
-
 	void market ();
 
-	void buy (int count, int cost) const;
-	void sell (int count, int cost) const;
-	void prod (int count) const;
+	void buy (int count, int cost);
+	void sell (int count, int cost);
+	void prod (int count);
 	void build () const;
 	void turn () const;
 

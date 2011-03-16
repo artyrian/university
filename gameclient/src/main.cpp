@@ -24,30 +24,102 @@ void login (Game &g, int argc, char *nick, int room, int maxpl)
 
 void play (Game &g)
 {
-	do {	
+	while ( g._checkactive (g._my_id ()) != 0 && 
+		g._active_players () != 1 )	
+	{
+		g.readqueue ();
 		g.getinfo ();
 
 		g.market ();
 
 		g.buy (2, -1);
-		g.checkok ();
 
 		g.sell (2, -1);
-		g.checkok ();
 
 		g.prod (2);
-		g.checkok ();
 
 		g.turn ();
 		g.waitendturn ();
-		g.readqueue ();
-
-		g.getinfo ();
-
-		printf ("Active players = %d.\n", g._active_players ());
-
-	} while ( g._checkactive (g._my_id ()) != 0 && g._active_players () != 1 );
+	}
 }
+
+
+
+void ParseArguments (	int argc, char **argv, 
+			char*& ip, int& port, 
+			char*& nick, int& room, int& maxpl
+			)
+{
+	if ( argc >= 5 ) {
+		ip = new char [strlen (argv[1])];
+		nick = new char [strlen (argv[3])];
+
+		port = room = -1;
+		strcpy (ip, argv[1]);
+
+		sscanf (argv[2], "%d", &port);
+		if ( port == -1 ) {
+			perror ("Syntax error in parse port.\n");
+			exit (1);
+		}
+		
+		strcpy (nick, argv[3]);
+
+		sscanf (argv[4], "%d", &room);
+		if ( room == -1 ) {
+			perror ("Syntax error in parse room.\n");
+			exit (1);
+		}
+
+		if ( argc == 6 ) {
+			maxpl = -1;
+			sscanf (argv[5], "%d", &maxpl);
+			if ( maxpl == -1 ) {
+				perror ("Syntax error in parse max players to start.\n");
+				exit (1);
+			}
+		}
+	} else {
+		perror ("Not enough parametrs.\n");
+		exit (1);
+	}
+}
+
+
+
+void quit (Game &g, char* &ip, char* &nick)
+{
+	g.quit ();
+
+	delete [] ip;
+	delete [] nick;
+}
+
+
+
+/* */
+int main(int argc, char **argv)
+{	
+	char *ip, *nick;
+	int port, room, maxpl;
+
+	ParseArguments (argc, argv, ip, port, nick, room, maxpl);
+
+	Game g(ip, port);
+
+	login (g, argc, nick, room, maxpl);
+
+	g.startinfo ();
+
+	play (g);
+
+	quit (g, ip, nick);
+
+	return 0;
+}
+
+
+
 
 /*
 		printf ("==================  Check data: =============\n");
@@ -72,72 +144,3 @@ void play (Game &g)
 		);
 		printf ("=================     E N D     =============\n");
 */
-
-
-
-/* */
-void ParseArguments (	int argc, char **argv, 
-			char*& ip, int& port, 
-			char*& nick, int& room, int& maxpl
-			)
-{
-	if ( argc >= 5 ) {
-		port = room = -1;
-		strcpy (ip, argv[1]);
-
-		sscanf (argv[2], "%d", &port);
-		if ( port == -1 ) {
-			perror ("Syntax error in parse port.\n");
-		}
-		
-		strcpy (nick, argv[3]);
-
-		sscanf (argv[4], "%d", &room);
-		if ( room == -1 ) {
-			perror ("Syntax error in parse room.\n");
-		}
-
-		if ( argc == 6 ) {
-			maxpl = -1;
-			sscanf (argv[5], "%d", &maxpl);
-			if ( maxpl == -1 ) {
-				perror ("Syntax error in parse max players to start.\n");
-			}
-		}
-	} else {
-		perror ("Not enough parametrs.\n");
-	}
-}
-
-
-
-/* */
-int main(int argc, char **argv)
-{	
-	printf("Start program.\n");
-
-	char *ip = new char [strlen (argv[1])];
-	int port;
-	char *nick = new char [strlen (argv[3])];
-	int room;
-	int maxpl;
-
-	ParseArguments (argc, argv, ip, port, nick, room, maxpl);
-
-	Game g(ip, port);
-
-	login (g, argc, nick, room, maxpl);
-
-	g.startinfo ();
-
-	play (g);
-
-	printf ("Game is end for you ;-).\n");
-
-	delete [] ip;
-	delete [] nick;
-
-	printf("End program.\n");
-
-	return 0;
-}
