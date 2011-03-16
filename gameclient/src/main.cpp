@@ -40,6 +40,8 @@ void play (Game &g)
 
 		g.turn ();
 		g.waitendturn ();
+
+		g.getinfo ();		// ATT
 	}
 }
 
