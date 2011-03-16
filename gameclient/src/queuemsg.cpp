@@ -107,10 +107,11 @@ char * QueueMsg::getmsgq()
 QueueMsg::~QueueMsg ()
 {
 	QueueElem *cur = first;	
-	while ( cur != 0 ) {
+	while ( first != 0 ) {
+		first = cur->next;
 		delete [] cur->str;
-		cur = first->next;
-		delete first;
+		delete cur;
+		cur = first;
 	}
 }
 
