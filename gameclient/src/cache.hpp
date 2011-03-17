@@ -3,7 +3,7 @@
 
 #include "socket.hpp"
 
-class Cache{
+class Cache {
 	Socket link;
 
 	int sd;

@@ -1,11 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <string.h>
-
 #include <unistd.h>
-
 #include "game.hpp"
+
+void login (Game &g, int argc, char *nick, int room, int maxpl);
+void play (Game &g);
+void ParseArguments (	int argc, char **argv, 
+			char*& ip, int& port, 
+			char*& nick, int& room, int& maxpl
+			);
+void quit (Game &g, char* &ip, char* &nick);
+
+
 
 
 void login (Game &g, int argc, char *nick, int room, int maxpl)
@@ -119,30 +126,3 @@ int main(int argc, char **argv)
 
 	return 0;
 }
-
-
-
-
-/*
-		printf ("==================  Check data: =============\n");
-		printf ("my_id:%s.\nmonth:%d.\nplayers:%d.\nact_pl:%d.\nsullpy:%d.\nraw_price:%d.\ndemand:%d.\nprod_price:%d.\nmoney(n):%d.\nraw(n):%d\nprod(n):%d\n.factories(n):%d.\nauto_factories(n):%d.\nmanufactured(n):%d\n.sold(n):%d.\nsold_price(n)%d.\nbought(n)%d.\nbought_price(n)%d.\n", 
-		g._my_id (), 
-		g._month (), 
-		g._players (),
-		g._active_players (),
-		g._supply (),
-		g._raw_price (), g._demand (), 
-		g._production_price (), 
-		g._money(g._my_id ()), 
-		g._raw (g._my_id ()), 
-		g._production (g._my_id ()), 
-		g._factories (g._my_id ()), 
-		g._auto_factories (g._my_id ()), 
-		g._manufactured (g._my_id ()), 
-		g._result_raw_sold (g._my_id ()), 
-		g._result_raw_price (g._my_id ()), 
-		g._result_prod_bought (g._my_id ()), 
-		g._result_prod_price (g._my_id ()) 
-		);
-		printf ("=================     E N D     =============\n");
-*/
