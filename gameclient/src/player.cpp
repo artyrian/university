@@ -82,7 +82,7 @@ void ListPlayer::add (Player *pl)
 
 
 
-Player * ListPlayer::find (char *nick)
+Player * ListPlayer::find (const char *nick)
 {
 	ListElem *cur = first;
 	while ( cur != 0 ) {

@@ -45,7 +45,7 @@ public:
 	void readqueue ();
 	void quit ();
 
-	int _checkactive (char *);
+	int checkactive (char *);
 
 	void market ();
 
@@ -55,24 +55,24 @@ public:
 	void build () const;
 	void turn () const;
 
-	char* _my_id () const;
-	int _month () const;
-	int _players () const;
-	int _active_players () const;
-	int _supply () const;
-	int _raw_price () const;
-	int _demand () const;
-	int _production_price () const;
-	int _money (char *nick) const;
-	int _raw (char *nick) const;
-	int _production (char *nick) const;
-	int _factories (char *nick) const;
-	int _auto_factories (char *nick) const;
-	int _manufactured (char *nick) const;
-	int _result_raw_sold (char *nick) const;
-	int _result_raw_price (char *nick) const;
-	int _result_prod_bought (char *nick) const;
-	int _result_prod_price (char *nick) const;
+	char* my_id () const;
+	int curmonth () const;
+	int players () const;
+	int active_players () const;
+	int supply () const;
+	int raw_price () const;
+	int demand () const;
+	int production_price () const;
+	int money (const char *nick) const;
+	int raw (const char *nick) const;
+	int production (const char *nick) const;
+	int factories (const char *nick) const;
+	int auto_factories (const char *nick) const;
+	int manufactured (const char *nick) const;
+	int result_raw_sold (const char *nick) const;
+	int result_raw_price (const char *nick) const;
+	int result_prod_bought (const char *nick) const;
+	int result_prod_price (const char *nick) const;
 
 	~Game ();
 };

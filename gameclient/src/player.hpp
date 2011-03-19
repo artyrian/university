@@ -39,7 +39,7 @@ public:
 	ListPlayer ();
 
 	void add (Player *pl);
-	Player * find (char *nick);
+	Player * find (const char *nick);
 	Player * parse (char *str) const;
 
 	~ListPlayer ();

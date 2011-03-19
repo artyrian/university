@@ -32,7 +32,7 @@ void Game::bankrupt (char *nick)
 }
 
 
-int Game::_checkactive (char *nick)
+int Game::checkactive (char *nick)
 {
 	Player *pl = lp->find (nick);
 	return pl->factive;
@@ -352,86 +352,86 @@ void Game::checkok ()
 }
 
 
-char* Game::_my_id () const
+char* Game::my_id () const
 {
 	return nick;
 }
 
-int Game::_month () const
+int Game::curmonth () const
 {
 	return month;
 }
-int Game::_players () const
+int Game::players () const
 {
 	return inf.players;
 }
-int Game::_active_players () const 
+int Game::active_players () const 
 {
 	return inf.active_players;
 }
-int Game::_supply () const
+int Game::supply () const
 {
 	return mrk.raw_count;
 }
-int Game::_raw_price () const
+int Game::raw_price () const
 {
 	return mrk.raw_cost;
 }
-int Game::_demand () const 
+int Game::demand () const 
 {
 	return mrk.prod_count;
 }
-int Game::_production_price () const
+int Game::production_price () const
 {
 	return mrk.prod_cost;
 }
-int Game::_money (char *nick) const
+int Game::money (const char *nick) const
 {
 	Player *pl = lp->find (nick);
 	return pl->money;
 }
-int Game::_raw (char *nick) const
+int Game::raw (const char *nick) const
 {
 	Player *pl = lp->find (nick);
 	return pl->raw;
 }
-int Game::_production (char *nick) const
+int Game::production (const char *nick) const
 {
 	Player *pl = lp->find (nick);
 	return pl->prod;	
 }
-int Game::_factories (char *nick) const 
+int Game::factories (const char *nick) const 
 {
 	Player *pl = lp->find (nick);
 	return pl->plants;
 }
-int Game::_auto_factories (char *nick) const 
+int Game::auto_factories (const char *nick) const 
 {
 	Player *pl = lp->find (nick);
 	return pl->autoplants;
 }
-int Game::_manufactured (char *nick) const
+int Game::manufactured (const char *nick) const
 {
 	Player *pl = lp->find (nick);
 	int manufactured = pl->prod - pl->last_prod + pl->sold;
 	return manufactured;
 }
-int Game::_result_raw_sold (char *nick) const
+int Game::result_raw_sold (const char *nick) const
 {
 	Player *pl = lp->find (nick);
 	return pl->bought;
 }
-int Game::_result_raw_price (char *nick) const
+int Game::result_raw_price (const char *nick) const
 {
 	Player *pl = lp->find (nick);
 	return pl->bought_price;
 }
-int Game::_result_prod_bought (char *nick) const
+int Game::result_prod_bought (const char *nick) const
 {
 	Player *pl = lp->find (nick);
 	return pl->sold;
 }
-int Game::_result_prod_price (char *nick) const
+int Game::result_prod_price (const char *nick) const
 {
 	Player *pl = lp->find (nick);
 	return pl->sold_price;

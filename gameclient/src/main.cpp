@@ -31,8 +31,8 @@ void login (Game &g, int argc, char *nick, int room, int maxpl)
 
 void play (Game &g)
 {
-	while ( g._checkactive (g._my_id ()) != 0 && 
-		g._active_players () != 1 )	
+	while ( g.checkactive (g.my_id ()) != 0 && 
+		g.active_players () != 1 )	
 	{
 		g.readqueue ();
 		g.getinfo ();
