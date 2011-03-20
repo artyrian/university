@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "game.hpp"
+
+#include "robot/game.hpp"
+
 
 void login (Game &g, int argc, char *nick, int room, int maxpl);
 void play (Game &g);

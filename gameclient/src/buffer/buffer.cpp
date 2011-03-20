@@ -1,12 +1,15 @@
-void Buffer::ext_buffer ()
+#include "buffer.hpp"
+#include <string.h>
+
+void Buffer:: ext_buffer ()
 {
-	char *newbuf = new char [buf_size * (++part)];
+	char *newbuf = new char [size_part * (++part)];
 	strcpy (newbuf, buf);
 	delete [] buf;
 	buf = newbuf;
 }
 
-void clear ()
+void Buffer:: clear ()
 {
 	for ( int i = 0; i <= count; i++) {
 		buf [i] = '\0';
@@ -15,26 +18,24 @@ void clear ()
 	part = 1;
 }
 
-char * Buffer::add (char c)
+void Buffer:: add (int c)
 {
-	if ( count == (buf_size * part - 1) ) {
+	if ( count == (size_part * part - 1) ) {
 		ext_buffer ();
 	}
 
 	buf [count++] = c;
 	buf [count] = '\0';
-
-	return buf;
 }
 
-Buffer::Buffer ()
-	: count = 0, part = 1;
+Buffer:: Buffer ()
+	: count (0), part (1)
 {
-	buf = new char [buf_size];
+	buf = new char [size_part];
 	clear ();
 }
 
-Buffer::~Buffer ()
+Buffer:: ~Buffer ()
 {
 	delete [] buf;
 }

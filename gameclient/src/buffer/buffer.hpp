@@ -2,16 +2,16 @@
 #define _BUFFER_HPP_
 
 class Buffer {
-	const int buf_size = 32;
-	char * str;
+	static const int size_part = 32;
+	char * buf;
 	int count;
 	int part;
 
 	void ext_buffer ();
-	void clear ();
 public:
 	Buffer ();
-	void add ();
+	void add (int c);
+	void clear ();
 	~Buffer ();
 };
 
