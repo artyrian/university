@@ -49,8 +49,8 @@ enum type_of_lex {
 struct TableLexem {
 	static const char *		word [];
 	static const char * 		delim [];
-	static type_of_lex	lex_word [];
-	static type_of_lex 	lex_delim [];
+	static type_of_lex		lex_word [];
+	static type_of_lex 		lex_delim [];
 };
 
 #endif
