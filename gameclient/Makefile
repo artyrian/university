@@ -3,7 +3,7 @@
 #
 
 root_source_dir  := src
-source_subdirs   := .
+source_subdirs   := . robot buffer lexer
 compile_flags    := -Wall
 link_flags       :=
 libraries        := 
