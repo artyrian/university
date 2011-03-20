@@ -4,6 +4,7 @@
 #include <unistd.h>
 
 #include "robot/game.hpp"
+#include "lexer/lexer.hpp"
 
 
 void login (Game &g, int argc, char *nick, int room, int maxpl);
@@ -12,8 +13,6 @@ void ParseArguments (	int argc, char **argv,
 			char*& ip, int& port, 
 			char*& nick, int& room, int& maxpl
 			);
-void quit (Game &g, char* &ip, char* &nick);
-
 
 
 
@@ -62,8 +61,8 @@ void ParseArguments (	int argc, char **argv,
 			)
 {
 	if ( argc >= 5 ) {
-		ip = new char [strlen (argv[1])];
-		nick = new char [strlen (argv[3])];
+		ip = argv[1];
+		nick = argv[3];
 
 		port = room = -1;
 		strcpy (ip, argv[1]);
@@ -98,16 +97,6 @@ void ParseArguments (	int argc, char **argv,
 
 
 
-void quit (Game &g, char* &ip, char* &nick)
-{
-	g.quit ();
-
-	delete [] ip;
-	delete [] nick;
-}
-
-
-
 /* */
 int main(int argc, char **argv)
 {	
@@ -124,7 +113,7 @@ int main(int argc, char **argv)
 
 	play (g);
 
-	quit (g, ip, nick);
+	g.quit ();
 
 	return 0;
 }
