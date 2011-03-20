@@ -28,3 +28,20 @@ void print ()
 	printf ("(%d,%d)", t_lex, v_lex);
 
 }
+
+Scanner::Scanner ()
+	: buf ()
+{
+	// open where we must read;
+
+	// begin state
+
+	// get first symbol or create new method
+	// where I feed symbol;
+}
+
+Lex Scanner::get_lex ()
+{
+	
+	return Lex();
+}
