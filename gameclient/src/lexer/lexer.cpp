@@ -87,6 +87,27 @@ Ident::~Ident ()
 	delete [] name;
 }
 
+char * String:: get_name ()
+{
+	return name;
+}
+
+void put_name (const char *str)
+{
+	name = new char [ strlen (str) + 1 ];
+	strcpy (name, str);
+}
+
+type_of_lex get_type ()
+{
+	return type;
+}
+
+void String::put_type (type_of_lex t)
+{
+	type = t;
+}
+
 void TableIdent:: extend_table ()
 {
 	perror ("Not enought place to next ident.\n");
@@ -138,6 +159,30 @@ int TableIdent:: put (const char * buf)
 TableIdent:: ~TableIdent ()
 {
 	delete [] p;
+}
+
+TableString::TableString ()
+	: size (1);
+{
+	s = new String [ size ];
+}
+
+String & TableString:: operator (int k)
+{
+	return s[k];
+}
+
+int TableString:: put (const char * buf)
+{
+	extend_table ();
+	
+	
+	return ;
+}
+
+TableString::~TableString ()
+{
+	delete [] s;
 }
 
 

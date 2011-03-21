@@ -32,6 +32,7 @@ public:
 	void put_assign ();
 	int get_value ();
 	void put_value (int v);
+	~Ident ();
 };
 
 class TableIdent {
@@ -47,6 +48,31 @@ public:
 	~TableIdent ();
 };
 
+class String {
+	char * 		name;
+	type_of_lex	type;
+pulic:
+	char * get_name ();
+	void put_name (const char * str);
+	type_of_lex get_type ();
+	void put_type (type_of_lex t);
+};
+
+class TableString {
+	
+	String *s;
+	int	size;
+	int	top;
+
+	void extend_table ();
+public:
+	TableString ();
+	String & operator[] (int k);
+	int put (const char * buf);
+	~TableString ();
+	
+
+};
 
 
 class Scanner {
