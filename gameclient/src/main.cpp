@@ -20,12 +20,11 @@ int main (int argc, char ** argv)
 		if ( (c = fgetc (fp)) == -1 ) {
 			break;
 		}
-
+		
 		lex = la.feed_symbol (c);
 
 		if ( lex.get_type () != 0 ) {
 			lex.print ();
-			lex = Lex (LEX_NULL, 0);	
 		}
 		
 	}
@@ -36,7 +35,6 @@ int main (int argc, char ** argv)
 		lex = Lex (LEX_NULL, 0);	
 	}
 
-	fclose (fp);
-
+	fclose (fp); 
 	return 0;
 }
