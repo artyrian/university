@@ -87,104 +87,11 @@ Ident::~Ident ()
 	delete [] name;
 }
 
-char * String:: get_name ()
-{
-	return name;
-}
+//======TEMPLATES====================================
 
-void put_name (const char *str)
-{
-	name = new char [ strlen (str) + 1 ];
-	strcpy (name, str);
-}
+//-------------------------------
 
-type_of_lex get_type ()
-{
-	return type;
-}
-
-void String::put_type (type_of_lex t)
-{
-	type = t;
-}
-
-void TableIdent:: extend_table ()
-{
-	perror ("Not enought place to next ident.\n");
-	
-	int new_size = 2 * size;	
-	Ident * newp = new Ident [ new_size ];
-
-	for ( int i = 1; i < top; i++ ) {
-		newp[i] = p[i];
-	}
-	
-	delete [] p;
-	
-	p = newp;
-	size = new_size;
-}
-
-
-TableIdent:: TableIdent ()
-	: size (4)
-{
-	p = new Ident [size];
-	top = 1;
-}
-
-Ident& TableIdent:: operator[] (int k)
-{
-	return p[k];
-}
-
-int TableIdent:: put (const char * buf)
-{
-	if ( top == size - 1) {
-		extend_table ();
-	}
-
-	for ( int i = 1; i < top; ++i ) {
-		if ( strcmp (buf, p[i].get_name ()) == 0 ) {
-			return i;	
-		}
-	} 
-
-	p[top].put_name (buf);
-	top++;
-
-	return (top - 1);
-}
-
-TableIdent:: ~TableIdent ()
-{
-	delete [] p;
-}
-
-TableString::TableString ()
-	: size (1);
-{
-	s = new String [ size ];
-}
-
-String & TableString:: operator (int k)
-{
-	return s[k];
-}
-
-int TableString:: put (const char * buf)
-{
-	extend_table ();
-	
-	
-	return ;
-}
-
-TableString::~TableString ()
-{
-	delete [] s;
-}
-
+//=======================================
 
 
 int Scanner::look (const char * buf, const char ** list)
@@ -202,8 +109,8 @@ int Scanner::look (const char * buf, const char ** list)
 }
 
 
-Scanner::Scanner ()
-	: table_ident ()
+Scanner:: Scanner ()
+	: table ()
 {
 	buffer = new Buffer;
 
@@ -312,10 +219,10 @@ Lex Scanner::feed_symbol (int c)
 			return Lex (LEX_NULL, 0);
 		}
 		else {
-			i = table_ident.put (buffer->get ());
+			i = table.ident.put (buffer->get ());
 			CS = H;
 			feed_symbol (c);
-			return Lex (LEX_ID, i );
+			return Lex (LEX_ID, i);
 		}
 		break;
 
@@ -350,17 +257,18 @@ Lex Scanner::feed_symbol (int c)
 			return Lex (LEX_NULL, 0);
 		}
 		else {
-			// create strchar.
+			i = table.string.put (buffer->get ());
+			CS = H;
 			feed_symbol (c);
-			return Lex (LEX_NULL, 0);
+			return Lex (LEX_STR, 0);
 		}
 		break;
-
+	
 	case DELIM:
 		if ( (i = look (buffer->get (), table.delim)) != 0 ) {
 			CS = H;
 			feed_symbol (c);
-			return Lex (table.lex_delim[i], i);
+			return Lex (table.lex_delim [i], i);
 		}
 		else {
 			perror ("Not found delim (state DELIM).\n");
@@ -386,13 +294,14 @@ Lex Scanner::feed_symbol (int c)
 			return Lex (LEX_NULL, 0);
 		}
 		else {
-			feed_symbol (c);
-			return Lex (LEX_NULL, 0);
-			/*
-			i = table_fn.put (buffer->get ());
-			CS = H;
-			return Lex (LEX_FN, i );
-			*/
+			if ( (i = look (buffer->get (), table.function)) != 0 ) {
+				CS = H;
+				feed_symbol (c);
+				return Lex (table.lex_function [i], i);
+			}
+			else {
+				perror ("Not found function.\n");
+			}
 		}
 		break;
 	}
