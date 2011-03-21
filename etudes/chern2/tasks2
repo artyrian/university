@@ -1,0 +1,102 @@
+/* Задача ps02-1
+ * Time limit:	1 s
+ * Memory limit:	64 M
+
+ * Напишите функцию process, которая принимает по ссылке три параметра:
+
+    * вектор целых (int) чисел;
+    * неизменяемый список целых (int) чисел;
+    * целый положительный параметр: шаг по вектору.
+
+ * Функция проходит элементы вектора целых чисел с заданным шагом, а список с шагом 1. Если очередной 
+ * элемент списка меньше нуля, он копируется в соответствующий элемент вектора.
+
+ * Затем элементы вектора выводятся на стандартный поток вывода в прямом порядке.
+
+ * Функция должна возвращать количество скопированных элементов списка.
+
+ * Для доступа к элементам массива и списка использовать только итераторы. 
+*/
+=====================
+/* Задача ps02-2
+ * Time limit: 1 s
+ * Memory limit:   64 M
+
+ * Напишите определения классов A и B так, чтобы компилировалась 
+ и работала следующая программа.
+
+ * Программа должна выводить числа 2 и 10.
+ */
+
+#include <new>
+#include <iostream>
+
+
+int
+main()
+{
+    B *pb1 = new(std::nothrow) B(10);
+    B *pb2 = new(std::nothrow) A(1, 2);
+
+    if ( dynamic_cast<A*>(pb2) != NULL ) {
+        static_cast<A*>(pb2)->g();
+        std::cout << static_cast<A*>(pb2)->val2 << std::endl;
+    }
+    std::cout << pb1->val1 << std::endl;
+
+    return 0;
+}
+=========================
+/*Задача ps02-3
+Time limit: 1 s
+Memory limit:   64 M
+
+Найдите и исправьте все синтаксические и семантические ошибки в приведенной ниже программе.
+
+Удалять строки или конструкции языка нельзя!
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+class MyCompare
+{
+public:
+    boolean operator(const string &s1, const string &s2)
+    {
+        if (s1.length() < s2.length()) return true;
+        if (s1.length() > s2.length()) return false;
+        return s1 < s2;
+    }
+    static void do_work(vector<string> &vec, vector<string> &vec2);
+}
+
+void
+do_work(const vector<string> &vec, vector<string> &vec2)
+{
+    sort(vec.begin(), vec.end(), MyCompare);
+
+    vector<string>::const_iterator i1 = vec.start();
+    vector<string>::const_iterator i2 = vec.start() + 1;
+    for (; i1 < vec.end() && i2 < vec.end(); ++i1, ++i2) {
+        vec2.push_back(*i1 + " " + *i2);
+    }
+}
+
+char
+main()
+{
+    string s;
+    vector<int> v1, v2;
+
+    while (stdin >> s) {
+        v1->push_back(s);
+    }
+    MyCompare::do_work(v1, v2);
+    for (vector<string>::const_iterator i = v2.start(), i != v2.end(), ++i) {
+        cout << *i << endl;
+    }
+    return 0;
+}
