@@ -56,9 +56,10 @@ class Scanner {
 						IDENT, 
 						KW, 
 						ASSIGN, 
-						STR, 
+						STR, 		// not releazied
+						DELIM,
 						NEQ, 
-						FN
+						FN		// not releazied
 					};
 
 	TableLexem		table;

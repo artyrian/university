@@ -204,14 +204,12 @@ Lex Scanner::feed_symbol (int c)
 			CS = KW;
 			return Lex (LEX_NULL, 0);
 		}
-/*
 		else if ( c == '!' ) {
 			buffer->clear ();
 			buffer->add (c);
 			CS = NEQ;
 			return Lex (LEX_NULL, 0);
 		}
-*/
 		else if ( c == '?' ) {
 			buffer->clear ();
 			buffer->add (c);
@@ -224,7 +222,7 @@ Lex Scanner::feed_symbol (int c)
 			CS = IDENT;
 			return Lex (LEX_NULL, 0);
 		}
-		else if ( c == ':' ) {
+		else if ( c == '=' ) {
 			buffer->clear ();
 			buffer->add (c);
 			CS = ASSIGN;
@@ -238,18 +236,14 @@ Lex Scanner::feed_symbol (int c)
 		else if ( isdelim (c) != 0 ) {
 			buffer->clear ();
 			buffer->add (c);
-			if ( (i = look (buffer->get (), table.delim)) != 0 ) {
-				CS = H;
-				return Lex (table.lex_delim[i], i);
-			}
-			else {
-				perror ("Not found delim (state DELIM).\n");
-			}
+			CS = DELIM;
+			return Lex (LEX_NULL, 0);
 		}
 		else {
 			perror ("Undefined symbol so can't set state.\n");
 		}
 		break;
+
 	case NUM:
 		if ( isdigit (c) ) {
 			digit = digit * 10 + ( c - '0');
@@ -257,9 +251,11 @@ Lex Scanner::feed_symbol (int c)
 		}
 		else {
 			CS = H;
+			feed_symbol (c);
 			return Lex (LEX_NUM, digit);
 		}
 		break;
+
 	case IDENT:
 		if ( isalpha (c) || isdigit (c) ) {
 			buffer->add (c);
@@ -268,9 +264,11 @@ Lex Scanner::feed_symbol (int c)
 		else {
 			i = table_ident.put (buffer->get ());
 			CS = H;
+			feed_symbol (c);
 			return Lex (LEX_ID, i );
 		}
 		break;
+
 	case KW:
 		if ( isalpha (c) || isdigit (c) ) {
 			buffer->add (c);
@@ -279,6 +277,7 @@ Lex Scanner::feed_symbol (int c)
 		else {
 			if ( (i = look (buffer->get (), table.word)) != 0 ) {
 				CS = H;
+				feed_symbol (c);
 				return Lex (table.lex_word [i], i);
 			} 
 			else {
@@ -286,21 +285,15 @@ Lex Scanner::feed_symbol (int c)
 			}
 		}
 		break;
+
 	case ASSIGN:
-		if ( c == '=' ) {
-			buffer->add (c);
-			if ( (i = look (buffer->get (), table.delim)) != 0 )  {
-				CS = H;
-				return Lex (table.lex_delim [i], i);
-			} else {
-				perror ("Not found assign.\n");
-				return Lex (LEX_NULL, 0);
-			}
-		}
-		else {
-			perror ("Not found delim (state(ASSIGN).\n");
-		}
+		if ( (i = look (buffer->get (), table.delim)) != 0 )  {
+			CS = H;
+			feed_symbol (c);
+			return Lex (table.lex_delim [i], i);
+		}		
 		break;
+
 	case STR:
 		if ( c != '"' ) {
 			buffer->add (c);
@@ -308,37 +301,43 @@ Lex Scanner::feed_symbol (int c)
 		}
 		else {
 			// create strchar.
+			feed_symbol (c);
 			return Lex (LEX_NULL, 0);
 		}
 		break;
-/*
+
 	case DELIM:
 		if ( (i = look (buffer->get (), table.delim)) != 0 ) {
 			CS = H;
+			feed_symbol (c);
 			return Lex (table.lex_delim[i], i);
 		}
 		else {
 			perror ("Not found delim (state DELIM).\n");
 		}
 		break;
-*/
+
 	case NEQ:
 		if ( c == '=' ) {
 			buffer->add (c);
 			i = look (buffer->get (), table.delim);
 			CS = H;
+			feed_symbol (c);
 			return Lex (LEX_NEQ, i);
 		}
 		else {
 			perror ("Error in state NEG.\n");
 		}
 		break;
+
 	case FN:
 		if ( isalpha (c) || isdigit (c) ) {
 			buffer->add (c);
 			return Lex (LEX_NULL, 0);
 		}
 		else {
+			feed_symbol (c);
+			return Lex (LEX_NULL, 0);
 			/*
 			i = table_fn.put (buffer->get ());
 			CS = H;
@@ -349,6 +348,8 @@ Lex Scanner::feed_symbol (int c)
 	}
 	
 	CS = H;	
-	printf ("Error switch.c[%c]. Str number[%d]. Buf[%s]\n", c,count_str + 1 , buffer->get ());
+	printf ( "Error switch.c[%c]. Str number[%d]. Buf[%s]\n", 
+			c, count_str + 1 , buffer->get ()
+		);
 	return Lex (LEX_NULL, 0);
 }
