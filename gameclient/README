@@ -1,8 +1,14 @@
+QUESTIONS:
+1) What is delim, how many symbols in it;
+2) how create state delim;
+3) How send or solve problem with prev symbol in rather situations?
 NEED TO DO:
 --------------
 1) Create language;
 2) create state fn;
 3) create state str;
+4) Add to class Lex info about number str;
+5) Create class Exeption;
 ---------------
 
 /*
