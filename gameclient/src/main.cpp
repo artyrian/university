@@ -1,119 +1,42 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include "robot/game.hpp"
 #include "lexer/lexer.hpp"
+#include <stdlib.h>
 
 
-void login (Game &g, int argc, char *nick, int room, int maxpl);
-void play (Game &g);
-void ParseArguments (	int argc, char **argv, 
-			char*& ip, int& port, 
-			char*& nick, int& room, int& maxpl
-			);
-
-
-
-void login (Game &g, int argc, char *nick, int room, int maxpl)
+int main (int argc, char ** argv)
 {
-	g.setnick (nick);
-
-	if ( argc == 6 ) {
-		g.create ();
-		g.waitplayers (maxpl);
-	} else {
-		g.joinroom (room);
-		g.waitstart ();
-	}
-}
-
-
-void play (Game &g)
-{
-	while ( g.checkactive (g.my_id ()) != 0 && 
-		g.active_players () != 1 )	
-	{
-		g.readqueue ();
-		g.getinfo ();
-
-		g.market ();
-
-		g.buy (2, -1);
-
-		g.sell (2, -1);
-
-		g.prod (2);
-
-		g.turn ();
-		g.waitendturn ();
-
-		g.getinfo ();		// ATT
-	}
-}
-
-
-
-void ParseArguments (	int argc, char **argv, 
-			char*& ip, int& port, 
-			char*& nick, int& room, int& maxpl
-			)
-{
-	if ( argc >= 5 ) {
-		ip = argv[1];
-		nick = argv[3];
-
-		port = room = -1;
-		strcpy (ip, argv[1]);
-
-		sscanf (argv[2], "%d", &port);
-		if ( port == -1 ) {
-			perror ("Syntax error in parse port.\n");
-			exit (1);
-		}
-		
-		strcpy (nick, argv[3]);
-
-		sscanf (argv[4], "%d", &room);
-		if ( room == -1 ) {
-			perror ("Syntax error in parse room.\n");
-			exit (1);
-		}
-
-		if ( argc == 6 ) {
-			maxpl = -1;
-			sscanf (argv[5], "%d", &maxpl);
-			if ( maxpl == -1 ) {
-				perror ("Syntax error in parse max players to start.\n");
-				exit (1);
-			}
-		}
-	} else {
-		perror ("Not enough parametrs.\n");
+	Scanner la;
+	FILE * fp;
+	
+	if ( (fp = fopen (argv[1], "r")) == 0 ) {
+		perror ("Couldn'n open file.\n");
 		exit (1);
 	}
-}
 
+	int c = 0;
+	Lex lex = Lex (LEX_NULL, 0);
 
+	while ( true ) {
+		if ( (c = fgetc (fp)) == -1 ) {
+			break;
+		}
 
-/* */
-int main(int argc, char **argv)
-{	
-	char *ip, *nick;
-	int port, room, maxpl;
+		lex = la.feed_symbol (c);
 
-	ParseArguments (argc, argv, ip, port, nick, room, maxpl);
+		if ( lex.get_type () != 0 ) {
+			lex.print ();
+			lex = Lex (LEX_NULL, 0);	
+		}
+		
+	}
 
-	Game g(ip, port);
+	lex = la.feed_symbol (' ');
+	if ( lex.get_type () != 0 ) {
+		lex.print ();
+		lex = Lex (LEX_NULL, 0);	
+	}
 
-	login (g, argc, nick, room, maxpl);
-
-	g.startinfo ();
-
-	play (g);
-
-	g.quit ();
+	fclose (fp);
 
 	return 0;
 }
