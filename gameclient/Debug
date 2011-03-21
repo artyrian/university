@@ -6,4 +6,6 @@
 mkdir -p bin
 mkdir -p obj
 mkdir -p obj/Debug
+rm -r obj/Debug/*
 make --directory=./obj/Debug --makefile=../../Makefile build_flags="-g" program_name=../../bin/appDBG
+
