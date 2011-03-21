@@ -28,6 +28,11 @@ void Buffer:: add (int c)
 	buf [count] = '\0';
 }
 
+char * Buffer:: get ()
+{
+	return buf;
+}
+
 Buffer:: Buffer ()
 	: count (0), part (1)
 {

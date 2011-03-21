@@ -12,6 +12,7 @@ public:
 	Buffer ();
 	void add (int c);
 	void clear ();
+	char * get ();
 	~Buffer ();
 };
 
