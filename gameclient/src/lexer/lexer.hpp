@@ -38,8 +38,10 @@ class TableIdent {
 	Ident * p;
 	int	size;
 	int 	top;
+	
+	void extend_table ();
 public:
-	TableIdent (int max_size);
+	TableIdent ();
 	Ident & operator[] (int k);
 	int put (const char * buf);
 	~TableIdent ();
@@ -48,16 +50,31 @@ public:
 
 
 class Scanner {
-	enum			state { H, NUM, IDENT, KW, AS, STR };
-	TableLexem		table;
-	state			CS;
-	int			c;
-	Buffer * 		buf;
+	enum			state 	{	
+						H, 
+						NUM, 	
+						IDENT, 
+						KW, 
+						ASSIGN, 
+						STR, 
+						NEQ, 
+						FN
+					};
 
-	int look (const char * buf, char ** list);
+	TableLexem		table;
+	TableIdent		table_ident;
+	state			CS;
+	int			save_char;
+	int			count_str;
+	Buffer * 		buffer;
+	int 			digit;
+
+	int isdelim (int c);
+	int look (const char * buf, const char ** list);
 public:
 	Scanner ();
 	Lex feed_symbol (int c);
+	~Scanner ();
 };
 
 #endif

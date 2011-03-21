@@ -23,11 +23,11 @@ enum type_of_lex {
 	LEX_WRITE,				// 18
 	LEX_FIN,				// 19
 	LEX_SEMICOLON, 				// 20
-	LEX_COMMA, 
+	LEX_COMMA,
 	LEX_COLON,
 	LEX_ASSIGN,
 	LEX_LPAREN,
-	LEX_RPAREN,
+	LEX_RPAREN,				// 25
 	LEX_EQ,
 	LEX_LSS,
 	LEX_GTR,
@@ -40,16 +40,17 @@ enum type_of_lex {
 	LEX_GEQ,				// 35
 	LEX_NUM,				// 36
 	LEX_ID,					// 37
-	POLIZ_LABEL,				// 38
-	POLIZ_ADDRESS,				// 39
-	POLIZ_GO,				// 40
-	POLIZ_FGO				// 41
+	LEX_FN,					 
+	POLIZ_LABEL,				// 
+	POLIZ_ADDRESS,				//
+	POLIZ_GO,				// 
+	POLIZ_FGO				// 
 };
 
 struct TableLexem {
-	static const char *		word [];
-	static const char * 		delim [];
-	static type_of_lex		lex_word [];
+	static const char *			word [];
+	static const char *			delim [];
+	static type_of_lex 		lex_word [];
 	static type_of_lex 		lex_delim [];
 };
 
