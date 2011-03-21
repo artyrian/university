@@ -1,7 +1,6 @@
 #
 # Взято отсюда: http://habrahabr.ru/blogs/development/111691/
 #
-
 root_source_dir  := src
 source_subdirs   := . robot buffer lexer
 compile_flags    := -Wall
