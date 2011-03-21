@@ -1,0 +1,7 @@
+# Compiled source #
+*.o
+obj/
+
+# Swp files #
+.*.swp
+
