@@ -1,10 +1,9 @@
--
-NOTHING;
-+
-+1) change "_name" to "name" in class Game; 
-+2) parametrs char * to const char * in methods Game;
-
-
+NEED TO DO:
+--------------
+1) Create language;
+2) create state fn;
+3) create state str;
+---------------
 
 /*
 		printf ("==================  Check data: =============\n");
