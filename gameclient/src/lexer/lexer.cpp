@@ -82,6 +82,11 @@ void Ident:: put_value (int v)
 	value = v;
 }
 
+Ident::~Ident ()
+{
+	delete [] name;
+}
+
 void TableIdent:: extend_table ()
 {
 	perror ("Not enought place to next ident.\n");
