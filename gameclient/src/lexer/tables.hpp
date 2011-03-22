@@ -1,6 +1,8 @@
 #ifndef _TABLES_HPP_
 #define _TABLES_HPP_
 
+#define PART_SIZE_TABLE 4
+
 enum type_of_lex {
 	LEX_NULL,				// 0
 	LEX_AND,				// 1 
@@ -16,6 +18,7 @@ enum type_of_lex {
 	LEX_OR,					// 11
 	LEX_PROGRAM,				// 12
 	LEX_READ,				// 13
+	LEX_STR,				// 13.5
 	LEX_THEN,				// 14
 	LEX_TRUE,				// 15
 	LEX_VAR,				// 16
@@ -40,18 +43,67 @@ enum type_of_lex {
 	LEX_GEQ,				// 35
 	LEX_NUM,				// 36
 	LEX_ID,					// 37
-	LEX_FN,					 
+	LEX_BUY,
+	LEX_PROD,
+	LEX_SELL,
+	LEX_TURN,
 	POLIZ_LABEL,				// 
 	POLIZ_ADDRESS,				//
 	POLIZ_GO,				// 
 	POLIZ_FGO				// 
 };
 
+
+class StorageTypeLex {
+	char * 		name;
+	type_of_lex	type;
+	int 		value;
+//	bool		declare;
+//	bool		assign;
+
+public:
+	char * get_name ();
+	void put_name (const char * str);
+	type_of_lex get_type ();
+	void put_type (type_of_lex t);
+
+	~StorageTypeLex ();
+
+	void operator= (const StorageTypeLex & str);
+
+//	bool get_declare ();
+//	void put_declare ();
+//	bool get_assign ();
+//	void put_assign ();
+};
+
+
+class TableStorageTypeLex {
+	StorageTypeLex *s;
+	int	size;
+	int	top;
+
+	void extend_table ();
+public:
+	TableStorageTypeLex ();
+	StorageTypeLex & operator [] (int k);
+	int put (const char * buf);
+	~TableStorageTypeLex ();
+};
+
+
 struct TableLexem {
-	static const char *			word [];
-	static const char *			delim [];
-	static type_of_lex 		lex_word [];
-	static type_of_lex 		lex_delim [];
+	static const char *	word [];
+	static type_of_lex 	lex_word [];
+
+	static const char *	delim [];
+	static type_of_lex 	lex_delim [];
+
+	static const char *	function [];
+	static type_of_lex	lex_function [];
+
+	TableStorageTypeLex	string;
+	TableStorageTypeLex	ident;
 };
 
 #endif
