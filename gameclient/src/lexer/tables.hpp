@@ -62,9 +62,6 @@ class StorageTypeLex {
 	char * 		name;
 	type_of_lex	type;
 	int 		value;
-//	bool		declare;
-//	bool		assign;
-
 public:
 	char * get_name ();
 	void put_name (const char * str);
@@ -72,13 +69,7 @@ public:
 	void put_type (type_of_lex t);
 
 	virtual ~StorageTypeLex ();
-
 	virtual void operator= (const StorageTypeLex & str);
-
-//	bool get_declare ();
-//	void put_declare ();
-//	bool get_assign ();
-//	void put_assign ();
 };
 
 
@@ -92,6 +83,7 @@ public:
 	TableStorageTypeLex ();
 	StorageTypeLex & operator [] (int k);
 	int put (const char * buf);
+
 	virtual ~TableStorageTypeLex ();
 
 	virtual void operator= (const TableStorageTypeLex & t);
