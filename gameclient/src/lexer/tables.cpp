@@ -221,8 +221,6 @@ int TableStorageTypeLex:: put (const char * buf)
 
 void TableStorageTypeLex:: operator= (const TableStorageTypeLex & t)
 {
-	printf ("start copy.\n");
-
 	name = new char [ strlen (t.name) ];
 	strcpy (name, t.name);
 
@@ -233,7 +231,6 @@ void TableStorageTypeLex:: operator= (const TableStorageTypeLex & t)
 	s = new StorageTypeLex [ top ];
 
 	for ( int i = 1; i < top; ++i ) {
-		
 		s[i] = t.s[i];
 	}
 
@@ -244,7 +241,6 @@ void TableStorageTypeLex:: operator= (const TableStorageTypeLex & t)
 
 void TableArrayStorageTypeLex:: extend_table ()
 {
-	printf ("Extend table array.\n");
 	int new_size = 2 * size;	
 	TableStorageTypeLex * new_t = new TableStorageTypeLex [ new_size ];
 
@@ -256,8 +252,6 @@ void TableArrayStorageTypeLex:: extend_table ()
 	
 	t = new_t;
 	size = new_size;
-	
-	printf ("End of ext table array.\n");
 }
 
 TableStorageTypeLex:: ~TableStorageTypeLex ()
@@ -279,8 +273,6 @@ int TableArrayStorageTypeLex:: put (const char  * buf)
 	
 	t[top].put_name (buf);
 	top++;
-
-	printf ("Create new array.\n");
 
 	return (top - 1);
 }

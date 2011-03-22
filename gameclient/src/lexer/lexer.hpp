@@ -16,7 +16,17 @@ public:
 
 
 class Scanner {
-	enum		state 	{ H, NUM, IDENT, KW, ASSIGN, STR, DELIM, NEQ, FN, LBRACKET, RBRACKET };
+	enum		state 	{ 
+					H, 
+					NUM, 
+					IDENT, 
+					KW, 
+					ASSIGN, 
+					STR, 
+					DELIM, 
+					NEQ, 
+					FN, 
+				};
 	TableLexem	table;
 	state		CS;
 	int		count_str;

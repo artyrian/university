@@ -58,7 +58,7 @@ Scanner:: ~Scanner ()
 
 int Scanner:: isdelim (int c)
 {
-	const char smb [] = "+-*/%<>=&|!();,@";
+	const char smb [] = "+-*/%<>=&|![]();,@";
 	int i = 0;
 
 	while ( smb[i] != '\0' ) {
@@ -109,18 +109,6 @@ Lex Scanner::feed_symbol (int c)
 			buffer->clear ();
 			buffer->add (c);
 			CS = IDENT;
-			return Lex (LEX_NULL, 0);
-		}
-		else if ( c == '[' ) {
-			buffer->clear ();
-			buffer->add (c);
-			CS = LBRACKET;
-			return Lex (LEX_NULL, 0);
-		}
-		else if ( c == ']' ) {
-			buffer->clear ();
-			buffer->add (c);
-			CS = RBRACKET;
 			return Lex (LEX_NULL, 0);
 		}
 		else if ( c == '=' ) {
@@ -252,22 +240,6 @@ Lex Scanner::feed_symbol (int c)
 				perror ("Not found function.\n");
 			}
 		}
-		break;
-
-	case LBRACKET:
-		i = look (buffer->get (), table.delim);	
-		CS = H;
-		feed_symbol (c);
-		return Lex (LEX_LBRACKET, i);
-
-		break;
-
-	case RBRACKET:
-		i = look (buffer->get (), table.delim);	
-		CS = H;
-		feed_symbol (c);
-		return Lex (LEX_RBRACKET, i);
-
 		break;
 	}
 
