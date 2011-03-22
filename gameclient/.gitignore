@@ -1,6 +1,7 @@
 # Compiled source #
 *.o
 obj/
+bin/
 
 # Swp files #
 .*.swp
