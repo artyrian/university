@@ -53,10 +53,14 @@ enum type_of_lex {
 	POLIZ_FGO				// 
 };
 
+
 class StorageTypeLex {
 	char * 		name;
 	type_of_lex	type;
 	int 		value;
+//	bool		declare;
+//	bool		assign;
+
 public:
 	char * get_name ();
 	void put_name (const char * str);
@@ -67,49 +71,12 @@ public:
 
 	void operator= (const StorageTypeLex & str);
 
-};
-
-/*
-class String {
-	char * 		name;
-	type_of_lex	type;
-	int 		value;
-public:
-	char * get_name ();
-	void put_name (const char * str);
-	type_of_lex get_type ();
-	void put_type (type_of_lex t);
-
-	~String ();
-
-	void operator= (const String & str);
-};
-*/
-
-/*
-class Ident {
-	char * 		name;
-//	bool		declare;
-	type_of_lex	type;
-//	bool		assign;
-	int 		value;
-public:
-	Ident ();
-	char * get_name ();
-	void put_name (const char * str);
 //	bool get_declare ();
 //	void put_declare ();
-	type_of_lex get_type ();
-	void put_type ( type_of_lex t);
 //	bool get_assign ();
 //	void put_assign ();
-	int get_value ();
-	void put_value (int v);
-	~Ident ();
-
-	void operator= (const Ident & ident);
 };
-*/
+
 
 class TableStorageTypeLex {
 	StorageTypeLex *s;
@@ -124,93 +91,6 @@ public:
 	~TableStorageTypeLex ();
 };
 
-
-/*
-class TableString {
-	StorageTypeLex *s;
-	int	size;
-	int	top;
-
-	void extend_table ();
-public:
-	TableString ();
-	StorageTypeLex & operator [] (int k);
-	int put (const char * buf);
-	~TableString ();
-};
-
-class TableIdent {
-	StorageTypeLex * p;
-	int	size;
-	int 	top;
-	
-	void extend_table ();
-public:
-	TableIdent ();
-	StorageTypeLex & operator [] (int k);
-	int put (const char * buf);
-	~TableIdent ();
-};
-*/
-
-/*
-template <class T>
-class Table {
-	T * 	p;
-	int	size;
-	int	top;
-
-	void extend_table ()
-	{
-		int new_size = 2 * size;
-		T * new_p = new T [ new_size ];
-
-		for ( int i = 1; i < top; i++ ) {
-			new_p [i] = p [i];
-		}
-
-		delete [] p;
-
-		p = new_p;
-		size = new_size;
-	}
-public:
-	Table ()
-		: size (PART_SIZE_TABLE)
-	{
-		p = new T [size];
-		top = 1;
-	}
-
-	T & operator [] (int k)
-	{
-		return p[k];
-	}
-
-	int put (const char * buf)
-	{
-		if ( top = size - 1 ) {
-			extend_table ();
-		}
-
-		for ( int i = 1; i < top; i++ ) {
-			if ( strcmp (buf, p[i].get_name ()) == 0 ) {
-				return i;
-			}
-		}
-		
-		p[top].put_name (buf);
-		top++;
-		
-		return (top - 1);
-	}
-
-	~Table ()
-	{
-		delete [] p;
-	}
-};
-*/
 
 struct TableLexem {
 	static const char *	word [];
