@@ -26,74 +26,6 @@ void Lex:: print ()
 }
 
 
-Ident:: Ident ()
-	: declare (false), assign (false)
-{
-}
-
-char * Ident:: get_name ()
-{
-	return name;
-}
-
-void Ident:: put_name (const char * str)
-{
-	name = new char [ strlen (str) + 1 ];
-	strcpy (name, str);
-}
-
-bool Ident:: get_declare ()
-{
-	return declare;
-}
-
-void Ident:: put_declare ()
-{
-	declare = true;
-}
-
-type_of_lex Ident:: get_type ()
-{
-	return type;
-}
-
-void Ident:: put_type ( type_of_lex t)
-{
-	type = t;
-}
-
-bool Ident:: get_assign ()
-{
-	return assign;
-}
-
-void Ident:: put_assign ()
-{
-	assign = true;
-}
-
-int Ident:: get_value ()
-{
-	return value;
-}
-
-void Ident:: put_value (int v)
-{
-	value = v;
-}
-
-Ident::~Ident ()
-{
-	delete [] name;
-}
-
-//======TEMPLATES====================================
-
-//-------------------------------
-
-//=======================================
-
-
 int Scanner::look (const char * buf, const char ** list)
 {
 	int i = 0;
@@ -259,8 +191,7 @@ Lex Scanner::feed_symbol (int c)
 		else {
 			i = table.string.put (buffer->get ());
 			CS = H;
-			feed_symbol (c);
-			return Lex (LEX_STR, 0);
+			return Lex (LEX_STR, i);
 		}
 		break;
 	

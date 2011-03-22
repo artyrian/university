@@ -1,8 +1,6 @@
 #include "tables.hpp"
 #include "string.h"
-#include <stdio.h>
 
-#define PART_SIZE_TABLE 4
 
 const char * TableLexem:: word [] =
 {
@@ -53,10 +51,10 @@ const char * TableLexem:: delim [] =
 const char * TableLexem:: function [] =
 {
 	""
-	"?buy",			// 1
-	"?prod",		// 2
-	"?sell",		// 3
-	"?turn",		// 4
+	"buy",		// 1
+	"prod",		// 2
+	"sell",		// 3
+	"turn",		// 4
 	0
 };
 
@@ -138,96 +136,8 @@ void String::put_type (type_of_lex t)
 	type = t;
 }
 
-String:: ~String ()
-{
-	delete [] name;
-}
-
-void String:: operator= (const String & str)
-{
-	name = new char [ strlen (str.name) ];
-	strcpy (name, str.name);
-
-	type = str.type;
-	value = str.value;
-}
 
 
-Ident:: Ident ()
-//	: declare (false), assign (false)
-{
-}
-
-char * Ident:: get_name ()
-{
-	return name;
-}
-
-void Ident:: put_name (const char * str)
-{
-	name = new char [ strlen (str) + 1 ];
-	strcpy (name, str);
-}
-
-/*
-bool Ident:: get_declare ()
-{
-	return declare;
-}
-
-void Ident:: put_declare ()
-{
-	declare = true;
-}
-*/
-
-type_of_lex Ident:: get_type ()
-{
-	return type;
-}
-
-void Ident:: put_type ( type_of_lex t)
-{
-	type = t;
-}
-
-/*
-bool Ident:: get_assign ()
-{
-	return assign;
-}
-
-void Ident:: put_assign ()
-{
-	assign = true;
-}
-
-int Ident:: get_value ()
-{
-	return value;
-}
-
-void Ident:: put_value (int v)
-{
-	value = v;
-}
-*/
-
-Ident::~Ident ()
-{
-	delete [] name;
-}
-
-void Ident:: operator= (const Ident & ident)
-{
-	name = new char [ strlen (ident.name) ];
-	strcpy (name, ident.name);
-
-	type = ident.type;
-	value = ident.value;
-}
-
-//=================================
 void TableString:: extend_table ()
 {
 	int new_size = 2 * size;	
@@ -280,70 +190,68 @@ TableString:: ~TableString ()
 }
 
 
-//-------------------------
-/*
-template <class T>
-void Table <T>:: extend_table ()
+Ident:: Ident ()
+	: declare (false), assign (false)
 {
-	int new_size = 2 * size;
-	T * new_p = new T [ new_size ];
-
-	for ( int i = 1; i < top; i++ ) {
-		new_p [i] = p [i];
-	}
-
-	delete [] p;
-
-	p = new_p;
-	size = new_size;
 }
-*/
-/*
-template <class T>
-Table <T>:: Table ()
-	: size (PART_SIZE_TABLE)
+
+char * Ident:: get_name ()
 {
-	p = new T [size];
-	top = 1;
+	return name;
 }
-*/
 
-/*
-template <class T>
-T & Table <T>:: operator[] (int k)
+void Ident:: put_name (const char * str)
 {
-	return p[k];
+	name = new char [ strlen (str) + 1 ];
+	strcpy (name, str);
 }
-*/
 
-/*
-template <class T>
-int Table <T>:: put (const char * buf)
+bool Ident:: get_declare ()
 {
-	if ( top = size - 1 ) {
-		extend_table ();
-	}
+	return declare;
+}
 
-	for ( int i = 1; i < top; i++ ) {
-		if ( strcmp (buf, p[i].get_name ()) == 0 ) {
-			return i;
-		}
-	}
-	
-	p[top].put_name (buf);
-	top++;
-	
-	return (top - 1);
-}
-*/
-/*
-template <class T>
-Table <T>:: ~Table ()
+void Ident:: put_declare ()
 {
-	delete [] p;
+	declare = true;
 }
-*/
-//-------------------------
+
+type_of_lex Ident:: get_type ()
+{
+	return type;
+}
+
+void Ident:: put_type ( type_of_lex t)
+{
+	type = t;
+}
+
+bool Ident:: get_assign ()
+{
+	return assign;
+}
+
+void Ident:: put_assign ()
+{
+	assign = true;
+}
+
+int Ident:: get_value ()
+{
+	return value;
+}
+
+void Ident:: put_value (int v)
+{
+	value = v;
+}
+
+Ident::~Ident ()
+{
+	delete [] name;
+}
+
+
 
 void TableIdent:: extend_table ()
 {
@@ -354,7 +262,7 @@ void TableIdent:: extend_table ()
 		newp[i] = p[i];
 	}
 	
-	delete [] p;
+//	delete [] p;
 	
 	p = newp;
 	size = new_size;
@@ -396,4 +304,8 @@ TableIdent:: ~TableIdent ()
 	delete [] p;
 }
 
-//=========================
+TableLexem:: TableLexem ()
+	: ident (), string ()
+{
+}
+
