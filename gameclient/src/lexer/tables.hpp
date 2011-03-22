@@ -53,7 +53,23 @@ enum type_of_lex {
 	POLIZ_FGO				// 
 };
 
+class StorageTypeLex {
+	char * 		name;
+	type_of_lex	type;
+	int 		value;
+public:
+	char * get_name ();
+	void put_name (const char * str);
+	type_of_lex get_type ();
+	void put_type (type_of_lex t);
 
+	~StorageTypeLex ();
+
+	void operator= (const StorageTypeLex & str);
+
+};
+
+/*
 class String {
 	char * 		name;
 	type_of_lex	type;
@@ -68,8 +84,9 @@ public:
 
 	void operator= (const String & str);
 };
+*/
 
-
+/*
 class Ident {
 	char * 		name;
 //	bool		declare;
@@ -92,33 +109,49 @@ public:
 
 	void operator= (const Ident & ident);
 };
+*/
+
+class TableStorageTypeLex {
+	StorageTypeLex *s;
+	int	size;
+	int	top;
+
+	void extend_table ();
+public:
+	TableStorageTypeLex ();
+	StorageTypeLex & operator [] (int k);
+	int put (const char * buf);
+	~TableStorageTypeLex ();
+};
 
 
+/*
 class TableString {
-	String *s;
+	StorageTypeLex *s;
 	int	size;
 	int	top;
 
 	void extend_table ();
 public:
 	TableString ();
-	String & operator [] (int k);
+	StorageTypeLex & operator [] (int k);
 	int put (const char * buf);
 	~TableString ();
 };
 
 class TableIdent {
-	Ident * p;
+	StorageTypeLex * p;
 	int	size;
 	int 	top;
 	
 	void extend_table ();
 public:
 	TableIdent ();
-	Ident & operator [] (int k);
+	StorageTypeLex & operator [] (int k);
 	int put (const char * buf);
 	~TableIdent ();
 };
+*/
 
 /*
 template <class T>
@@ -181,13 +214,16 @@ public:
 
 struct TableLexem {
 	static const char *	word [];
-	static const char *	delim [];
-	static const char *	function [];
 	static type_of_lex 	lex_word [];
+
+	static const char *	delim [];
 	static type_of_lex 	lex_delim [];
+
+	static const char *	function [];
 	static type_of_lex	lex_function [];
-	TableString		string;
-	TableIdent		ident;
+
+	TableStorageTypeLex	string;
+	TableStorageTypeLex	ident;
 };
 
 #endif

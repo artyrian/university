@@ -16,24 +16,12 @@ public:
 
 
 class Scanner {
-	enum			state 	{	
-						H,
-						NUM,
-						IDENT,
-						KW,
-						ASSIGN,
-						STR,
-						DELIM,
-						NEQ,
-						FN
-					};
-
-	TableLexem		table;
-	state			CS;
-	int			save_char;
-	int			count_str;
-	Buffer * 		buffer;
-	int 			digit;
+	enum		state 	{ H, NUM, IDENT, KW, ASSIGN, STR, DELIM, NEQ, FN };
+	TableLexem	table;
+	state		CS;
+	int		count_str;
+	Buffer * 	buffer;
+	int 		digit;
 
 	int isdelim (int c);
 	int look (const char * buf, const char ** list);

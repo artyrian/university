@@ -4,6 +4,7 @@
 
 #define PART_SIZE_TABLE 4
 
+
 const char * TableLexem:: word [] =
 {
 	""		// 0 dont use.
@@ -29,36 +30,6 @@ const char * TableLexem:: word [] =
 	0
 };
 
-const char * TableLexem:: delim [] =
-{
-	""		// 0 dont use.
-	";",		// 1
-	"@",		// 2 
-	",",		// 3
-	"(", 		// 4
-	")",		// 5
-	"=",		// 6
-	"<",		// 7
-	">",		// 8
-	"+",		// 9
-	"-",		// 10
-	"*",		// 11
-	"/",		// 12
-	">=",		// 13
-	"!",		// 14 
-	"<=",		// 15
-	0
-};
-
-const char * TableLexem:: function [] =
-{
-	""
-	"?buy",			// 1
-	"?prod",		// 2
-	"?sell",		// 3
-	"?turn",		// 4
-	0
-};
 
 type_of_lex TableLexem:: lex_word [] =
 {
@@ -85,6 +56,29 @@ type_of_lex TableLexem:: lex_word [] =
 	LEX_NULL			// 19
 };
 
+
+const char * TableLexem:: delim [] =
+{
+	""		// 0 dont use.
+	";",		// 1
+	"@",		// 2 
+	",",		// 3
+	"(", 		// 4
+	")",		// 5
+	"=",		// 6
+	"<",		// 7
+	">",		// 8
+	"+",		// 9
+	"-",		// 10
+	"*",		// 11
+	"/",		// 12
+	">=",		// 13
+	"!",		// 14 
+	"<=",		// 15
+	0
+};
+
+
 type_of_lex TableLexem:: lex_delim [] =
 {
 	LEX_NULL,		// 0 
@@ -106,6 +100,18 @@ type_of_lex TableLexem:: lex_delim [] =
 	LEX_NULL
 };
 
+
+const char * TableLexem:: function [] =
+{
+	""
+	"?buy",			// 1
+	"?prod",		// 2
+	"?sell",		// 3
+	"?turn",		// 4
+	0
+};
+
+
 type_of_lex TableLexem:: lex_function [] =
 {
 	LEX_NULL,
@@ -117,6 +123,107 @@ type_of_lex TableLexem:: lex_function [] =
 };
 
 
+
+char * StorageTypeLex:: get_name ()
+{
+	return name;
+}
+
+
+void StorageTypeLex:: put_name (const char *str)
+{
+	name = new char [ strlen (str) + 1 ];
+	strcpy (name, str);
+}
+
+
+type_of_lex StorageTypeLex:: get_type ()
+{
+	return type;
+}
+
+
+void StorageTypeLex::put_type (type_of_lex t)
+{
+	type = t;
+}
+
+
+StorageTypeLex:: ~StorageTypeLex ()
+{
+	delete [] name;
+}
+
+
+void StorageTypeLex:: operator= (const StorageTypeLex & str)
+{
+	name = new char [ strlen (str.name) ];
+	strcpy (name, str.name);
+
+	type = str.type;
+	value = str.value;
+}
+
+
+
+void TableStorageTypeLex:: extend_table ()
+{
+	int new_size = 2 * size;	
+	StorageTypeLex * news = new StorageTypeLex [ new_size ];
+
+	for ( int i = 1; i < top; ++i ) {
+		news[i] = s[i];
+	}
+	
+	delete [] s;
+	
+	s = news;
+	size = new_size;
+
+}
+
+
+TableStorageTypeLex:: TableStorageTypeLex ()
+	: size (4)
+{
+	s = new StorageTypeLex [ size ];
+	top = 1;
+}
+
+
+StorageTypeLex & TableStorageTypeLex:: operator[] (int k)
+{
+	return s[k];
+}
+
+
+int TableStorageTypeLex:: put (const char * buf)
+{
+	if ( top == size - 1 ) {
+		extend_table ();
+	}
+
+	for ( int i = 1; i < top; i++ ) {
+		if ( strcmp (buf, s[i].get_name ()) == 0 ) {
+			return i;	
+		}
+	}
+
+	s[top].put_name (buf);
+	top++;
+
+	return (top - 1);
+}
+
+
+TableStorageTypeLex:: ~TableStorageTypeLex ()
+{
+	delete [] s;
+}
+
+
+
+/*
 char * String:: get_name ()
 {
 	return name;
@@ -151,8 +258,9 @@ void String:: operator= (const String & str)
 	type = str.type;
 	value = str.value;
 }
+*/
 
-
+/*
 Ident:: Ident ()
 //	: declare (false), assign (false)
 {
@@ -169,7 +277,6 @@ void Ident:: put_name (const char * str)
 	strcpy (name, str);
 }
 
-/*
 bool Ident:: get_declare ()
 {
 	return declare;
@@ -179,7 +286,6 @@ void Ident:: put_declare ()
 {
 	declare = true;
 }
-*/
 
 type_of_lex Ident:: get_type ()
 {
@@ -191,7 +297,6 @@ void Ident:: put_type ( type_of_lex t)
 	type = t;
 }
 
-/*
 bool Ident:: get_assign ()
 {
 	return assign;
@@ -211,7 +316,6 @@ void Ident:: put_value (int v)
 {
 	value = v;
 }
-*/
 
 Ident::~Ident ()
 {
@@ -227,11 +331,14 @@ void Ident:: operator= (const Ident & ident)
 	value = ident.value;
 }
 
+*/
+
 //=================================
+/*
 void TableString:: extend_table ()
 {
 	int new_size = 2 * size;	
-	String * news = new String [ new_size ];
+	StorageTypeLex * news = new StorageTypeLex [ new_size ];
 
 	for ( int i = 1; i < top; ++i ) {
 		news[i] = s[i];
@@ -247,11 +354,11 @@ void TableString:: extend_table ()
 TableString:: TableString ()
 	: size (4)
 {
-	s = new String [ size ];
+	s = new StorageTypeLex [ size ];
 	top = 1;
 }
 
-String & TableString:: operator[] (int k)
+StorageTypeLex & TableString:: operator[] (int k)
 {
 	return s[k];
 }
@@ -279,7 +386,7 @@ TableString:: ~TableString ()
 	delete [] s;
 }
 
-
+*/
 //-------------------------
 /*
 template <class T>
@@ -345,10 +452,11 @@ Table <T>:: ~Table ()
 */
 //-------------------------
 
+/*
 void TableIdent:: extend_table ()
 {
 	int new_size = 2 * size;	
-	Ident * newp = new Ident [ new_size ];
+	StorageTypeLex * newp = new StorageTypeLex [ new_size ];
 
 	for ( int i = 1; i < top; i++ ) {
 		newp[i] = p[i];
@@ -364,11 +472,11 @@ void TableIdent:: extend_table ()
 TableIdent:: TableIdent ()
 	: size (4)
 {
-	p = new Ident [size];
+	p = new StorageTypeLex [size];
 	top = 1;
 }
 
-Ident& TableIdent:: operator[] (int k)
+StorageTypeLex& TableIdent:: operator[] (int k)
 {
 	return p[k];
 }
@@ -395,5 +503,5 @@ TableIdent:: ~TableIdent ()
 {
 	delete [] p;
 }
-
+*/
 //=========================
