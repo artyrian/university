@@ -58,7 +58,7 @@ Scanner:: ~Scanner ()
 
 int Scanner:: isdelim (int c)
 {
-	const char smb [] = "+-*/%<>=&|!()[];,@";
+	const char smb [] = "+-*/%<>=&|!();,@";
 	int i = 0;
 
 	while ( smb[i] != '\0' ) {
@@ -111,6 +111,18 @@ Lex Scanner::feed_symbol (int c)
 			CS = IDENT;
 			return Lex (LEX_NULL, 0);
 		}
+		else if ( c == '[' ) {
+			buffer->clear ();
+			buffer->add (c);
+			CS = LBRACKET;
+			return Lex (LEX_NULL, 0);
+		}
+		else if ( c == ']' ) {
+			buffer->clear ();
+			buffer->add (c);
+			CS = RBRACKET;
+			return Lex (LEX_NULL, 0);
+		}
 		else if ( c == '=' ) {
 			buffer->clear ();
 			buffer->add (c);
@@ -146,10 +158,16 @@ Lex Scanner::feed_symbol (int c)
 		break;
 
 	case IDENT:
-		if ( isalpha (c) || isdigit (c) ) {
+		if ( isalpha (c) || isdigit (c) || (c == '_') ) {
 			buffer->add (c);
 			return Lex (LEX_NULL, 0);
 		}
+		else if ( c == '[' ) {
+			i = table.array.put (buffer->get ());
+			CS = H;
+			feed_symbol (c);
+			return Lex (LEX_ARRAY, i);
+		} 
 		else {
 			i = table.ident.put (buffer->get ());
 			CS = H;
@@ -159,7 +177,7 @@ Lex Scanner::feed_symbol (int c)
 		break;
 
 	case KW:
-		if ( isalpha (c) || isdigit (c) ) {
+		if ( isalpha (c) || isdigit (c) || (c == '_') ) {
 			buffer->add (c);
 			return Lex (LEX_NULL, 0);
 		}
@@ -220,7 +238,7 @@ Lex Scanner::feed_symbol (int c)
 		break;
 
 	case FN:
-		if ( isalpha (c) || isdigit (c) ) {
+		if ( isalpha (c) || isdigit (c) || (c == '_') ) {
 			buffer->add (c);
 			return Lex (LEX_NULL, 0);
 		}
@@ -235,8 +253,24 @@ Lex Scanner::feed_symbol (int c)
 			}
 		}
 		break;
+
+	case LBRACKET:
+		i = look (buffer->get (), table.delim);	
+		CS = H;
+		feed_symbol (c);
+		return Lex (LEX_LBRACKET, i);
+
+		break;
+
+	case RBRACKET:
+		i = look (buffer->get (), table.delim);	
+		CS = H;
+		feed_symbol (c);
+		return Lex (LEX_RBRACKET, i);
+
+		break;
 	}
-	
+
 	CS = H;	
 	printf ( "Error switch.c[%c]. Str number[%d]. Buf[%s]\n", 
 			c, count_str + 1 , buffer->get ()
