@@ -1,14 +1,13 @@
 #include <stdio.h>
-#include "lexer/lexlist.hpp"
+#include "lexer/parser.hpp"
 
 int main (int argc, char ** argv)
 {
 	if ( argc > 1 ) {
-		LexList ll (argv[1]);
+		Parser p (argv[1]);
 
-		ll.analyze (); 
+		p.analyze (); 
 
-		ll.print ();
 	}
 	else {
 		perror ("Not enough parameters.\n");
