@@ -100,6 +100,8 @@ Lex Scanner::feed_symbol (int c)
 		return state_FN (c);
 	case COMMENT:
 		return state_COMMENT (c);
+	case LABEL:
+		return state_LABEL (c);
 	default:
 		CS = H;	
 		printf ( "c[%c]. Buf[%s]\n", c, buffer->get ());
@@ -168,6 +170,12 @@ Lex Scanner:: state_H (int c)
 		CS = COMMENT;
 		return Lex ();
 	}
+	else if ( c == '@' ) {
+		buffer->clear ();
+		buffer->aadd (c);
+		CS = LABEL;
+		return Lex ();
+	}
 	else {
 		throw LexExeption ( "Undefined symbol. Can't set state. ", Lex (count_str));
 	}
@@ -229,13 +237,16 @@ Lex Scanner:: state_KW (int c)
 Lex Scanner:: state_ASSIGN (int c)
 {
 	int i;
-	if ( (i = look (buffer->get (), table.delim)) != 0 )  {
+	if ( c == '=' ) { 
+		buffer->add (c);
 		CS = H;
 		feed_symbol (c);
 		return Lex (count_str, table.lex_delim [i], i);
 	}		
 	else {
-		throw LexExeption ("Error assign. Not found delim (state ASSIGN)", Lex (count_str));
+		CS = H;
+		feed_symbol (c);
+		return Lex (count_str, LEX_ASSIGN, i);
 	}
 }
 
@@ -267,16 +278,9 @@ Lex Scanner:: state_DELIM (int c)
 
 Lex Scanner:: state_NEQ (int c)
 {
-	if ( c == '=' ) {
-		buffer->add (c);
-		int i = look (buffer->get (), table.delim);
-		CS = H;
-		feed_symbol (c);
-		return Lex (count_str, LEX_NEQ, i);
-	}
-	else {
-		throw LexExeption ("Error in state NEG.", Lex (count_str));
-	}
+	CS = H;
+	feed_symbol (c);
+	return Lex (count_str, LEX_NEQ, 0);
 }
 
 Lex Scanner:: state_FN (int c)
@@ -306,4 +310,18 @@ Lex Scanner:: state_COMMENT (int c)
 	}
 
 	return Lex ();
+}
+
+Lex Scanner:: state_LABEL (int c)
+{
+	if ( isalpha (c) || isdigit (c) || ( c == '_') ) {
+		buffer->add (c);
+		return Lex ();
+	}
+	else {
+		int i = table.label.put (buffer->get ())
+		CS = H;	
+		return Lex (count_str, LEX_LABEL, i);
+	}
+
 }

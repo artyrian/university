@@ -45,6 +45,7 @@ enum type_of_lex {
 	LEX_NUM,				// 38
 	LEX_ID,					// 39
 	LEX_ARRAY,
+	LEX_LABEL,
 	LEX_BUY,
 	LEX_PROD,
 	LEX_SELL,
@@ -114,6 +115,7 @@ struct TableLexem {
 
 	TableStorageTypeLex		string;
 	TableStorageTypeLex		ident;
+	TableStorageTypeLex		label;
 
 	TableArrayStorageTypeLex	array;
 };

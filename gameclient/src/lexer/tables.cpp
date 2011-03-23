@@ -61,22 +61,20 @@ const char * TableLexem:: delim [] =
 {
 	""		// 0 dont use.
 	";",		// 1
-	"@",		// 2 
-	",",		// 3
-	"(", 		// 4
-	")",		// 5
-	"=",		// 6
-	"<",		// 7
-	">",		// 8
-	"+",		// 9
-	"-",		// 10
-	"*",		// 11
-	"/",		// 12
-	">=",		// 13
-	"!",		// 14 
-	"<=",		// 15
-	"[",
-	"]",		// 17
+	",",		// 2
+	"(", 		// 3
+	")",		// 4
+	"==",		// 5
+	"<",		// 6
+	">",		// 7
+	"+",		// 8
+	"-",		// 9
+	"*",		// 10
+	"/",		// 11
+	">=",		// 12
+	"<=",		// 13
+	"[",		// 14
+	"]",		// 15
 	0
 };
 
@@ -85,7 +83,6 @@ type_of_lex TableLexem:: lex_delim [] =
 {
 	LEX_NULL,		// 0 
 	LEX_FIN,
-	LEX_SEMICOLON,
 	LEX_COMMA,
 	LEX_LPAREN,
 	LEX_RPAREN,
@@ -93,13 +90,12 @@ type_of_lex TableLexem:: lex_delim [] =
 	LEX_LSS,
 	LEX_GTR,
 	LEX_PLUS,
-	LEX_MINUS,		// 10
+	LEX_MINUS,		// 9
 	LEX_TIMES,
 	LEX_SLASH, 
-	LEX_LEQ,		// 13
-	LEX_NEQ,		// 14
-	LEX_GEQ,		// 15
-	LEX_LBRACKET,
+	LEX_LEQ,		// 12
+	LEX_GEQ,		// 13
+	LEX_LBRACKET,		// 14
 	LEX_RBRACKET,
 	LEX_NULL
 };

@@ -29,7 +29,8 @@ class Scanner {
 					DELIM, 
 					NEQ, 
 					FN, 
-					COMMENT
+					COMMENT,
+					LABEL
 				};
 	TableLexem	table;
 	state		CS;
@@ -54,6 +55,7 @@ private:
 	Lex state_NEQ (int c);
 	Lex state_FN (int c);
 	Lex state_COMMENT (int c);
+	Lex state_LABEL (int c);
 };
 
 #endif
