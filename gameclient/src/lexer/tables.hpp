@@ -41,8 +41,11 @@ enum type_of_lex {
 	LEX_LEQ,
 	LEX_NEQ,
 	LEX_GEQ,				// 35
-	LEX_NUM,				// 36
-	LEX_ID,					// 37
+	LEX_LBRACKET,
+	LEX_RBRACKET,
+	LEX_NUM,				// 38
+	LEX_ID,					// 39
+	LEX_ARRAY,
 	LEX_BUY,
 	LEX_PROD,
 	LEX_SELL,
@@ -55,55 +58,65 @@ enum type_of_lex {
 
 
 class StorageTypeLex {
+	friend class TableStorageTypeLex;
 	char * 		name;
 	type_of_lex	type;
 	int 		value;
-//	bool		declare;
-//	bool		assign;
-
 public:
 	char * get_name ();
 	void put_name (const char * str);
 	type_of_lex get_type ();
 	void put_type (type_of_lex t);
 
-	~StorageTypeLex ();
-
-	void operator= (const StorageTypeLex & str);
-
-//	bool get_declare ();
-//	void put_declare ();
-//	bool get_assign ();
-//	void put_assign ();
+	virtual ~StorageTypeLex ();
+	virtual void operator= (const StorageTypeLex & str);
 };
 
 
-class TableStorageTypeLex {
+class TableStorageTypeLex: public StorageTypeLex {
 	StorageTypeLex *s;
-	int	size;
-	int	top;
+	int		size;
+	int		top;
 
 	void extend_table ();
 public:
 	TableStorageTypeLex ();
 	StorageTypeLex & operator [] (int k);
 	int put (const char * buf);
-	~TableStorageTypeLex ();
+
+	virtual ~TableStorageTypeLex ();
+
+	virtual void operator= (const TableStorageTypeLex & t);
+
 };
 
+class TableArrayStorageTypeLex {
+	TableStorageTypeLex * 	t;
+	int 			size;
+	int 			top;
+
+	void extend_table ();
+public:
+	TableArrayStorageTypeLex ();
+	TableStorageTypeLex & operator [] (int k);
+	int put (const char * buf);
+	~TableArrayStorageTypeLex ();
+};
 
 struct TableLexem {
-	static const char *	word [];
-	static type_of_lex 	lex_word [];
+	static const char *		word [];
+	static type_of_lex 		lex_word [];
 
-	static const char *	delim [];
-	static type_of_lex 	lex_delim [];
+	static const char *		delim [];
+	static type_of_lex 		lex_delim [];
 
-	static const char *	function [];
-	static type_of_lex	lex_function [];
+	static const char *		function [];
+	static type_of_lex		lex_function [];
 
-	TableStorageTypeLex	string;
-	TableStorageTypeLex	ident;
+	TableStorageTypeLex		string;
+	TableStorageTypeLex		ident;
+
+	TableArrayStorageTypeLex	array;
 };
 
 #endif

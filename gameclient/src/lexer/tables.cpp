@@ -75,6 +75,8 @@ const char * TableLexem:: delim [] =
 	">=",		// 13
 	"!",		// 14 
 	"<=",		// 15
+	"[",
+	"]",		// 17
 	0
 };
 
@@ -97,6 +99,8 @@ type_of_lex TableLexem:: lex_delim [] =
 	LEX_LEQ,		// 13
 	LEX_NEQ,		// 14
 	LEX_GEQ,		// 15
+	LEX_LBRACKET,
+	LEX_RBRACKET,
 	LEX_NULL
 };
 
@@ -215,40 +219,79 @@ int TableStorageTypeLex:: put (const char * buf)
 	return (top - 1);
 }
 
+void TableStorageTypeLex:: operator= (const TableStorageTypeLex & t)
+{
+	name = new char [ strlen (t.name) ];
+	strcpy (name, t.name);
+
+	type = t.type;
+	value = t.value;
+
+
+	s = new StorageTypeLex [ top ];
+
+	for ( int i = 1; i < top; ++i ) {
+		s[i] = t.s[i];
+	}
+
+	size = t.size;
+	top = t.top;
+}
+	
+
+void TableArrayStorageTypeLex:: extend_table ()
+{
+	int new_size = 2 * size;	
+	TableStorageTypeLex * new_t = new TableStorageTypeLex [ new_size ];
+
+	for ( int i = 1; i < top; ++i ) {
+		new_t[i] = t[i];
+	}
+	
+	delete [] t;
+	
+	t = new_t;
+	size = new_size;
+}
 
 TableStorageTypeLex:: ~TableStorageTypeLex ()
 {
 	delete [] s;
 }
 
-/*
-bool Ident:: get_declare ()
+int TableArrayStorageTypeLex:: put (const char  * buf)
 {
-	return declare;
+	if ( top == size - 1 ) {
+		extend_table ();
+	}
+	
+	for ( int i = 1; i < top; i++ ) {
+		if ( strcmp (buf, t[i].get_name ()) == 0 ) {
+			return i;	
+		}
+	}
+	
+	t[top].put_name (buf);
+	top++;
+
+	return (top - 1);
 }
 
-void Ident:: put_declare ()
+TableArrayStorageTypeLex:: TableArrayStorageTypeLex ()
+	: size (PART_SIZE_TABLE)
 {
-	declare = true;
+	t = new TableStorageTypeLex [size];
+	top = 1;	
 }
 
-bool Ident:: get_assign ()
+
+TableArrayStorageTypeLex:: ~TableArrayStorageTypeLex ()
 {
-	return assign;
+	delete [] t;
 }
 
-void Ident:: put_assign ()
+TableStorageTypeLex & 
+TableArrayStorageTypeLex:: operator [] (int k)
 {
-	assign = true;
+	return t[k];
 }
-
-int Ident:: get_value ()
-{
-	return value;
-}
-
-void Ident:: put_value (int v)
-{
-	value = v;
-}
-*/
