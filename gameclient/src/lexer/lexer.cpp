@@ -128,6 +128,11 @@ Lex Scanner::feed_symbol (int c)
 			CS = DELIM;
 			return Lex (LEX_NULL, 0);
 		}
+		else if ( c == '\'' ) {
+			buffer->clear ();
+			CS = COMMENT;
+			return Lex (LEX_NULL, 0);
+		}
 		else {
 			perror ("Undefined symbol so can't set state.\n");
 		}
@@ -241,6 +246,12 @@ Lex Scanner::feed_symbol (int c)
 			}
 		}
 		break;
+	
+	case COMMENT:
+		if ( c == '\'' ) {
+			CS = H;
+		}
+		return Lex (LEX_NULL, 0);
 	}
 
 	CS = H;	

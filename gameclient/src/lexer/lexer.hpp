@@ -26,6 +26,7 @@ class Scanner {
 					DELIM, 
 					NEQ, 
 					FN, 
+					COMMENT
 				};
 	TableLexem	table;
 	state		CS;
