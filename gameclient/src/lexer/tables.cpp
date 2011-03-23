@@ -8,25 +8,12 @@
 const char * TableLexem:: word [] =
 {
 	""		// 0 dont use.
-	"and",		// 1
-	"begin",	// 2 
-	"bool",		// 3
-	"do", 		// 4
-	"else",		// 5
-	"end", 		// 6
-	"if",		// 7
-	"false",	// 8
-	"int",		// 9
-	"not",		// 10
-	"or",		// 11
-	"program",	// 12
-	"read",		// 13
-	"string",	// 13.5
-	"then",		// 14
-	"true",		// 15
-	"var",		// 16
-	"while",	// 17
-	"write", 	// 18	
+	"do", 		// 1
+	"goto",		// 2
+	"else",		// 3
+	"if",		// 4
+	"then",		// 5
+	"while",	// 6
 	0
 };
 
@@ -34,26 +21,13 @@ const char * TableLexem:: word [] =
 type_of_lex TableLexem:: lex_word [] =
 {
 	LEX_NULL,			// 0
-	LEX_AND,			// 1
-	LEX_BEGIN,			// 2
-	LEX_BOOL,			// 3
-	LEX_DO,				// 4
-	LEX_ELSE,			// 5
-	LEX_END,			// 6
-	LEX_IF,				// 7
-	LEX_FALSE,			// 8
-	LEX_INT,			// 9
-	LEX_NOT,			// 10
-	LEX_OR,				// 11
-	LEX_PROGRAM,			// 12
-	LEX_READ,			// 13
-	LEX_STR,
-	LEX_THEN,			// 14
-	LEX_TRUE,			// 15
-	LEX_VAR,			// 16
-	LEX_WHILE,			// 17
-	LEX_WRITE,			// 18
-	LEX_NULL			// 19
+	LEX_DO,				// 1
+	LEX_GOTO			// 2
+	LEX_ELSE,			// 3
+	LEX_IF,				// 4
+	LEX_THEN,			// 5
+	LEX_WHILE,			// 6
+	LEX_NULL
 };
 
 
@@ -73,8 +47,13 @@ const char * TableLexem:: delim [] =
 	"/",		// 11
 	">=",		// 12
 	"<=",		// 13
+	"<>",		// 13.5
 	"[",		// 14
 	"]",		// 15
+	"{"		// 16
+	"}"		// 17
+	"|",		// 18
+	"&",		// 19
 	0
 };
 
@@ -87,16 +66,21 @@ type_of_lex TableLexem:: lex_delim [] =
 	LEX_LPAREN,
 	LEX_RPAREN,
 	LEX_EQ,
-	LEX_LSS,
-	LEX_GTR,
+	LEX_LESS,
+	LEX_GREATER,
 	LEX_PLUS,
 	LEX_MINUS,		// 9
-	LEX_TIMES,
-	LEX_SLASH, 
+	LEX_MULTIPLY,
+	LEX_DIVISION, 
 	LEX_LEQ,		// 12
 	LEX_GEQ,		// 13
-	LEX_LBRACKET,		// 14
-	LEX_RBRACKET,
+	LEX_NEQ,		// 14
+	LEX_LBRACKET,		// 15
+	LEX_RBRACKET,		//
+	LEX_BEGIN,
+	LEX_END,
+	LEX_OR,			
+	LEX_AND,		// 20
 	LEX_NULL
 };
 
@@ -184,7 +168,7 @@ void TableStorageTypeLex:: extend_table ()
 
 
 TableStorageTypeLex:: TableStorageTypeLex ()
-	: size (4)
+	: size (PART_SIZE_TABLE)
 {
 	s = new StorageTypeLex [ size ];
 	top = 1;

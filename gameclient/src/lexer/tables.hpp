@@ -4,56 +4,41 @@
 
 enum type_of_lex {
 	LEX_NULL,				// 0
-	LEX_AND,				// 1 
-	LEX_BEGIN, 				// 2
-	LEX_BOOL,				// 3
-	LEX_DO,					// 4
-	LEX_ELSE,				// 5
-	LEX_END,				// 6
-	LEX_IF,					// 7
-	LEX_FALSE,				// 8
-	LEX_INT,				// 9
-	LEX_NOT,				// 10
-	LEX_OR,					// 11
-	LEX_PROGRAM,				// 12
-	LEX_READ,				// 13
-	LEX_STR,				// 13.5
-	LEX_THEN,				// 14
-	LEX_TRUE,				// 15
-	LEX_VAR,				// 16
-	LEX_WHILE,				// 17
-	LEX_WRITE,				// 18
-	LEX_FIN,				// 19
-	LEX_SEMICOLON, 				// 20
-	LEX_COMMA,
-	LEX_COLON,
-	LEX_ASSIGN,
-	LEX_LPAREN,
-	LEX_RPAREN,				// 25
-	LEX_EQ,
-	LEX_LSS,
-	LEX_GTR,
-	LEX_PLUS,
-	LEX_MINUS,				// 30
-	LEX_TIMES,
-	LEX_SLASH, 
-	LEX_LEQ,
-	LEX_NEQ,
-	LEX_GEQ,				// 35
-	LEX_LBRACKET,
-	LEX_RBRACKET,
-	LEX_NUM,				// 38
-	LEX_ID,					// 39
-	LEX_ARRAY,
-	LEX_LABEL,
-	LEX_BUY,
-	LEX_PROD,
-	LEX_SELL,
-	LEX_TURN,
-	POLIZ_LABEL,				// 
-	POLIZ_ADDRESS,				//
-	POLIZ_GO,				// 
-	POLIZ_FGO				// 
+	LEX_DO,				// 1
+	LEX_GOTO			// 2
+	LEX_ELSE,			// 3
+	LEX_IF,				// 4
+	LEX_THEN,			// 5
+	LEX_WHILE,			// 6
+	LEX_FIN,			// 7
+	LEX_COMMA,			// 8
+	LEX_LPAREN,			// 9
+	LEX_RPAREN,			// 10
+	LEX_EQ,				// 11
+	LEX_LESS,			// 12
+	LEX_GREATER,			// 13
+	LEX_PLUS,			// 14
+	LEX_MINUS,			// 15
+	LEX_MULTIPLY,			// 16
+	LEX_DIVISION, 			// 17
+	LEX_LEQ,			// 18
+	LEX_GEQ,			// 19
+	LEX_NEQ,			// 20
+	LEX_LBRACKET,			// 21
+	LEX_RBRACKET,			// 22
+	LEX_BEGIN,			// 23
+	LEX_END,			// 24
+	LEX_OR,				// 25
+	LEX_AND,			// 26
+	LEX_NUM,			// 27
+	LEX_ID,				// 28
+	LEX_ARRAY,			// 29
+	LEX_LABEL,			// 30
+	LEX_STR,			// 31
+	LEX_BUY,			// 32
+	LEX_PROD,			// 33
+	LEX_SELL,			// 34
+	LEX_TURN,			// 35
 };
 
 
