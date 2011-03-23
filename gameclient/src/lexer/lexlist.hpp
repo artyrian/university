@@ -30,7 +30,8 @@ class LexList {
 	void add (const Lex & l);
 public:
 	LexList (const char * path);
-	void analyze ();
+	void save ();
+	Lex get_lex () const;
 	void print ();
 	~LexList ();
 };

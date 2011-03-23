@@ -65,7 +65,7 @@ void LexList:: add (const Lex & l)
 	}
 }
 
-void LexList:: analyze ()
+void LexList:: save ()
 {
 	Scanner la;
 	Lex lex (0, LEX_NULL, 0);
@@ -91,6 +91,21 @@ void LexList:: analyze ()
 	}
 	catch (const LexExeption & le) {
 		le.print ();	
+	}
+}
+
+Lex LexList:: get_lex () const
+{
+	ListElem * cur = first;
+	ListElem * sdn;
+	
+	if ( cur->type  != 0 ) {
+		snd = cur;
+		cur = cur->next;
+		return snd->lex;
+	}
+	else {
+		return Lex (0, LEX_NULL, 0);
 	}
 }
 
