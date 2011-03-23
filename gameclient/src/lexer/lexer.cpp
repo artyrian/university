@@ -1,4 +1,5 @@
 #include "lexer.hpp"
+#include "exeption.hpp"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -19,7 +20,7 @@ int Lex:: get_value ()
 	return v_lex;
 }
 
-void Lex:: print ()
+void Lex:: print () const
 {
 	printf ("(%d,%d)", t_lex, v_lex);
 
@@ -36,7 +37,7 @@ int Scanner::look (const char * buf, const char ** list)
 		}
 		++i;
 	}
-	printf ("buf:[%s]\n", buf);
+
 	return 0;
 }
 
@@ -134,7 +135,7 @@ Lex Scanner::feed_symbol (int c)
 			return Lex (LEX_NULL, 0);
 		}
 		else {
-			perror ("Undefined symbol so can't set state.\n");
+			throw LexExeption ("Undefined symbol. Can't set state. ", Lex (LEX_NULL, 0), count_str);
 		}
 		break;
 
@@ -182,6 +183,7 @@ Lex Scanner::feed_symbol (int c)
 			} 
 			else {
 				perror ("Not found keyword.\n");
+				throw LexExeption ("Not found keyword", Lex (LEX_NULL, 0), count_str);
 			}
 		}
 		break;
@@ -213,7 +215,7 @@ Lex Scanner::feed_symbol (int c)
 			return Lex (table.lex_delim [i], i);
 		}
 		else {
-			perror ("Not found delim (state DELIM).\n");
+			throw LexExeption ("Not found delim (state FDELIM).", Lex (LEX_NULL, 0), count_str); 
 		}
 		break;
 
@@ -226,7 +228,7 @@ Lex Scanner::feed_symbol (int c)
 			return Lex (LEX_NEQ, i);
 		}
 		else {
-			perror ("Error in state NEG.\n");
+			throw LexExeption ("Error in state NEG.", Lex (LEX_NULL, 0), count_str);
 		}
 		break;
 
@@ -243,6 +245,7 @@ Lex Scanner::feed_symbol (int c)
 			}
 			else {
 				perror ("Not found function.\n");
+				throw LexExeption ("Not found function.", Lex (LEX_NULL, 0), count_str);
 			}
 		}
 		break;
@@ -255,8 +258,6 @@ Lex Scanner::feed_symbol (int c)
 	}
 
 	CS = H;	
-	printf ( "Error switch.c[%c]. Str number[%d]. Buf[%s]\n", 
-			c, count_str + 1 , buffer->get ()
-		);
-	return Lex (LEX_NULL, 0);
+	printf ( "c[%c]. Buf[%s]\n", c, buffer->get ());
+	throw LexExeption ("Error in switch.", Lex (LEX_NULL, 0), count_str);
 }

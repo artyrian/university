@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "lexlist.hpp"
+#include "exeption.hpp"
 
 
 ReadFrom:: ReadFrom (const char * str)
@@ -70,34 +71,39 @@ void LexList:: analyze ()
 	Lex lex (LEX_NULL, 0);
 	int c;
 
-	while ( true ) {
-		if ( (c = rf.get_symbol ()) == -1 ) {
-			break;
-		}
-		
-		lex = la.feed_symbol (c);
+	try {
+		while ( true ) {
+			if ( (c = rf.get_symbol ()) == -1 ) {
+				break;
+			}
+			
+			lex = la.feed_symbol (c);
 
+			if ( lex.get_type () != 0 ) {
+				add (lex);
+			}
+		}
+
+		lex = la.feed_symbol (' ');
 		if ( lex.get_type () != 0 ) {
-			lex.print ();
-			add (lex);
+			add (lex); 
 		}
 	}
-
-	lex = la.feed_symbol (' ');
-	if ( lex.get_type () != 0 ) {
-		lex.print ();
-		add (lex); 
+	catch (const LexExeption & le) {
+		le.print ();	
 	}
 }
 
 void LexList:: print ()
 {
 	ListElem * cur = first;
-
+	
+	printf ("Print LexList:\n");
 	while ( cur != 0 ) {
 		cur->lex.print ();	
 		cur = cur->next;
 	}
+	printf ("End of Lex List.\n");
 
 }
 

@@ -3,14 +3,10 @@ CREATE IN VIM HOTKEY WITH AUTOCOMMIT
 Work with some states. create for each state each case.
 1 - solved, 2 - solved => 3 - solved.
 QUESTIONS:
-1) What is delim, how many symbols in it;
-2) how create state delim;
-3) How send or solve problem with prev symbol in rather situations?
+1) class Exeption. Which info i need to save?
 NEED TO DO:
 --------------
 1) Create language;
-2) create state fn;
-3) create state str;
 4) Add to class Lex info about number str;
 5) Create class Exeption;
 ---------------
