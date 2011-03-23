@@ -11,7 +11,7 @@ public:
 	Lex (type_of_lex t, int v);
 	type_of_lex get_type ();
 	int get_value ();
-	void print (); 
+	void print () const; 
 };
 
 
