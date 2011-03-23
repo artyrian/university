@@ -24,7 +24,7 @@ ReadFrom:: ~ReadFrom ()
 
 
 LexList:: ListElem:: ListElem ()
-	: lex (LEX_NULL, 0)
+	: lex (0, LEX_NULL, 0)
 {
 }
 
@@ -68,7 +68,7 @@ void LexList:: add (const Lex & l)
 void LexList:: analyze ()
 {
 	Scanner la;
-	Lex lex (LEX_NULL, 0);
+	Lex lex (0, LEX_NULL, 0);
 	int c;
 
 	try {

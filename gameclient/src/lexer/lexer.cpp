@@ -4,23 +4,24 @@
 #include <string.h>
 #include <ctype.h>
 
-
 Lex:: Lex (int k = 0, type_of_lex t = LEX_NULL, int v = 0)
-	: str_n (k), t_lex (t), v_lex (v), 
 {
+	str_n = k; 
+	t_lex = t;
+	v_lex = v; 
 }
 
-type_of_lex Lex:: get_type ()
+type_of_lex Lex:: get_type () const
 {
 	return t_lex;
 }
 
-int Lex:: get_value ()
+int Lex:: get_value () const
 {
 	return v_lex;
 }
 
-int Lex:: get_str_n ()
+int Lex:: get_str_n () const
 {
 	return str_n;
 }
@@ -80,25 +81,25 @@ Lex Scanner::feed_symbol (int c)
 {
 	switch ( CS ) {
 	case H:
-		return H ();
+		return state_H (c);
 	case NUM:
-		return NUM ();
+		return state_NUM (c);
 	case IDENT:
-		return IDENT ();
+		return state_IDENT (c);
 	case KW:
-		return KW ();
+		return state_KW (c);
 	case ASSIGN:
-		return ASSIGN ();
+		return state_ASSIGN (c);
 	case STR:
-		return STR ();
+		return state_STR (c);
 	case DELIM:
-		return DELIM ();
+		return state_DELIM (c);
 	case NEQ:
-		return NEQ ();
+		return state_NEQ (c);
 	case FN:
-		return FN ();
+		return state_FN (c);
 	case COMMENT:
-		return COMMENT ();
+		return state_COMMENT (c);
 	default:
 		CS = H;	
 		printf ( "c[%c]. Buf[%s]\n", c, buffer->get ());
@@ -108,7 +109,7 @@ Lex Scanner::feed_symbol (int c)
 
 
 
-Lex Scanner:: H ()
+Lex Scanner:: state_H (int c)
 {
 	if ( isspace (c) ) {
 		if ( c == '\n' ) {
@@ -172,7 +173,7 @@ Lex Scanner:: H ()
 	}
 }
 
-Lex Scanner:: NUM ()
+Lex Scanner:: state_NUM (int c)
 {
 	if ( isdigit (c) ) {
 		digit = digit * 10 + ( c - '0');
@@ -185,7 +186,7 @@ Lex Scanner:: NUM ()
 	}
 }
 
-Lex Scanner:: IDENT ()
+Lex Scanner:: state_IDENT (int c)
 {
 	if ( isalpha (c) || isdigit (c) || (c == '_') ) {
 		buffer->add (c);
@@ -205,7 +206,7 @@ Lex Scanner:: IDENT ()
 	}
 }
 
-Lex Scanner:: KW ()
+Lex Scanner:: state_KW (int c)
 {
 	if ( isalpha (c) || isdigit (c) || (c == '_') ) {
 		buffer->add (c);
@@ -225,7 +226,7 @@ Lex Scanner:: KW ()
 	}
 }
 
-Lex Scanner:: ASSIGN ()
+Lex Scanner:: state_ASSIGN (int c)
 {
 	int i;
 	if ( (i = look (buffer->get (), table.delim)) != 0 )  {
@@ -233,9 +234,12 @@ Lex Scanner:: ASSIGN ()
 		feed_symbol (c);
 		return Lex (count_str, table.lex_delim [i], i);
 	}		
+	else {
+		throw LexExeption ("Error assign. Not found delim (state ASSIGN)", Lex (count_str));
+	}
 }
 
-Lex Scanner:: STR ()
+Lex Scanner:: state_STR (int c)
 {
 	if ( c != '"' ) {
 		buffer->add (c);
@@ -248,7 +252,7 @@ Lex Scanner:: STR ()
 	}
 }
 
-Lex Scanner:: DELIM ()
+Lex Scanner:: state_DELIM (int c)
 {
 	int i;
 	if ( (i = look (buffer->get (), table.delim)) != 0 ) {
@@ -261,7 +265,7 @@ Lex Scanner:: DELIM ()
 	}
 }
 
-Lex Scanner:: NEQ ()
+Lex Scanner:: state_NEQ (int c)
 {
 	if ( c == '=' ) {
 		buffer->add (c);
@@ -275,7 +279,7 @@ Lex Scanner:: NEQ ()
 	}
 }
 
-Lex Scanner:: FN ()
+Lex Scanner:: state_FN (int c)
 {
 	if ( isalpha (c) || isdigit (c) || (c == '_') ) {
 		buffer->add (c);
@@ -295,7 +299,7 @@ Lex Scanner:: FN ()
 	}
 }
 
-Lex Scanner:: COMMENT ()
+Lex Scanner:: state_COMMENT (int c)
 {
 	if ( c == '\'' ) {
 		CS = H;
@@ -303,5 +307,3 @@ Lex Scanner:: COMMENT ()
 
 	return Lex ();
 }
-
-

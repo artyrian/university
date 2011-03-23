@@ -9,10 +9,11 @@ class Lex {
 	int 		v_lex;
 	int		str_n;
 public:
-	Lex (ink k, type_of_lex t, int v);
-	type_of_lex get_type ();
-	int get_value ();
-	int get_str_n ();
+	Lex (int k, type_of_lex t, int v);
+
+	type_of_lex get_type () const ;
+	int get_value () const;
+	int get_str_n () const;
 	void print () const; 
 };
 
@@ -43,16 +44,16 @@ public:
 	Lex feed_symbol (int c);
 	~Scanner ();
 private:
-	Lex H ();
-	Lex NUM ();
-	Lex IDENT ();
-	Lex KW ();
-	Lex ASSIGN ();
-	Lex STR ();
-	Lex DELIM ();
-	Lex NEQ ();
-	Lex FN ();
-	Lex COMMENT ();
+	Lex state_H (int c);
+	Lex state_NUM (int c);
+	Lex state_IDENT (int c);
+	Lex state_KW (int c);
+	Lex state_ASSIGN (int c);
+	Lex state_STR (int c);
+	Lex state_DELIM (int c);
+	Lex state_NEQ (int c);
+	Lex state_FN (int c);
+	Lex state_COMMENT (int c);
 };
 
 #endif

@@ -8,7 +8,7 @@ class LexExeption {
 	char * 	str;
 	int 	num_str;
 public:
-	LexExeption (const char * s, const Lex & l, int n);
+	LexExeption (const char * s, const Lex & l);
 	LexExeption (const LexExeption & le);
 	~LexExeption ();
 	void print () const;
