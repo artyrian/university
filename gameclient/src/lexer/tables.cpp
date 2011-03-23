@@ -47,13 +47,14 @@ const char * TableLexem:: delim [] =
 	"/",		// 11
 	">=",		// 12
 	"<=",		// 13
-	"<>",		// 13.5
-	"[",		// 14
-	"]",		// 15
-	"{"		// 16
-	"}"		// 17
-	"|",		// 18
-	"&",		// 19
+	"<>",		// 14
+	"[",		// 15
+	"]",		// 16
+	"{"		// 17
+	"}"		// 18
+	"|",		// 19
+	"&",		// 20
+	"!",		// 21
 	0
 };
 
@@ -74,13 +75,14 @@ type_of_lex TableLexem:: lex_delim [] =
 	LEX_DIVISION, 
 	LEX_LEQ,		// 12
 	LEX_GEQ,		// 13
-	LEX_NEQ,		// 14
+	LEX_LG,			// 14
 	LEX_LBRACKET,		// 15
 	LEX_RBRACKET,		//
 	LEX_BEGIN,
 	LEX_END,
 	LEX_OR,			
 	LEX_AND,		// 20
+	LEX_NEQ,
 	LEX_NULL
 };
 
