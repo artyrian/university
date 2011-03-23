@@ -7,10 +7,12 @@
 class Lex {
 	type_of_lex	t_lex;
 	int 		v_lex;
+	int		str_n;
 public:
-	Lex (type_of_lex t, int v);
+	Lex (ink k, type_of_lex t, int v);
 	type_of_lex get_type ();
 	int get_value ();
+	int get_str_n ();
 	void print () const; 
 };
 
@@ -40,6 +42,17 @@ public:
 	Scanner ();
 	Lex feed_symbol (int c);
 	~Scanner ();
+private:
+	Lex H ();
+	Lex NUM ();
+	Lex IDENT ();
+	Lex KW ();
+	Lex ASSIGN ();
+	Lex STR ();
+	Lex DELIM ();
+	Lex NEQ ();
+	Lex FN ();
+	Lex COMMENT ();
 };
 
 #endif
