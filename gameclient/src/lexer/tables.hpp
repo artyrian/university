@@ -1,7 +1,6 @@
 #ifndef _TABLES_HPP_
 #define _TABLES_HPP_
 
-#define PART_SIZE_TABLE 4
 
 enum type_of_lex {
 	LEX_NULL,				// 0
