@@ -26,5 +26,5 @@ void LexExeption:: print () const
 {
 	printf ("Exeption: [%s], Lex:", str);
 	lex.print ();
-	printf (", num:%d.\n", lex.get_str_n ());
+	printf (", str number:%d.\n", lex.get_str_n ());
 }

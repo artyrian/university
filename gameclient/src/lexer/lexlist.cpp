@@ -103,7 +103,7 @@ void LexList:: print ()
 		cur->lex.print ();	
 		cur = cur->next;
 	}
-	printf ("End of Lex List.\n");
+	printf ("\nEnd of Lex List.\n");
 
 }
 
