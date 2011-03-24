@@ -1,11 +1,10 @@
 #include "parser.hpp"
 #include "exeption.hpp"
+#include <stdlib.h>
 
 Parser:: Parser (const char * path)
 	: ll (path)
 {
-	ll.save ();
-	ll.print ();
 }
 
 void Parser:: get_lex ()
@@ -13,7 +12,6 @@ void Parser:: get_lex ()
 	cur_lex = ll.get_lex () ;
 	if ( cur_lex.get_type () == LEX_NULL ) {
 		throw LexExeption ("End of file.", cur_lex);
-		//throw 1;
 	}
 	c_type = cur_lex.get_type (); 
 	c_val = cur_lex.get_value ();
@@ -22,19 +20,32 @@ void Parser:: get_lex ()
 
 void Parser:: analyze ()
 {
-	printf ("Begin parse.\n");
+	try {
+		ll.save ();
+		ll.print ();
 
-	get_lex ();
-	B ();
+		printf ("Begin parse.\n");
 
-	printf ("End parser.\n"); 
+		get_lex ();
+		B ();
+
+		printf ("End parser.\n"); 
+	}
+	catch (const LexExeption & le) {
+		printf ("catch exeption.\n");
+		le.print ();
+		exit (1);
+	}
+	catch (int i) {
+		printf ("Exeption: %d.\n", i);
+	}
 }
 
 
 void Parser:: B ()
 {
 	if ( c_type != LEX_BEGIN ) {
-		throw LexExeption ("Exepted '{'.", cur_lex);
+		throw LexExeption ("Exepted 'begin'.", cur_lex);
 		//throw 2;
 	}
 	
@@ -104,8 +115,7 @@ void Parser:: C ()
 		W ();
 	}
 	else {
-		throw LexExeption ("Error {}.", cur_lex);
-		//throw 4;
+		throw LexExeption ("Invdalid left-handed expression.", cur_lex);
 	}
 }
 
@@ -164,7 +174,6 @@ void Parser:: G ()
 		
 		if ( c_type != LEX_RPAREN ) {
 			throw LexExeption ("Expected ')'", cur_lex);
-			//throw 5;
 		}
 		
 		get_lex ();
