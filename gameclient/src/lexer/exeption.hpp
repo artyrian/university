@@ -10,8 +10,8 @@ class LexExeption {
 public:
 	LexExeption (const char * s, const Lex & l);
 	LexExeption (const LexExeption & le);
-	~LexExeption ();
 	void print () const;
+	~LexExeption ();
 };
 
 #endif

@@ -5,15 +5,16 @@
 LexExeption:: LexExeption (const char * s, const Lex & l)
 	: lex (l)
 {
-	str = new char [ strlen (s) ];
+	str = new char [ strlen (s) + 1 ];
 	strcpy (str, s);
 }
 
 LexExeption:: LexExeption (const LexExeption & le)
 	: lex (le.lex)
 {
-	str = new char [ strlen (le.str) ];
+	str = new char [ strlen (le.str) + 1 ];
 	strcpy (str, le.str);
+
 	num_str = le.num_str;
 }
 

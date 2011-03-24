@@ -4,7 +4,18 @@
 #include <string.h>
 #include <ctype.h>
 
-Lex:: Lex (int k = 0, type_of_lex t = LEX_NULL, int v = 0)
+Lex:: Lex ()
+	: t_lex (LEX_NULL), v_lex (0), str_n (0)
+{
+}
+
+Lex:: Lex (int n)
+	: t_lex (LEX_NULL), v_lex (0), str_n (n)
+{
+}
+
+Lex:: Lex (int k, type_of_lex t, int v)
+	//: str_n (k)
 {
 	str_n = k; 
 	t_lex = t;
@@ -65,7 +76,7 @@ Scanner:: ~Scanner ()
 
 int Scanner:: isdelim (int c)
 {
-	const char smb [] = "+-*/%<>=&|![]();,@";
+	const char smb [] = "+-*/%<>=&|!{}[]();,@";
 	int i = 0;
 
 	while ( smb[i] != '\0' ) {
@@ -148,7 +159,7 @@ Lex Scanner:: state_H (int c)
 		CS = IDENT;
 		return Lex ();
 	}
-	else if ( c == '=' ) {
+	else if ( c == ':' ) {
 		buffer->clear ();
 		buffer->add (c);
 		CS = ASSIGN;
@@ -172,7 +183,7 @@ Lex Scanner:: state_H (int c)
 	}
 	else if ( c == '@' ) {
 		buffer->clear ();
-		buffer->aadd (c);
+		buffer->add (c);
 		CS = LABEL;
 		return Lex ();
 	}
@@ -203,12 +214,14 @@ Lex Scanner:: state_IDENT (int c)
 	else if ( c == '[' ) {
 		int i = table.array.put (buffer->get ());
 		CS = H;
+		buffer->add (c);
 		feed_symbol (c);
 		return Lex (count_str, LEX_ARRAY, i);
 	} 
 	else {
 		int i = table.ident.put (buffer->get ());
 		CS = H;
+		buffer->add (c);
 		feed_symbol (c);
 		return Lex (count_str, LEX_ID, i);
 	}
@@ -236,17 +249,18 @@ Lex Scanner:: state_KW (int c)
 
 Lex Scanner:: state_ASSIGN (int c)
 {
-	int i;
 	if ( c == '=' ) { 
-		buffer->add (c);
 		CS = H;
-		feed_symbol (c);
-		return Lex (count_str, table.lex_delim [i], i);
+		return Lex (count_str, LEX_ASSIGN, 1);
 	}		
 	else {
+		throw LexExeption ("Error in assign.", Lex (count_str));
+/*
 		CS = H;
+		i = look (buffer->get (), table.delim);
 		feed_symbol (c);
 		return Lex (count_str, LEX_ASSIGN, i);
+*/
 	}
 }
 
@@ -272,7 +286,8 @@ Lex Scanner:: state_DELIM (int c)
 		return Lex (count_str, table.lex_delim [i], i);
 	}
 	else {
-		throw LexExeption ( "Not found delim (state FDELIM).", Lex (count_str));
+		printf ("%dbuf[%s]\n", i, buffer->get ());
+		throw LexExeption ( "Not found delim (state DELIM).", Lex (count_str));
 	}
 }
 
@@ -319,7 +334,7 @@ Lex Scanner:: state_LABEL (int c)
 		return Lex ();
 	}
 	else {
-		int i = table.label.put (buffer->get ())
+		int i = table.label.put (buffer->get ());
 		CS = H;	
 		return Lex (count_str, LEX_LABEL, i);
 	}

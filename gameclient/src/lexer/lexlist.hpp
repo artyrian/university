@@ -24,6 +24,7 @@ class LexList {
 	};
 
 	ListElem *	first;
+	ListElem *	snd;
 	ReadFrom 	rf;
 
 	ListElem * create (const Lex & l);
@@ -31,7 +32,7 @@ class LexList {
 public:
 	LexList (const char * path);
 	void save ();
-	Lex get_lex () const;
+	Lex get_lex ();
 	void print ();
 	~LexList ();
 };

@@ -71,38 +71,34 @@ void LexList:: save ()
 	Lex lex (0, LEX_NULL, 0);
 	int c;
 
-	try {
-		while ( true ) {
-			if ( (c = rf.get_symbol ()) == -1 ) {
-				break;
-			}
-			
-			lex = la.feed_symbol (c);
-
-			if ( lex.get_type () != 0 ) {
-				add (lex);
-			}
+	while ( true ) {
+		if ( (c = rf.get_symbol ()) == -1 ) {
+			break;
 		}
+		
+		lex = la.feed_symbol (c);
 
-		lex = la.feed_symbol (' ');
 		if ( lex.get_type () != 0 ) {
-			add (lex); 
+			add (lex);
 		}
 	}
-	catch (const LexExeption & le) {
-		le.print ();	
+
+	lex = la.feed_symbol (' ');
+	if ( lex.get_type () != 0 ) {
+		add (lex); 
 	}
+
+	snd = first;
 }
 
-Lex LexList:: get_lex () const
+Lex LexList:: get_lex ()
 {
-	ListElem * cur = first;
-	ListElem * sdn;
-	
-	if ( cur->type  != 0 ) {
-		snd = cur;
-		cur = cur->next;
-		return snd->lex;
+	ListElem * cur;
+
+	if ( snd->lex.get_type () != 0 ) {
+		cur = snd;
+		snd = snd->next;
+		return cur->lex;
 	}
 	else {
 		return Lex (0, LEX_NULL, 0);

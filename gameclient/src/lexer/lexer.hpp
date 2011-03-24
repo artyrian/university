@@ -9,6 +9,8 @@ class Lex {
 	int 		v_lex;
 	int		str_n;
 public:
+	Lex ();
+	Lex (int n);
 	Lex (int k, type_of_lex t, int v);
 
 	type_of_lex get_type () const ;

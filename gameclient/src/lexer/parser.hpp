@@ -8,7 +8,7 @@ class Parser {
 	Lex		cur_lex;
 	type_of_lex	c_type;
 	int		c_val;
-	LexList		le;
+	LexList		ll;
 
 	void B ();
 	void C ();
@@ -21,7 +21,9 @@ class Parser {
 
 	void get_lex ();
 	
-	void colon ();
+	void ifthenelse ();
+	void whiledo ();
+	void array ();
 	void assign ();
 	void lparen ();
 	void rparen ();
@@ -32,17 +34,3 @@ public:
 };
 
 #endif
-
-void Parser:: assign ()
-{
-	get_lex ();
-	if ( c_type == LEX_ASSIGN ) {
-		get_lex ();
-		D ();
-		
-		colon ();
-	}
-	else {
-		throw LexExeption ("Expext assign", cur_lex);
-	}
-}

@@ -5,7 +5,7 @@
 enum type_of_lex {
 	LEX_NULL,				// 0
 	LEX_DO,				// 1
-	LEX_GOTO			// 2
+	LEX_GOTO,			// 2
 	LEX_ELSE,			// 3
 	LEX_IF,				// 4
 	LEX_THEN,			// 5
@@ -30,10 +30,11 @@ enum type_of_lex {
 	LEX_END,			// 24
 	LEX_OR,				// 25
 	LEX_AND,			// 26
-	LEX_NEQ,
-	LEX_NUM,			// 27
-	LEX_ID,				// 28
-	LEX_ARRAY,			// 29
+	LEX_NEQ,			// 27
+	LEX_ASSIGN,			// 28
+	LEX_NUM,			// 29
+	LEX_ID,				// 
+	LEX_ARRAY,			// 
 	LEX_LABEL,			// 30
 	LEX_STR,			// 31
 	LEX_BUY,			// 32

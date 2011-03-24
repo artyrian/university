@@ -22,7 +22,7 @@ type_of_lex TableLexem:: lex_word [] =
 {
 	LEX_NULL,			// 0
 	LEX_DO,				// 1
-	LEX_GOTO			// 2
+	LEX_GOTO,			// 2
 	LEX_ELSE,			// 3
 	LEX_IF,				// 4
 	LEX_THEN,			// 5
@@ -38,7 +38,7 @@ const char * TableLexem:: delim [] =
 	",",		// 2
 	"(", 		// 3
 	")",		// 4
-	"==",		// 5
+	"=",		// 5
 	"<",		// 6
 	">",		// 7
 	"+",		// 8
@@ -50,8 +50,8 @@ const char * TableLexem:: delim [] =
 	"<>",		// 14
 	"[",		// 15
 	"]",		// 16
-	"{"		// 17
-	"}"		// 18
+	"{",		// 17
+	"}",		// 18
 	"|",		// 19
 	"&",		// 20
 	"!",		// 21
