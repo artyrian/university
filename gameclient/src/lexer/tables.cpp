@@ -1,8 +1,52 @@
 #include "tables.hpp"
-#include "string.h"
+#include <string.h>
 #include <stdio.h>
 
 #define PART_SIZE_TABLE 4
+
+const char * PrintTable:: lexem [] =
+{
+	"",
+	"LEX_DO",
+	"LEX_GOTO",
+	"LEX_ELSE",
+	"LEX_IF",
+	"LEX_THEN",
+	"LEX_WHILE",
+	"LEX_BEGIN",
+	"LEX_END",
+	"LEX_FIN",
+	"LEX_COMMA",
+	"LEX_LPAREN",
+	"LEX_RPAREN",
+	"LEX_EQ",
+	"LEX_LESS",
+	"LEX_GREATER",
+	"LEX_PLUS",
+	"LEX_MINUS",
+	"LEX_MULTIPLY",
+	"LEX_DIVISION",
+	"LEX_LEQ",
+	"LEX_GEQ",
+	"LEX_LG",
+	"LEX_LBRACKET",
+	"LEX_RBRACKET",
+	"LEX_OR",
+	"LEX_AND",
+	"LEX_NEQ",
+	"LEX_ASSIGN",
+	"LEX_NUM",
+	"LEX_ID",
+	"LEX_ARRAY",
+	"LEX_LABEL", 
+	"LEX_STR",
+	"LEX_BUY",
+	"LEX_PROD",
+	"LEX_SELL",
+	"LEX_TURN",
+	"LEX_RAW",
+	0
+};
 
 
 const char * TableLexem:: word [] =
@@ -54,8 +98,6 @@ const char * TableLexem:: delim [] =
 	"<>",		// 14
 	"[",		// 15
 	"]",		// 16
-	//"{",		// 17
-	//"}",		// 18
 	"|",		// 19
 	"&",		// 20
 	"!",		// 21
@@ -82,8 +124,6 @@ type_of_lex TableLexem:: lex_delim [] =
 	LEX_LG,			// 14
 	LEX_LBRACKET,		// 15
 	LEX_RBRACKET,		//
-//	LEX_BEGIN,
-//	LEX_END,
 	LEX_OR,			
 	LEX_AND,		// 20
 	LEX_NEQ,

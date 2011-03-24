@@ -45,6 +45,7 @@ enum type_of_lex {
 };
 
 
+
 class StorageTypeLex {
 	friend class TableStorageTypeLex;
 	char * 		name;
@@ -106,6 +107,10 @@ struct TableLexem {
 	TableStorageTypeLex		label;
 
 	TableArrayStorageTypeLex	array;
+};
+
+struct PrintTable {
+	static const char * 		lexem [];
 };
 
 #endif
