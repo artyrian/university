@@ -3,6 +3,7 @@
 
 #include "../buffer/buffer.hpp"
 #include "tables.hpp"
+#include <stdio.h>
 
 
 class ReadFrom {

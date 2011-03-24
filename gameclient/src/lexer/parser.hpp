@@ -1,7 +1,6 @@
 #ifndef _PARSER_HPP_
 #define _PARSER_HPP_
 
-#include "lexlist.hpp"
 #include "lexer.hpp"
 
 class Parser {

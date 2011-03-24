@@ -1,6 +1,7 @@
 #include "lexer.hpp"
 #include "exeption.hpp"
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
