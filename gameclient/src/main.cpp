@@ -8,7 +8,7 @@ int main (int argc, char ** argv)
 		try {
 			Parser p (argv[1]);
 
-			p.analyze (); 
+		//	 p.analyze (); 
 		}
 		catch (const LexExeption & le) {
 			printf ("catch exeption.\n");

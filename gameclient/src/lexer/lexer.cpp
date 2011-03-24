@@ -280,9 +280,12 @@ Lex Scanner:: state_STR (int c)
 Lex Scanner:: state_DELIM (int c)
 {
 	int i;
+	if ( isdelim (c) ) {
+		buffer->add (c);
+	}
+
 	if ( (i = look (buffer->get (), table.delim)) != 0 ) {
 		CS = H;
-		feed_symbol (c);
 		return Lex (count_str, table.lex_delim [i], i);
 	}
 	else {

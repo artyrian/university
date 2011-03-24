@@ -68,9 +68,13 @@ void Parser:: C ()
 		get_lex ();
 		array ();
 	}
-	else {
+	else if ( c_type == LEX_BEGIN ) {
+		printf ("Im here");
 		B ();
 		get_lex ();
+	}
+	else {
+		throw LexExeption ("Error {}.", cur_lex);
 	}
 }
 
