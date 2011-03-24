@@ -58,8 +58,6 @@ const char * TableLexem:: word [] =
 	"if",		// 4
 	"then",		// 5
 	"while",	// 6
-	"begin",
-	"end",
 	0
 };
 
@@ -73,8 +71,6 @@ type_of_lex TableLexem:: lex_word [] =
 	LEX_IF,				// 4
 	LEX_THEN,			// 5
 	LEX_WHILE,			// 6
-	LEX_BEGIN,
-	LEX_END,
 	LEX_NULL
 };
 
@@ -101,6 +97,8 @@ const char * TableLexem:: delim [] =
 	"|",		// 19
 	"&",		// 20
 	"!",		// 21
+	"{",
+	"}",	
 	0
 };
 
@@ -127,6 +125,8 @@ type_of_lex TableLexem:: lex_delim [] =
 	LEX_OR,			
 	LEX_AND,		// 20
 	LEX_NEQ,
+	LEX_BEGIN,
+	LEX_END,
 	LEX_NULL
 };
 

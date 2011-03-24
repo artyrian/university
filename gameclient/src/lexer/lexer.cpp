@@ -77,7 +77,7 @@ Scanner:: ~Scanner ()
 
 int Scanner:: isdelim (int c)
 {
-	const char smb [] = "+-*/%<>=&|![]();,@";
+	const char smb [] = "+-*/%<>=&|!{}[]();,@";
 	int i = 0;
 
 	while ( smb[i] != '\0' ) {
