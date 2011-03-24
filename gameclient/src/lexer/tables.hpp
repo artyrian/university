@@ -28,8 +28,6 @@ enum type_of_lex {
 	LEX_LG,				// 20
 	LEX_LBRACKET,			// 21
 	LEX_RBRACKET,			// 22
-//	LEX_BEGIN,			// 23
-//	LEX_END,			// 24
 	LEX_OR,				// 25
 	LEX_AND,			// 26
 	LEX_NEQ,			// 27
