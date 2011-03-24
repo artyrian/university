@@ -1,5 +1,6 @@
 #include "lexer.hpp"
 #include "exeption.hpp"
+#include "tables.hpp"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -38,7 +39,8 @@ int Lex:: get_str_n () const
 
 void Lex:: print () const
 {
-	printf ("(%d,%d)", t_lex, v_lex);
+	PrintTable pt;
+	printf ("%s=(%d,%d);", pt.lexem [t_lex], t_lex, v_lex);
 
 }
 
@@ -272,12 +274,6 @@ Lex Scanner:: state_ASSIGN (int c)
 	}		
 	else {
 		throw LexExeption ("Error in assign.", Lex (count_str));
-/*
-		CS = H;
-		i = look (buffer->get (), table.delim);
-		save_c = c;
-		return Lex (count_str, LEX_ASSIGN, i);
-*/
 	}
 }
 
@@ -312,6 +308,7 @@ Lex Scanner:: state_DELIM (int c)
 
 	if ( (i = look (buffer->get (), table.delim)) != 0 ) {
 		CS = H;
+		save_c = c;
 		return Lex (count_str, table.lex_delim [i], i);
 	}
 	else {
