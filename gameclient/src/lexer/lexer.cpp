@@ -30,42 +30,28 @@ ReadFrom:: ~ReadFrom ()
 
 
 Lex:: Lex ()
-	: t_lex (LEX_NULL), v_lex (0), str_n (0)
+	: type (LEX_NULL), value (0), str_n (0)
 {
 }
 
 Lex:: Lex (int n)
-	: t_lex (LEX_NULL), v_lex (0), str_n (n)
+	: type (LEX_NULL), value (0), str_n (n)
 {
 }
 
 Lex:: Lex (int k, type_of_lex t, int v)
 {
 	str_n = k; 
-	t_lex = t;
-	v_lex = v; 
+	type = t;
+	value = v; 
 }
 
-type_of_lex Lex:: get_type () const
-{
-	return t_lex;
-}
-
-int Lex:: get_value () const
-{
-	return v_lex;
-}
-
-int Lex:: get_str_n () const
-{
-	return str_n;
-}
 
 void Lex:: print () const
 {
 	PrintTable pt;
-	printf ("%s=(%d,%d);", pt.lexem [t_lex], t_lex, v_lex);
 
+	printf ("%s=(%d,%d);", pt.lexem [type], type, value);
 }
 
 
@@ -126,13 +112,13 @@ void LexList:: save ()
 		
 		lex = la.feed_symbol (c);
 
-		if ( lex.get_type () != 0 ) {
+		if ( lex.type != 0 ) {
 			add (lex);
 		}
 	}
 
 	lex = la.feed_symbol (' ');
-	if ( lex.get_type () != 0 ) {
+	if ( lex.type != 0 ) {
 		add (lex); 
 	}
 
@@ -144,7 +130,7 @@ Lex LexList:: get_lex ()
 {
 	ListElem * cur;
 
-	if ( (snd != 0) && (snd->lex.get_type () != 0) ) {
+	if ( (snd != 0) && (snd->lex.type  != 0) ) {
 		cur = snd;
 		snd = snd->next;
 		return cur->lex;

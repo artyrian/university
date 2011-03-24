@@ -15,18 +15,15 @@ public:
 };
 
 
-class Lex {
-	type_of_lex	t_lex;
-	int 		v_lex;
+struct Lex {
+	type_of_lex	type;
+	int 		value;
 	int		str_n;
-public:
+
 	Lex ();
 	Lex (int n);
 	Lex (int k, type_of_lex t, int v);
 
-	type_of_lex get_type () const ;
-	int get_value () const;
-	int get_str_n () const;
 	void print () const; 
 };
 

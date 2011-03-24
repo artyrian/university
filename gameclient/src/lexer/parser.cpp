@@ -10,11 +10,11 @@ Parser:: Parser (const char * path)
 void Parser:: get_lex ()
 {
 	cur_lex = ll.get_lex () ;
-	if ( cur_lex.get_type () == LEX_NULL ) {
+	if ( cur_lex.type == LEX_NULL ) {
 		throw LexExeption ("End of file.", cur_lex);
 	}
-	c_type = cur_lex.get_type (); 
-	c_val = cur_lex.get_value ();
+	c_type = cur_lex.type;
+	c_val = cur_lex.value;
 
 }
 
