@@ -22,7 +22,7 @@ struct Lex {
 
 	Lex ();
 	Lex (int n);
-	Lex (int k, type_of_lex t, int v);
+	Lex (type_of_lex t, int v, int n);
 
 	void print () const; 
 };
@@ -40,6 +40,7 @@ class LexList {
 	ListElem *	snd;
 	ReadFrom 	rf;
 
+	Lex		lex;
 	ListElem * create (const Lex & l);
 	void add (const Lex & l);
 public:

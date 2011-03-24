@@ -39,11 +39,9 @@ Lex:: Lex (int n)
 {
 }
 
-Lex:: Lex (int k, type_of_lex t, int v)
+Lex:: Lex (type_of_lex t, int v, int n)
+	: type (t), value (v), str_n (n)
 {
-	str_n = k; 
-	type = t;
-	value = v; 
 }
 
 
@@ -58,13 +56,13 @@ void Lex:: print () const
 
 
 LexList:: ListElem:: ListElem ()
-	: lex (0, LEX_NULL, 0)
+	: lex ()
 {
 }
 
 
 LexList:: LexList (const char * path)
-	: rf (path)
+	: rf (path), lex ()
 {
 	first = 0;
 }
@@ -102,7 +100,6 @@ void LexList:: add (const Lex & l)
 void LexList:: save ()
 {
 	Scanner la;
-	Lex lex (0, LEX_NULL, 0);
 	int c;
 
 	while ( true ) {
@@ -136,7 +133,7 @@ Lex LexList:: get_lex ()
 		return cur->lex;
 	}
 	else {
-		return Lex (0, LEX_NULL, 0);
+		return Lex ();
 	}
 }
 
@@ -184,7 +181,7 @@ int Scanner:: isdelim (int c)
 
 
 
-int Scanner::look (const char * buf, const char ** list)
+int Scanner:: look (const char * buf, const char ** list)
 {
 	int i = 0;
 
@@ -211,15 +208,18 @@ Scanner:: Scanner ()
 Lex Scanner:: feed_symbol (int c)
 {
 	save_c = 0;
+
 	lex = step(c);
+
 	if ( c == '\n' ) {
-		printf ("Find \\n.\n");
 		count_str++;
 	}
+
 	if ( save_c != 0 ) {
 		step (save_c);
 		save_c = 0;
 	}
+
 	return lex;
 }
 
@@ -339,7 +339,7 @@ Lex Scanner:: state_NUM (int c)
 	else {
 		CS = H;
 		save_c = c;
-		return Lex (count_str, LEX_NUM, digit);
+		return Lex (LEX_NUM, digit, count_str);
 	}
 }
 
@@ -353,14 +353,14 @@ Lex Scanner:: state_IDENT (int c)
 		int i = table.array.put (buffer->get ());
 		CS = H;
 		save_c = c;
-		return Lex (count_str, LEX_ARRAY, i);
+		return Lex (LEX_ARRAY, i, count_str);
 	} 
 	else {
 		int i = table.ident.put (buffer->get ());
 		CS = H;
 		buffer->add (c);
 		save_c = c;
-		return Lex (count_str, LEX_ID, i);
+		return Lex (LEX_ID, i, count_str);
 	}
 }
 
@@ -375,7 +375,7 @@ Lex Scanner:: state_KW (int c)
 		if ( (i = look (buffer->get (), table.word)) != 0 ) {
 			CS = H;
 			save_c = c;
-			return Lex (count_str, table.lex_word [i], i);
+			return Lex (table.lex_word [i], i, count_str);
 		} 
 		else {
 			throw LexExeption ("Not found keyword", Lex (count_str));
@@ -388,7 +388,7 @@ Lex Scanner:: state_ASSIGN (int c)
 	if ( c == '=' ) { 
 		CS = H;
 		//save = c;
-		return Lex (count_str, LEX_ASSIGN, 1);
+		return Lex (LEX_ASSIGN, 1, count_str);
 	}		
 	else {
 		throw LexExeption ("Error in assign.", Lex (count_str));
@@ -404,7 +404,7 @@ Lex Scanner:: state_STR (int c)
 	else {
 		int i = table.string.put (buffer->get ());
 		CS = H;
-		return Lex (count_str, LEX_STR, i);
+		return Lex (LEX_STR, i, count_str);
 	}
 }
 
@@ -419,7 +419,7 @@ Lex Scanner:: state_DELIM (int c)
 	if ( (i = look (buffer->get (), table.delim)) != 0 ) {
 		CS = H;
 		save_c = c;
-		return Lex (count_str, table.lex_delim [i], i);
+		return Lex (table.lex_delim [i], i, count_str);
 	}
 	else {
 		printf ("%dbuf[%s]\n", i, buffer->get ());
@@ -431,7 +431,7 @@ Lex Scanner:: state_NEQ (int c)
 {
 	CS = H;
 	save_c = c;
-	return Lex (count_str, LEX_NEQ, 0);
+	return Lex (LEX_NEQ, 0, count_str);
 }
 
 Lex Scanner:: state_FN (int c)
@@ -445,7 +445,7 @@ Lex Scanner:: state_FN (int c)
 		if ( (i = look (buffer->get (), table.function)) != 0 ) {
 			CS = H;
 			save_c = c;
-			return Lex (count_str, table.lex_function [i], i);
+			return Lex (table.lex_function [i], i, count_str);
 		}
 		else {
 			perror ("Not found function.\n");
@@ -472,7 +472,7 @@ Lex Scanner:: state_LABEL (int c)
 	else {
 		int i = table.label.put (buffer->get ());
 		CS = H;	
-		return Lex (count_str, LEX_LABEL, i);
+		return Lex (LEX_LABEL, i, count_str);
 	}
 
 }
