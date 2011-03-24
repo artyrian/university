@@ -28,7 +28,6 @@ class Scanner {
 					KW, 
 					ASSIGN, 
 					STR, 
-					INDEX,
 					DELIM, 
 					NEQ, 
 					FN, 
@@ -57,7 +56,6 @@ private:
 	Lex state_KW (int c);
 	Lex state_ASSIGN (int c);
 	Lex state_STR (int c);
-	Lex state_INDEX (int c);
 	Lex state_DELIM (int c);
 	Lex state_NEQ (int c);
 	Lex state_FN (int c);

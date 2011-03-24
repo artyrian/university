@@ -119,8 +119,6 @@ Lex Scanner:: step (int c)
 		return state_ASSIGN (c);
 	case STR:
 		return state_STR (c);
-	case INDEX:
-		return state_INDEX (c);
 	case DELIM:
 		return state_DELIM (c);
 	case NEQ:
@@ -184,12 +182,6 @@ Lex Scanner:: state_H (int c)
 		CS = STR;
 		return Lex ();
 	} 
-	else if ( c == '[' ) {
-		buffer->clear ();
-		buffer->add (c);
-		CS = INDEX;
-		return Lex ();
-	}
 	else if ( isdelim (c) != 0 ) {
 		buffer->clear ();
 		buffer->add (c);
@@ -288,14 +280,6 @@ Lex Scanner:: state_STR (int c)
 		CS = H;
 		return Lex (count_str, LEX_STR, i);
 	}
-}
-
-Lex Scanner:: state_INDEX (int c)
-{
-	int i = look (buffer->get (), table.delim);
-	CS = H;
-	save_c = c;
-	return Lex (count_str, LEX_LBRACKET, i);
 }
 
 
