@@ -1,6 +1,6 @@
 #include "lexer.hpp"
 #include "exeption.hpp"
-#include "tables.hpp"
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
