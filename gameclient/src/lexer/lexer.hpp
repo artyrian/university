@@ -4,6 +4,16 @@
 #include "../buffer/buffer.hpp"
 #include "tables.hpp"
 
+
+class ReadFrom {
+	FILE * fp;
+public:
+	ReadFrom (const char * str);
+	int get_symbol ();
+	~ReadFrom ();
+};
+
+
 class Lex {
 	type_of_lex	t_lex;
 	int 		v_lex;
@@ -17,6 +27,29 @@ public:
 	int get_value () const;
 	int get_str_n () const;
 	void print () const; 
+};
+
+
+class LexList {
+	struct ListElem {
+		Lex		lex;
+		ListElem *	next;
+
+		ListElem ();
+	};
+
+	ListElem *	first;
+	ListElem *	snd;
+	ReadFrom 	rf;
+
+	ListElem * create (const Lex & l);
+	void add (const Lex & l);
+public:
+	LexList (const char * path);
+	void save ();
+	Lex get_lex ();
+	void print ();
+	~LexList ();
 };
 
 
@@ -44,12 +77,13 @@ class Scanner {
 
 	int isdelim (int c);
 	int look (const char * buf, const char ** list);
-	Lex step (int);
 public:
 	Scanner ();
 	Lex feed_symbol (int);
 	~Scanner ();
 private:
+	Lex step (int);
+
 	Lex state_H (int c);
 	Lex state_NUM (int c);
 	Lex state_IDENT (int c);
@@ -62,5 +96,6 @@ private:
 	Lex state_COMMENT (int c);
 	Lex state_LABEL (int c);
 };
+
 
 #endif
