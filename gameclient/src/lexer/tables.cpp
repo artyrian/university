@@ -14,6 +14,8 @@ const char * TableLexem:: word [] =
 	"if",		// 4
 	"then",		// 5
 	"while",	// 6
+	"begin",
+	"end",
 	0
 };
 
@@ -27,6 +29,8 @@ type_of_lex TableLexem:: lex_word [] =
 	LEX_IF,				// 4
 	LEX_THEN,			// 5
 	LEX_WHILE,			// 6
+	LEX_BEGIN,
+	LEX_END,
 	LEX_NULL
 };
 
@@ -50,8 +54,8 @@ const char * TableLexem:: delim [] =
 	"<>",		// 14
 	"[",		// 15
 	"]",		// 16
-	"{",		// 17
-	"}",		// 18
+	//"{",		// 17
+	//"}",		// 18
 	"|",		// 19
 	"&",		// 20
 	"!",		// 21
@@ -78,8 +82,8 @@ type_of_lex TableLexem:: lex_delim [] =
 	LEX_LG,			// 14
 	LEX_LBRACKET,		// 15
 	LEX_RBRACKET,		//
-	LEX_BEGIN,
-	LEX_END,
+//	LEX_BEGIN,
+//	LEX_END,
 	LEX_OR,			
 	LEX_AND,		// 20
 	LEX_NEQ,
@@ -94,6 +98,7 @@ const char * TableLexem:: function [] =
 	"?prod",		// 2
 	"?sell",		// 3
 	"?turn",		// 4
+	"?raw",			// 5
 	0
 };
 
@@ -105,6 +110,7 @@ type_of_lex TableLexem:: lex_function [] =
 	LEX_PROD,	// 2
 	LEX_SELL,	// 3
 	LEX_TURN,	// 4
+	LEX_RAW,	// 5
 	LEX_NULL
 };
 

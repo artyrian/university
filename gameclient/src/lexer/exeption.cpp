@@ -29,3 +29,4 @@ void LexExeption:: print () const
 	lex.print ();
 	printf (", str number:%d.\n", lex.get_str_n ());
 }
+

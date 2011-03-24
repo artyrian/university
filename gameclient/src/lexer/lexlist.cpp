@@ -95,7 +95,7 @@ Lex LexList:: get_lex ()
 {
 	ListElem * cur;
 
-	if ( snd->lex.get_type () != 0 ) {
+	if ( (snd != 0) && (snd->lex.get_type () != 0) ) {
 		cur = snd;
 		snd = snd->next;
 		return cur->lex;

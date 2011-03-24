@@ -10,24 +10,26 @@ enum type_of_lex {
 	LEX_IF,				// 4
 	LEX_THEN,			// 5
 	LEX_WHILE,			// 6
-	LEX_FIN,			// 7
-	LEX_COMMA,			// 8
-	LEX_LPAREN,			// 9
-	LEX_RPAREN,			// 10
-	LEX_EQ,				// 11
-	LEX_LESS,			// 12
-	LEX_GREATER,			// 13
-	LEX_PLUS,			// 14
-	LEX_MINUS,			// 15
-	LEX_MULTIPLY,			// 16
-	LEX_DIVISION, 			// 17
-	LEX_LEQ,			// 18
+	LEX_BEGIN,
+	LEX_END,
+	LEX_FIN,			// 
+	LEX_COMMA,			// 10 
+	LEX_LPAREN,			// 11 
+	LEX_RPAREN,			// 12
+	LEX_EQ,				// 13
+	LEX_LESS,			// 14
+	LEX_GREATER,			// 15
+	LEX_PLUS,			// 16
+	LEX_MINUS,			// 17
+	LEX_MULTIPLY,			// 18
+	LEX_DIVISION, 			// 19
+	LEX_LEQ,			// 
 	LEX_GEQ,			// 19
 	LEX_LG,				// 20
 	LEX_LBRACKET,			// 21
 	LEX_RBRACKET,			// 22
-	LEX_BEGIN,			// 23
-	LEX_END,			// 24
+//	LEX_BEGIN,			// 23
+//	LEX_END,			// 24
 	LEX_OR,				// 25
 	LEX_AND,			// 26
 	LEX_NEQ,			// 27
@@ -41,6 +43,7 @@ enum type_of_lex {
 	LEX_PROD,			// 33
 	LEX_SELL,			// 34
 	LEX_TURN,			// 35
+	LEX_RAW
 };
 
 

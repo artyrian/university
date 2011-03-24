@@ -11,12 +11,13 @@ Parser:: Parser (const char * path)
 void Parser:: get_lex ()
 {
 	cur_lex = ll.get_lex () ;
+	if ( cur_lex.get_type () == LEX_NULL ) {
+		throw LexExeption ("End of file.", cur_lex);
+		//throw 1;
+	}
 	c_type = cur_lex.get_type (); 
 	c_val = cur_lex.get_value ();
 
-	if ( cur_lex.get_type () == 0 ) {
-		throw LexExeption ("End of file.", cur_lex);
-	}
 }
 
 void Parser:: analyze ()
@@ -33,7 +34,17 @@ void Parser:: analyze ()
 void Parser:: B ()
 {
 	if ( c_type != LEX_BEGIN ) {
-		throw LexExeption ("'{' absent.", cur_lex);
+		throw LexExeption ("Exepted '{'.", cur_lex);
+		//throw 2;
+	}
+	
+	get_lex ();
+
+	C ();
+
+	if ( c_type != LEX_FIN ) {
+		throw LexExeption ("Exepted ';'.", cur_lex);
+		//throw -1;
 	}
 	
 	get_lex ();
@@ -43,7 +54,8 @@ void Parser:: B ()
 		C ();
 
 		if ( c_type != LEX_FIN ) {
-			throw LexExeption ("Exeption ';'", cur_lex);
+			throw LexExeption ("Exepted';'", cur_lex);
+			//throw 3;
 		} 
 
 		get_lex ();
@@ -69,12 +81,31 @@ void Parser:: C ()
 		array ();
 	}
 	else if ( c_type == LEX_BEGIN ) {
-		printf ("Im here");
 		B ();
 		get_lex ();
 	}
+	else if ( c_type == LEX_LABEL ) {
+		get_lex ();
+	}
+	else if ( c_type == LEX_GOTO ) {
+		get_lex ();
+
+		if ( c_type == LEX_GOTO ) {
+			get_lex ();
+		}
+		else {
+			throw -2;
+		}
+	}
+	else if ( 	c_type == LEX_BUY || 
+			c_type == LEX_SELL) 
+	{
+		get_lex ();
+		W ();
+	}
 	else {
 		throw LexExeption ("Error {}.", cur_lex);
+		//throw 4;
 	}
 }
 
@@ -133,6 +164,7 @@ void Parser:: G ()
 		
 		if ( c_type != LEX_RPAREN ) {
 			throw LexExeption ("Expected ')'", cur_lex);
+			//throw 5;
 		}
 		
 		get_lex ();
@@ -141,9 +173,13 @@ void Parser:: G ()
 		get_lex ();
 		array ();
 	}
-	else {
+	else if ( c_type == LEX_RAW ) {
 		get_lex ();
 		Z ();	
+	}
+	else
+	{
+		throw -10;
 	}
 
 }
@@ -195,23 +231,22 @@ void Parser:: W ()
 	}
 	else {
 		throw LexExeption ("Syntax error.", cur_lex);
+		//throw 6;
 	}
 }
 
 void Parser:: Z ()
 {
 	printf ("Fns with return paramaters.\n");
-	if ( 1 ) {
+	if ( c_type == LEX_RAW ) {
 		lparen ();
 
 		rparen ();
 	}
-	else if ( 0 ) {
-		lparen ();
-
-		D ();
-
-		rparen ();
+	else 
+	{
+		throw LexExeption ("Not found function with return.", cur_lex);
+		//throw -20;
 	}
 }
 
@@ -224,6 +259,7 @@ void Parser:: assign ()
 	}
 	else {
 		throw LexExeption ("Expext assign", cur_lex);
+		//throw 7;
 	}
 }
 
@@ -231,6 +267,7 @@ void Parser:: lparen ()
 {
 		if ( c_type != LEX_LPAREN ) {
 			throw LexExeption ("Expected '('", cur_lex);
+			//throw 8;
 		}
 		get_lex ();
 }
@@ -239,6 +276,7 @@ void Parser:: rparen ()
 {
 		if ( c_type != LEX_RPAREN ) {
 			throw LexExeption ("Expected ')'", cur_lex);
+			//throw 9;
 		}
 		get_lex ();
 }
@@ -247,6 +285,7 @@ void Parser:: comma ()
 {
 		if ( c_type != LEX_COMMA ) {
 			throw LexExeption ("Expected ','", cur_lex);
+			//throw 10;
 		}
 		get_lex ();
 }
@@ -266,6 +305,7 @@ void Parser:: ifthenelse ()
 		}
 		else {
 			throw LexExeption ("Expected 'then'", cur_lex);
+			//throw 11;
 		}
 }
 
@@ -279,6 +319,7 @@ void Parser:: whiledo ()
 		}
 		else {
 			throw LexExeption ("Expected 'do'.", cur_lex);
+			//throw 12;
 		}
 
 }
@@ -295,10 +336,12 @@ void Parser:: array ()
 			}
 			else {
 				throw LexExeption ("Exepted ']'", cur_lex);
+				//throw 13;
 			}
 
 		}
 		else {
 			throw LexExeption ("Expected '['.", cur_lex);
+			//throw 14;
 		}
 }

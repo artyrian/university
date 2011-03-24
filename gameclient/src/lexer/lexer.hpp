@@ -28,6 +28,7 @@ class Scanner {
 					KW, 
 					ASSIGN, 
 					STR, 
+					INDEX,
 					DELIM, 
 					NEQ, 
 					FN, 
@@ -39,12 +40,15 @@ class Scanner {
 	int		count_str;
 	Buffer * 	buffer;
 	int 		digit;
+	Lex 		lex; 
+	int		save_c;
 
 	int isdelim (int c);
 	int look (const char * buf, const char ** list);
+	Lex step (int);
 public:
 	Scanner ();
-	Lex feed_symbol (int c);
+	Lex feed_symbol (int);
 	~Scanner ();
 private:
 	Lex state_H (int c);
@@ -53,6 +57,7 @@ private:
 	Lex state_KW (int c);
 	Lex state_ASSIGN (int c);
 	Lex state_STR (int c);
+	Lex state_INDEX (int c);
 	Lex state_DELIM (int c);
 	Lex state_NEQ (int c);
 	Lex state_FN (int c);
