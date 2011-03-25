@@ -46,7 +46,6 @@ void Parser:: B ()
 {
 	if ( c_type != LEX_BEGIN ) {
 		throw LexExeption ("Exepted 'begin'.", cur_lex);
-		//throw 2;
 	}
 	
 	get_lex ();
@@ -55,7 +54,6 @@ void Parser:: B ()
 
 	if ( c_type != LEX_FIN ) {
 		throw LexExeption ("Exepted ';'.", cur_lex);
-		//throw -1;
 	}
 	
 	get_lex ();
@@ -66,7 +64,6 @@ void Parser:: B ()
 
 		if ( c_type != LEX_FIN ) {
 			throw LexExeption ("Exepted';'", cur_lex);
-			//throw 3;
 		} 
 
 		get_lex ();
@@ -231,6 +228,13 @@ void Parser:: W ()
 
 		rparen ();
 	}
+	else if ( c_type == LEX_BUILD ) {
+		get_lex ();
+
+		lparen ();
+
+		rparen ();
+	}
 	else if (c_type == LEX_TURN ) {
 		get_lex ();
 
@@ -240,22 +244,120 @@ void Parser:: W ()
 	}
 	else {
 		throw LexExeption ("Syntax error.", cur_lex);
-		//throw 6;
 	}
 }
 
 void Parser:: Z ()
 {
 	printf ("Fns with return paramaters.\n");
-	if ( c_type == LEX_RAW ) {
+	if ( c_type == LEX_CUR_MONTH ) {
 		lparen ();
+
+		rparen ();
+	}
+	else if ( c_type == LEX_PLAYERS ) {
+		lparen ();
+
+		rparen ();
+	}
+	else if ( c_type == LEX_ACTIVE_PLAYERS ) {
+		lparen ();
+
+		rparen ();
+	}
+	else if ( c_type == LEX_SUPPLY ) {
+		lparen ();
+
+		rparen ();
+	}
+	else if ( c_type == LEX_RAW_PRICE ) {
+		lparen ();
+
+		rparen ();
+	}
+	else if ( c_type == LEX_DEMAND ) {
+		lparen ();
+
+		rparen ();
+	}
+	else if ( c_type == LEX_PRODUCTION_PRICE ) {
+		lparen ();
+
+		rparen ();
+	}
+	else if ( c_type == LEX_MONEY ) {
+		lparen ();
+
+		D ();
+
+		rparen ();
+	}
+	else if ( c_type == LEX_RAW ) {
+		lparen ();
+
+		D ();
+
+		rparen ();
+	}
+	else if ( c_type == LEX_PRODUCTION ) {
+		lparen ();
+
+		D ();
+
+		rparen ();
+	}
+	else if ( c_type == LEX_FACTORIES ) {
+		lparen ();
+
+		D ();
+
+		rparen ();
+	}
+	else if ( c_type == LEX_AUTO_FACTIORES ) {
+		lparen ();
+
+		D ();
+
+		rparen ();
+	}
+	else if ( c_type == LEX_MANUFACTURED ) {
+		lparen ();
+
+		D ();
+
+		rparen ();
+	}
+	else if ( c_type == LEX_RESULT_RAW_SOLD ) {
+		lparen ();
+
+		D ();
+
+		rparen ();
+	}
+	else if ( c_type == LEX_RESULT_RAW_PRICE ) {
+		lparen ();
+
+		D ();
+
+		rparen ();
+	}
+	else if ( c_type == LEX_RESULT_PROD_BOUGHT ) {
+		lparen ();
+
+		D ();
+
+		rparen ();
+	}
+	else if ( c_type == LEX_RESULT_PROD_PRICE ) {
+		lparen ();
+
+		D ();
 
 		rparen ();
 	}
 	else 
 	{
 		throw LexExeption ("Not found function with return.", cur_lex);
-		//throw -20;
 	}
 }
 
@@ -268,7 +370,6 @@ void Parser:: assign ()
 	}
 	else {
 		throw LexExeption ("Expext assign", cur_lex);
-		//throw 7;
 	}
 }
 
@@ -276,7 +377,6 @@ void Parser:: lparen ()
 {
 		if ( c_type != LEX_LPAREN ) {
 			throw LexExeption ("Expected '('", cur_lex);
-			//throw 8;
 		}
 		get_lex ();
 }
@@ -285,7 +385,6 @@ void Parser:: rparen ()
 {
 		if ( c_type != LEX_RPAREN ) {
 			throw LexExeption ("Expected ')'", cur_lex);
-			//throw 9;
 		}
 		get_lex ();
 }
@@ -294,7 +393,6 @@ void Parser:: comma ()
 {
 		if ( c_type != LEX_COMMA ) {
 			throw LexExeption ("Expected ','", cur_lex);
-			//throw 10;
 		}
 		get_lex ();
 }
@@ -314,7 +412,6 @@ void Parser:: ifthenelse ()
 		}
 		else {
 			throw LexExeption ("Expected 'then'", cur_lex);
-			//throw 11;
 		}
 }
 
@@ -328,7 +425,6 @@ void Parser:: whiledo ()
 		}
 		else {
 			throw LexExeption ("Expected 'do'.", cur_lex);
-			//throw 12;
 		}
 
 }
@@ -345,12 +441,10 @@ void Parser:: array ()
 			}
 			else {
 				throw LexExeption ("Exepted ']'", cur_lex);
-				//throw 13;
 			}
 
 		}
 		else {
 			throw LexExeption ("Expected '['.", cur_lex);
-			//throw 14;
 		}
 }
