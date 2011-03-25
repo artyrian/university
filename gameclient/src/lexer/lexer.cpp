@@ -213,13 +213,15 @@ Lex Scanner:: feed_symbol (int c)
 	save_c = 0;
 
 	lex = step(c);
+
 	if ( c == '\n' ) {
-		printf ("Find \\n.\n");
 		count_str++;
 	}
+
 	if ( save_c != 0 ) {
 		step (save_c);
 	}
+
 	return lex;
 }
 
