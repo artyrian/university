@@ -199,7 +199,7 @@ int Scanner::look (const char * buf, const char ** list)
 
 
 Scanner:: Scanner ()
-	: table (), lex ()
+	: table ()
 {
 	buffer = new Buffer;
 
@@ -209,7 +209,9 @@ Scanner:: Scanner ()
 
 Lex Scanner:: feed_symbol (int c)
 {
+	Lex lex;
 	save_c = 0;
+
 	lex = step(c);
 	if ( c == '\n' ) {
 		printf ("Find \\n.\n");
@@ -217,7 +219,6 @@ Lex Scanner:: feed_symbol (int c)
 	}
 	if ( save_c != 0 ) {
 		step (save_c);
-		save_c = 0;
 	}
 	return lex;
 }

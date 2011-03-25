@@ -70,7 +70,6 @@ class Scanner {
 	int		count_str;
 	Buffer * 	buffer;
 	int 		digit;
-	Lex 		lex; 
 	int		save_c;
 
 	int isdelim (int c);
