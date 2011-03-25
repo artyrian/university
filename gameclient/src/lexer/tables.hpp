@@ -23,13 +23,10 @@ enum type_of_lex {
 	LEX_MINUS,			// 17
 	LEX_MULTIPLY,			// 18
 	LEX_DIVISION, 			// 19
-	LEX_LEQ,			// 
-	LEX_GEQ,			// 19
-	LEX_LG,				// 20
-	LEX_LBRACKET,			// 21
-	LEX_RBRACKET,			// 22
-	LEX_OR,				// 25
-	LEX_AND,			// 26
+	LEX_LBRACKET,			// 
+	LEX_RBRACKET,			// 
+	LEX_OR,				// 2
+	LEX_AND,			// 2
 	LEX_NEQ,			// 27
 	LEX_ASSIGN,			// 28
 	LEX_NUM,			// 29

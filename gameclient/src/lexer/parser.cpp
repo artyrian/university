@@ -120,10 +120,7 @@ void Parser:: D ()
 {
 	E ();
 
-	if ( 	c_type == LEX_EQ 	|| c_type == LEX_GREATER	|| 
-		c_type == LEX_LESS 	|| c_type == LEX_LEQ		||
-		c_type == LEX_GEQ 	|| c_type == LEX_LG 		)
-	{
+	if (c_type == LEX_EQ || c_type == LEX_GREATER || c_type == LEX_LESS) {
 		get_lex ();
 		E ();
 	}

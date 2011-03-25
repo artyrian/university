@@ -26,9 +26,6 @@ const char * PrintTable:: lexem [] =
 	"LEX_MINUS",
 	"LEX_MULTIPLY",
 	"LEX_DIVISION",
-	"LEX_LEQ",
-	"LEX_GEQ",
-	"LEX_LG",
 	"LEX_LBRACKET",
 	"LEX_RBRACKET",
 	"LEX_OR",
@@ -89,9 +86,6 @@ const char * TableLexem:: delim [] =
 	"-",		// 9
 	"*",		// 10
 	"/",		// 11
-	">=",		// 12
-	"<=",		// 13
-	"<>",		// 14
 	"[",		// 15
 	"]",		// 16
 	"|",		// 19
@@ -117,9 +111,6 @@ type_of_lex TableLexem:: lex_delim [] =
 	LEX_MINUS,		// 9
 	LEX_MULTIPLY,
 	LEX_DIVISION, 
-	LEX_LEQ,		// 12
-	LEX_GEQ,		// 13
-	LEX_LG,			// 14
 	LEX_LBRACKET,		// 15
 	LEX_RBRACKET,		//
 	LEX_OR,			
