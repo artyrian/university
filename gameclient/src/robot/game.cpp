@@ -357,7 +357,7 @@ char* Game::my_id () const
 	return nick;
 }
 
-int Game::curmonth () const
+int Game::cur_month () const
 {
 	return month;
 }

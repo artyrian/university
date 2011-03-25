@@ -56,7 +56,7 @@ public:
 	void turn () const;
 
 	char* my_id () const;
-	int curmonth () const;
+	int cur_month () const;
 	int players () const;
 	int active_players () const;
 	int supply () const;
