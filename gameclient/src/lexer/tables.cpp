@@ -135,10 +135,27 @@ const char * TableLexem:: function [] =
 {
 	""
 	"?buy",			// 1
-	"?prod",		// 2
 	"?sell",		// 3
-	"?turn",		// 4
-	"?raw",			// 5
+	"?prod",		// 2
+	"?build",
+	"?turn",		//
+	"?cur_month",
+	"?players",
+	"?a_players",
+	"?supply",
+	"?raw_price",
+	"?demand",
+	"?production_price",
+	"?money",
+	"?raw",
+	"?production",
+	"?factories",
+	"?a_factories",
+	"?manufactured",
+	"?result_raw_sold",
+	"?result_raw_price",
+	"?result_prod_bought",
+	"?result_prod_price",
 	0
 };
 
@@ -147,10 +164,27 @@ type_of_lex TableLexem:: lex_function [] =
 {
 	LEX_NULL,
 	LEX_BUY,	// 1
-	LEX_PROD,	// 2
-	LEX_SELL,	// 3
-	LEX_TURN,	// 4
-	LEX_RAW,	// 5
+	LEX_SELL,	// 
+	LEX_PROD,	// 
+	LEX_BUILD,	
+	LEX_TURN,	// 
+	LEX_CUR_MONTH,
+	LEX_PLAYERS,
+	LEX_ACTIVE_PLAYERS,
+	LEX_SUPPLY,
+	LEX_RAW_PRICE,
+	LEX_DEMAND,
+	LEX_PRODUCTION_PRICE,
+	LEX_MONEY,
+	LEX_RAW,
+	LEX_PRODUCTION,
+	LEX_FACTORIES,
+	LEX_AUTO_FACTORIES,
+	LEX_MANUFACTURED,
+	LEX_RESULT_RAW_SOLD,
+	LEX_RESULT_RAW_PRICE,
+	LEX_RESULT_PROD_BOUGHT,
+	LEX_RESULT_PROD_PRICE,
 	LEX_NULL
 };
 
