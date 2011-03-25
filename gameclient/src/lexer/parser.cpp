@@ -313,7 +313,7 @@ void Parser:: Z ()
 
 		rparen ();
 	}
-	else if ( c_type == LEX_AUTO_FACTIORES ) {
+	else if ( c_type == LEX_AUTO_FACTORIES ) {
 		lparen ();
 
 		D ();
