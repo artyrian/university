@@ -94,3 +94,5 @@ private:
 	Lex state_COMMENT (int c);
 	Lex state_LABEL (int c);
 };
+
+#endif
