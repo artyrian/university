@@ -2,6 +2,7 @@
 #define _PARSER_HPP_
 
 #include "lexer.hpp"
+#include "poliz.hpp"
 
 class Parser {
 	Lex		cur_lex;
@@ -28,6 +29,7 @@ class Parser {
 	void rparen ();
 	void comma ();
 public:
+	Poliz	prg;			// not realized yet.
 	Parser (const char * path);
 	void analyze ();
 };

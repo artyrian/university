@@ -1,5 +1,5 @@
 #include "lexer.hpp"
-#include "exeption.hpp"
+#include "../exeption/exeption.hpp"
 
 #include <stdlib.h>
 #include <stdio.h>

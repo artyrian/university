@@ -1,5 +1,5 @@
 #include "parser.hpp"
-#include "exeption.hpp"
+#include "../exeption/exeption.hpp"
 #include <stdlib.h>
 
 Parser:: Parser (const char * path)
@@ -20,25 +20,15 @@ void Parser:: get_lex ()
 
 void Parser:: analyze ()
 {
-	try {
-		ll.save ();
-		ll.print ();
+	ll.save ();
+	ll.print ();
 
-		printf ("Begin parse.\n");
+	printf ("Begin parse.\n");
 
-		get_lex ();
-		B ();
+	get_lex ();
+	B ();
 
-		printf ("End parser.\n"); 
-	}
-	catch (const LexExeption & le) {
-		printf ("catch exeption.\n");
-		le.print ();
-		exit (1);
-	}
-	catch (int i) {
-		printf ("Exeption: %d.\n", i);
-	}
+	printf ("End parser.\n"); 
 }
 
 
