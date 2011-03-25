@@ -1,16 +1,8 @@
 CREATE IN VIM HOTKEY WITH AUTOCOMMIT
 
-Need to move INDEX to DELIM
-
-Work with some states. create for each state each case.
-1 - solved, 2 - solved => 3 - solved.
-QUESTIONS:
-1) class Exeption. Which info i need to save?
 NEED TO DO:
 --------------
-1) Create language;
-4) Add to class Lex info about number str;
-5) Create class Exeption;
+1) add all functions of game to table module and to parser
 ---------------
 
 /*
