@@ -2,6 +2,7 @@ CREATE IN VIM HOTKEY WITH AUTOCOMMIT
 
 NEED TO DO:
 --------------
+0) ~!!! ERROR WITH delims! FIND '}' ';'. View as "};" if stay without space.
 1) In src/robot/ create method which convert nick to uid to each player.
 ---------------
 
