@@ -1,6 +1,12 @@
 #ifndef _POLIZ_HPP_
 #define _POLIZ_HPP_
 
+/*
+class PolizItem {
+public:
+
+};
+
 class PolizElem {
 public:
 	virtual ~PolizElem ();
@@ -11,12 +17,9 @@ protected:
 	static PolizElem * 	pop (PolizItem ** stack);
 };
 
-class PolizConst /* */ {
-/*
-	Not ready yet.
-*/
+class PolizConst  {
 
-}
+};
 
 class PolizInt : public PolizConst {
 	int value;
@@ -45,7 +48,7 @@ public:
 	void evaluate ( PolizItem ** stack,
 			PolizItem ** cur_cmd) const;
 };
-/*
+
 Here class PolizFunction 
 
 class PolizFunPlus : public PolizFunPlus {

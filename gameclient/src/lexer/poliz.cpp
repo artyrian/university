@@ -1,11 +1,11 @@
 #include "poliz.hpp"
-
+/*
 PolizElem:: ~PolizElem ()
 {
 }
 
 
-PolizInt (int a)
+PolizInt:: PolizInt (int a)
 {
 	value = a;
 }
@@ -65,7 +65,6 @@ const
 	delete operand1;
 }
 
-/*
 PolizFunPlus:: PolizFunPlus ()
 {
 }
