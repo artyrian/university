@@ -19,6 +19,10 @@ int main (int argc, char ** argv)
 			printf ("Exeption: %d.\n", i);
 			return 1;
 		}
+		catch (...) {
+			printf ("Unknown exeption.\n");
+			return 1;
+		}
 
 	}
 	else {
