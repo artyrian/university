@@ -1,12 +1,27 @@
 #include "parser.hpp"
 #include "../exeption/exeption.hpp"
+#include "tables.hpp"
 #include <stdlib.h>
 
 Parser:: Parser (const char * path)
-	: ll (path)
+	: ll (path), table ()
 {
 }
 
+
+int Parser:: look (type_of_lex type_lex, const type_of_lex * table)
+{
+	int i = 1;
+
+	while ( table [i] != LEX_NULL ) {
+		if ( table [i] == type_lex ) {
+			return i;
+		}
+		++i;
+	}
+
+	return 0;
+}
 void Parser:: get_lex ()
 {
 	cur_lex = ll.get_lex () ;
@@ -88,17 +103,21 @@ void Parser:: C ()
 	else if ( c_type == LEX_GOTO ) {
 		get_lex ();
 
-		if ( c_type == LEX_GOTO ) {
+		if ( c_type == LEX_LABEL ) {
 			get_lex ();
 		}
 		else {
-			throw -2;
+			throw LexExeption ("Error in label of goto", cur_lex);
 		}
 	}
-	else if ( 	c_type == LEX_BUY || 
-			c_type == LEX_SELL) 
+	else if ( 	c_type == LEX_BUY 	|| 
+			c_type == LEX_SELL 	|| 
+			c_type == LEX_PROD 	||
+			c_type == LEX_BUILD 	|| 
+			c_type == LEX_TURN 	|| 
+			c_type == LEX_PRINT 
+		) 
 	{
-		get_lex ();
 		W ();
 	}
 	else {
@@ -172,7 +191,7 @@ void Parser:: G ()
 	}
 	else
 	{
-		throw -10;
+		throw LexExeption ("Unknown symbol of expression.", cur_lex);
 	}
 
 }
@@ -229,8 +248,17 @@ void Parser:: W ()
 
 		rparen ();
 	}
+	else if (c_type == LEX_PRINT ) {
+		get_lex ();
+
+		lparen ();
+
+		L ();
+
+		rparen ();
+	}
 	else {
-		throw LexExeption ("Syntax error.", cur_lex);
+		throw LexExeption ("Syntax error. Not allowed expression.", cur_lex);
 	}
 }
 
@@ -347,6 +375,37 @@ void Parser:: Z ()
 		throw LexExeption ("Not found function with return.", cur_lex);
 	}
 }
+
+void Parser:: L ()
+{
+	elem ();
+	
+	if ( c_type == LEX_COMMA ) {
+		get_lex ();
+		L ();
+	}
+	
+}
+
+void Parser:: elem ()
+{
+	if ( c_type == LEX_STR ) {
+		get_lex ();
+	}
+	else if ( 
+			c_type == LEX_NUM || 
+		  	c_type == LEX_ID || 
+			c_type == LEX_ARRAY ||
+		  	look (c_type, table.lex_function) != 0
+		)
+	{
+		D ();	
+	}
+	else {
+		throw LexExeption ("Exepted expression or string.", cur_lex);
+	}
+}
+
 
 
 void Parser:: assign ()

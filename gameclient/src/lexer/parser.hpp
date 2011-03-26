@@ -9,6 +9,7 @@ class Parser {
 	type_of_lex	c_type;
 	int		c_val;
 	LexList		ll;
+	TableLexem	table;
 
 	void B ();
 	void C ();
@@ -18,8 +19,11 @@ class Parser {
 	void G ();
 	void W ();
 	void Z ();
+	void L ();
 
 	void get_lex ();
+
+	int look (type_of_lex type_lex, const type_of_lex * table);
 	
 	void ifthenelse ();
 	void whiledo ();
@@ -28,6 +32,7 @@ class Parser {
 	void lparen ();
 	void rparen ();
 	void comma ();
+	void elem ();
 public:
 	Poliz	prg;			// not realized yet.
 	Parser (const char * path);
