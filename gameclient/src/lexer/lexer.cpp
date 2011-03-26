@@ -189,6 +189,7 @@ int Scanner::look (const char * buf, const char ** list)
 
 	while ( list [i] != 0 ) {
 		if ( strcmp (buf, list [i]) == 0 ) {
+			printf ("find №i=%d.\n", i);
 			return (i + 1);
 		}
 		++i;
@@ -442,6 +443,7 @@ Lex Scanner:: state_FN (int c)
 	else {
 		int i;
 		if ( (i = look (buffer->get (), table.function)) != 0 ) {
+			printf ("in buf[%s], i=%d.\n", buffer->get (), i);
 			CS = H;
 			save_c = c;
 			return Lex (count_str, table.lex_function [i], i);
