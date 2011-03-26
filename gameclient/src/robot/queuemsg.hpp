@@ -1,11 +1,11 @@
 #ifndef _QUEUEMSG_HPP_
 #define _QUEUEMSG_HPP_
 
-#include "cache.hpp"
+#include "socket.hpp"
 
 
 class QueueMsg {
-	Cache ch;
+	Socket ch;
 
 	struct QueueElem {
 		char *str;
