@@ -38,10 +38,28 @@ const char * PrintTable:: lexem [] =
 	"LEX_LABEL", 
 	"LEX_STR",
 	"LEX_BUY",
-	"LEX_PROD",
 	"LEX_SELL",
+	"LEX_PROD",
+	"LEX_BUILD",
 	"LEX_TURN",
+	"LEX_CUR_MONTH",
+	"LEX_PLAYERS",
+	"LEX_ACTIVE_PLAYERS",
+	"LEX_SUPPLY",
+	"LEX_RAW_PRICE",
+	"LEX_DEMAND",
+	"LEX_PRODUCTION_PRICE",
+	"LEX_MONEY",
 	"LEX_RAW",
+	"LEX_PRODUCTION",
+	"LEX_FACTORIES",
+	"LEX_AUTO_FACTORIES",
+	"LEX_MANUFACTURED",
+	"LEX_RESULT_RAW_SOLD",
+	"LEX_RESULT_RAW_PRICE",
+	"LEX_RESULT_PROD_BOUGHT",
+	"LEX_RESULT_PROD_PRICE",
+	"LEX_PRINT",
 	0
 };
 
@@ -55,6 +73,12 @@ const char * TableLexem:: word [] =
 	"if",		// 4
 	"then",		// 5
 	"while",	// 6
+	"print",
+	"buy",
+	"sell",
+	"prod",
+	"build",
+	"turn",
 	0
 };
 
@@ -68,6 +92,13 @@ type_of_lex TableLexem:: lex_word [] =
 	LEX_IF,				// 4
 	LEX_THEN,			// 5
 	LEX_WHILE,			// 6
+	LEX_PRINT,
+	LEX_BUY,
+	LEX_SELL,
+	LEX_PROD,			// 
+	LEX_BUILD,	
+	LEX_TURN,	// 
+
 	LEX_NULL
 };
 
@@ -86,12 +117,12 @@ const char * TableLexem:: delim [] =
 	"-",		// 9
 	"*",		// 10
 	"/",		// 11
-	"[",		// 15
-	"]",		// 16
-	"|",		// 19
-	"&",		// 20
-	"!",		// 21
-	"{",
+	"[",		// 12
+	"]",		// 13
+	"|",		// 14
+	"&",		// 15
+	"!",		// 16
+	"{",		// 17
 	"}",	
 	0
 };
@@ -125,11 +156,6 @@ type_of_lex TableLexem:: lex_delim [] =
 const char * TableLexem:: function [] =
 {
 	""
-	"?buy",			// 1
-	"?sell",		// 3
-	"?prod",		// 2
-	"?build",
-	"?turn",		//
 	"?cur_month",
 	"?players",
 	"?a_players",
@@ -137,7 +163,7 @@ const char * TableLexem:: function [] =
 	"?raw_price",
 	"?demand",
 	"?production_price",
-	"?money",
+	"?money",		// 13
 	"?raw",
 	"?production",
 	"?factories",
@@ -154,11 +180,6 @@ const char * TableLexem:: function [] =
 type_of_lex TableLexem:: lex_function [] =
 {
 	LEX_NULL,
-	LEX_BUY,	// 1
-	LEX_SELL,	// 
-	LEX_PROD,	// 
-	LEX_BUILD,	
-	LEX_TURN,	// 
 	LEX_CUR_MONTH,
 	LEX_PLAYERS,
 	LEX_ACTIVE_PLAYERS,
