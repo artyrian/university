@@ -95,6 +95,7 @@ void Parser:: C ()
 	else if ( c_type == LEX_ARRAY ) {
 		get_lex ();
 		array ();
+		assign ();
 	}
 	else if ( c_type == LEX_BEGIN ) {
 		B ();
@@ -405,7 +406,7 @@ void Parser:: elem ()
 		D ();	
 	}
 	else {
-		throw LexExeption ("Exepted expression or string.", cur_lex);
+		throw LexExeption ("Expected expression or string.", cur_lex);
 	}
 }
 
@@ -418,7 +419,7 @@ void Parser:: assign ()
 		D ();
 	}
 	else {
-		throw LexExeption ("Expext assign", cur_lex);
+		throw LexExeption ("Expected assign", cur_lex);
 	}
 }
 
@@ -486,7 +487,6 @@ void Parser:: array ()
 
 			if ( c_type == LEX_RBRACKET ) {
 				get_lex ();
-				assign ();
 			}
 			else {
 				throw LexExeption ("Exepted ']'", cur_lex);
