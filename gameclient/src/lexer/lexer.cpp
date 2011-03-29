@@ -18,7 +18,14 @@ ReadFrom:: ReadFrom (const char * str)
 
 int ReadFrom:: get_symbol ()
 {
-	return fgetc (fp);
+	int c = fgetc (fp);
+	
+	if ( c != EOF ) {
+		return c;
+	}
+	else {
+		return EOF;
+	}
 }
 
 ReadFrom:: ~ReadFrom ()
@@ -105,7 +112,7 @@ void LexList:: save ()
 	int c;
 
 	while ( true ) {
-		if ( (c = rf.get_symbol ()) == -1 ) {
+		if ( (c = rf.get_symbol ()) == EOF ) {
 			break;
 		}
 		

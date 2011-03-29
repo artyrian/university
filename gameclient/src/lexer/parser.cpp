@@ -22,6 +22,8 @@ int Parser:: look (type_of_lex type_lex, const type_of_lex * table)
 
 	return 0;
 }
+
+
 void Parser:: get_lex ()
 {
 	cur_lex = ll.get_lex_from_list () ;
@@ -32,6 +34,7 @@ void Parser:: get_lex ()
 	c_val = cur_lex.value;
 
 }
+
 
 void Parser:: analyze ()
 {
