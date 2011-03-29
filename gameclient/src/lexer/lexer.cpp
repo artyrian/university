@@ -125,7 +125,7 @@ void LexList:: save ()
 }
 
 
-Lex LexList:: get_lex ()
+Lex LexList:: get_lex_from_list ()
 {
 	ListElem * cur;
 
