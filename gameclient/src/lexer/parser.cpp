@@ -24,7 +24,7 @@ int Parser:: look (type_of_lex type_lex, const type_of_lex * table)
 }
 void Parser:: get_lex ()
 {
-	cur_lex = ll.get_lex () ;
+	cur_lex = ll.get_lex_from_list () ;
 	if ( cur_lex.type == LEX_NULL ) {
 		throw LexExeption ("End of file.", cur_lex);
 	}

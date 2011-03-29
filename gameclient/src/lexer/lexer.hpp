@@ -45,7 +45,7 @@ class LexList {
 public:
 	LexList (const char * path);
 	void save ();
-	Lex get_lex ();
+	Lex get_lex_from_list ();
 	void print ();
 	~LexList ();
 };
