@@ -1,10 +1,10 @@
 #include "parser.hpp"
 #include "../exeption/exeption.hpp"
-#include "tables.hpp"
 #include <stdlib.h>
 
+
 Parser:: Parser (const char * path)
-	: ll (path), table ()
+	: cur_lex (), ll (path), table ()
 {
 }
 
@@ -30,48 +30,46 @@ void Parser:: get_lex ()
 	if ( cur_lex.type == LEX_NULL ) {
 		throw LexExeption ("End of file.", cur_lex);
 	}
-	c_type = cur_lex.type;
-	c_val = cur_lex.value;
 
 }
 
 
 void Parser:: analyze ()
 {
-	ll.save ();
-	ll.print ();
+	ll.save_list ();
+	ll.print_list ();
 
 	printf ("Begin parse.\n");
 
 	get_lex ();
 	B ();
 
-	printf ("End parser.\n"); 
+	printf ("Syntax analyze:\tOK.\n"); 
 }
 
 
 void Parser:: B ()
 {
-	if ( c_type != LEX_BEGIN ) {
-		throw LexExeption ("Exepted 'begin'.", cur_lex);
+	if ( cur_lex.type != LEX_BEGIN ) {
+		throw LexExeption ("Expected 'begin'.", cur_lex);
 	}
 	
 	get_lex ();
 
 	C ();
 
-	if ( c_type != LEX_FIN ) {
-		throw LexExeption ("Exepted ';'.", cur_lex);
+	if ( cur_lex.type != LEX_FIN ) {
+		throw LexExeption ("Expected ';'.", cur_lex);
 	}
 	
 	get_lex ();
 
-	while ( c_type != LEX_END ) {
+	while ( cur_lex.type != LEX_END ) {
 
 		C ();
 
-		if ( c_type != LEX_FIN ) {
-			throw LexExeption ("Exepted';'", cur_lex);
+		if ( cur_lex.type != LEX_FIN ) {
+			throw LexExeption ("Expected ';'", cur_lex);
 		} 
 
 		get_lex ();
@@ -80,46 +78,46 @@ void Parser:: B ()
 
 void Parser:: C ()
 {
-	if ( c_type == LEX_IF ) {
+	if ( cur_lex.type == LEX_IF ) {
 		get_lex ();
 		ifthenelse ();
 	}
-	else if ( c_type == LEX_WHILE ) {
+	else if ( cur_lex.type == LEX_WHILE ) {
 		get_lex ();
 		whiledo ();
 	}
-	else if ( c_type == LEX_ID ) {
+	else if ( cur_lex.type == LEX_ID ) {
 		get_lex ();
 		assign ();
 	}
-	else if ( c_type == LEX_ARRAY ) {
+	else if ( cur_lex.type == LEX_ARRAY ) {
 		get_lex ();
 		array ();
 		assign ();
 	}
-	else if ( c_type == LEX_BEGIN ) {
+	else if ( cur_lex.type == LEX_BEGIN ) {
 		B ();
 		get_lex ();
 	}
-	else if ( c_type == LEX_LABEL ) {
+	else if ( cur_lex.type == LEX_LABEL ) {
 		get_lex ();
 	}
-	else if ( c_type == LEX_GOTO ) {
+	else if ( cur_lex.type == LEX_GOTO ) {
 		get_lex ();
 
-		if ( c_type == LEX_LABEL ) {
+		if ( cur_lex.type == LEX_LABEL ) {
 			get_lex ();
 		}
 		else {
 			throw LexExeption ("Error in label of goto", cur_lex);
 		}
 	}
-	else if ( 	c_type == LEX_BUY 	|| 
-			c_type == LEX_SELL 	|| 
-			c_type == LEX_PROD 	||
-			c_type == LEX_BUILD 	|| 
-			c_type == LEX_TURN 	|| 
-			c_type == LEX_PRINT 
+	else if ( 	cur_lex.type == LEX_BUY 	|| 
+			cur_lex.type == LEX_SELL 	|| 
+			cur_lex.type == LEX_PROD 	||
+			cur_lex.type == LEX_BUILD 	|| 
+			cur_lex.type == LEX_TURN 	|| 
+			cur_lex.type == LEX_PRINT 
 		) 
 	{
 		W ();
@@ -129,67 +127,77 @@ void Parser:: C ()
 	}
 }
 
+
 void Parser:: D ()
 {
 	E ();
 
-	if (c_type == LEX_EQ || c_type == LEX_GREATER || c_type == LEX_LESS) {
+	if (	cur_lex.type == LEX_EQ || 
+		cur_lex.type == LEX_GREATER || 
+		cur_lex.type == LEX_LESS) 
+	{
 		get_lex ();
 		E ();
 	}
 }
 
+
 void Parser:: E ()
 {
 	F ();
 
-	while (c_type == LEX_PLUS || c_type == LEX_MINUS || c_type == LEX_OR) {
+	while (	cur_lex.type == LEX_PLUS || 
+		cur_lex.type == LEX_MINUS || 
+		cur_lex.type == LEX_OR) 
+	{
 		get_lex ();
 		F ();
 	}
 }
 
+
 void Parser:: F ()
 {
 	G ();
 
-	while (	c_type == LEX_MULTIPLY || 
-		c_type == LEX_DIVISION || 
-		c_type == LEX_AND) 
+	while (	cur_lex.type == LEX_MULTIPLY || 
+		cur_lex.type == LEX_DIVISION || 
+		cur_lex.type == LEX_AND) 
 	{
 		get_lex ();
 		G ();
 	}
 }
 
+
 void Parser:: G ()
 {
-	if ( c_type == LEX_ID ) {
+	if ( cur_lex.type == LEX_ID ) {
 		get_lex ();	
 	}
-	else if ( c_type == LEX_NUM ) {
+	else if ( cur_lex.type == LEX_NUM ) {
 		get_lex ();	
 	}
-	else if ( c_type == LEX_NEQ ) {
+	else if ( cur_lex.type == LEX_NEQ ) {
 		get_lex ();
 		G ();
 	}
-	else if ( c_type == LEX_LPAREN ) {
+	else if ( cur_lex.type == LEX_LPAREN ) {
 		
 		get_lex ();
 		D ();
 		
-		if ( c_type != LEX_RPAREN ) {
+		if ( cur_lex.type != LEX_RPAREN ) {
 			throw LexExeption ("Expected ')'", cur_lex);
 		}
 		
 		get_lex ();
 	}
-	else if ( c_type == LEX_ARRAY ) {
+	else if ( cur_lex.type == LEX_ARRAY ) {
 		get_lex ();
 		array ();
 	}
-	else if ( c_type == LEX_RAW ) {
+	else if ( cur_lex.type == LEX_RAW ) {
 		get_lex ();
 		Z ();	
 	}
@@ -200,10 +208,10 @@ void Parser:: G ()
 
 }
 
+
 void Parser:: W ()
 {
-	printf ("Fns without return parametrs.\n");
-	if ( c_type == LEX_BUY ) {
+	if ( cur_lex.type == LEX_BUY ) {
 		get_lex ();
 
 		lparen ();
@@ -216,7 +224,7 @@ void Parser:: W ()
 
 		rparen ();
 	}
-	else if ( c_type == LEX_SELL ) {
+	else if ( cur_lex.type == LEX_SELL ) {
 		get_lex ();
 
 		lparen ();
@@ -229,7 +237,7 @@ void Parser:: W ()
 
 		rparen ();
 	}
-	else if ( c_type == LEX_PROD ) {
+	else if ( cur_lex.type == LEX_PROD ) {
 		get_lex ();
 
 		lparen ();
@@ -238,21 +246,21 @@ void Parser:: W ()
 
 		rparen ();
 	}
-	else if ( c_type == LEX_BUILD ) {
+	else if ( cur_lex.type == LEX_BUILD ) {
 		get_lex ();
 
 		lparen ();
 
 		rparen ();
 	}
-	else if (c_type == LEX_TURN ) {
+	else if (cur_lex.type == LEX_TURN ) {
 		get_lex ();
 
 		lparen ();
 
 		rparen ();
 	}
-	else if (c_type == LEX_PRINT ) {
+	else if (cur_lex.type == LEX_PRINT ) {
 		get_lex ();
 
 		lparen ();
@@ -262,112 +270,113 @@ void Parser:: W ()
 		rparen ();
 	}
 	else {
-		throw LexExeption ("Syntax error. Not allowed expression.", cur_lex);
+		throw LexExeption ("Syntax error. Not allowed expression.", 
+								cur_lex);
 	}
 }
 
+
 void Parser:: Z ()
 {
-	printf ("Fns with return paramaters.\n");
-	if ( c_type == LEX_CUR_MONTH ) {
+	if ( cur_lex.type == LEX_CUR_MONTH ) {
 		lparen ();
 
 		rparen ();
 	}
-	else if ( c_type == LEX_PLAYERS ) {
+	else if ( cur_lex.type == LEX_PLAYERS ) {
 		lparen ();
 
 		rparen ();
 	}
-	else if ( c_type == LEX_ACTIVE_PLAYERS ) {
+	else if ( cur_lex.type == LEX_ACTIVE_PLAYERS ) {
 		lparen ();
 
 		rparen ();
 	}
-	else if ( c_type == LEX_SUPPLY ) {
+	else if ( cur_lex.type == LEX_SUPPLY ) {
 		lparen ();
 
 		rparen ();
 	}
-	else if ( c_type == LEX_RAW_PRICE ) {
+	else if ( cur_lex.type == LEX_RAW_PRICE ) {
 		lparen ();
 
 		rparen ();
 	}
-	else if ( c_type == LEX_DEMAND ) {
+	else if ( cur_lex.type == LEX_DEMAND ) {
 		lparen ();
 
 		rparen ();
 	}
-	else if ( c_type == LEX_PRODUCTION_PRICE ) {
+	else if ( cur_lex.type == LEX_PRODUCTION_PRICE ) {
 		lparen ();
 
 		rparen ();
 	}
-	else if ( c_type == LEX_MONEY ) {
-		lparen ();
-
-		D ();
-
-		rparen ();
-	}
-	else if ( c_type == LEX_RAW ) {
+	else if ( cur_lex.type == LEX_MONEY ) {
 		lparen ();
 
 		D ();
 
 		rparen ();
 	}
-	else if ( c_type == LEX_PRODUCTION ) {
+	else if ( cur_lex.type == LEX_RAW ) {
 		lparen ();
 
 		D ();
 
 		rparen ();
 	}
-	else if ( c_type == LEX_FACTORIES ) {
+	else if ( cur_lex.type == LEX_PRODUCTION ) {
 		lparen ();
 
 		D ();
 
 		rparen ();
 	}
-	else if ( c_type == LEX_AUTO_FACTORIES ) {
+	else if ( cur_lex.type == LEX_FACTORIES ) {
 		lparen ();
 
 		D ();
 
 		rparen ();
 	}
-	else if ( c_type == LEX_MANUFACTURED ) {
+	else if ( cur_lex.type == LEX_AUTO_FACTORIES ) {
 		lparen ();
 
 		D ();
 
 		rparen ();
 	}
-	else if ( c_type == LEX_RESULT_RAW_SOLD ) {
+	else if ( cur_lex.type == LEX_MANUFACTURED ) {
 		lparen ();
 
 		D ();
 
 		rparen ();
 	}
-	else if ( c_type == LEX_RESULT_RAW_PRICE ) {
+	else if ( cur_lex.type == LEX_RESULT_RAW_SOLD ) {
 		lparen ();
 
 		D ();
 
 		rparen ();
 	}
-	else if ( c_type == LEX_RESULT_PROD_BOUGHT ) {
+	else if ( cur_lex.type == LEX_RESULT_RAW_PRICE ) {
 		lparen ();
 
 		D ();
 
 		rparen ();
 	}
-	else if ( c_type == LEX_RESULT_PROD_PRICE ) {
+	else if ( cur_lex.type == LEX_RESULT_PROD_BOUGHT ) {
+		lparen ();
+
+		D ();
+
+		rparen ();
+	}
+	else if ( cur_lex.type == LEX_RESULT_PROD_PRICE ) {
 		lparen ();
 
 		D ();
@@ -380,27 +389,29 @@ void Parser:: Z ()
 	}
 }
 
+
 void Parser:: L ()
 {
 	elem ();
 	
-	if ( c_type == LEX_COMMA ) {
+	if ( cur_lex.type == LEX_COMMA ) {
 		get_lex ();
 		L ();
 	}
 	
 }
 
+
 void Parser:: elem ()
 {
-	if ( c_type == LEX_STR ) {
+	if ( cur_lex.type == LEX_STR ) {
 		get_lex ();
 	}
 	else if ( 
-			c_type == LEX_NUM || 
-		  	c_type == LEX_ID || 
-			c_type == LEX_ARRAY ||
-		  	look (c_type, table.lex_function) != 0
+			cur_lex.type == LEX_NUM || 
+		  	cur_lex.type == LEX_ID || 
+			cur_lex.type == LEX_ARRAY ||
+		  	look (cur_lex.type , table.lex_function) != 0
 		)
 	{
 		D ();	
@@ -411,10 +422,9 @@ void Parser:: elem ()
 }
 
 
-
 void Parser:: assign ()
 {
-	if ( c_type == LEX_ASSIGN ) {
+	if ( cur_lex.type == LEX_ASSIGN ) {
 		get_lex ();
 		D ();
 	}
@@ -423,39 +433,43 @@ void Parser:: assign ()
 	}
 }
 
+
 void Parser:: lparen () 
 {
-		if ( c_type != LEX_LPAREN ) {
+		if ( cur_lex.type != LEX_LPAREN ) {
 			throw LexExeption ("Expected '('", cur_lex);
 		}
 		get_lex ();
 }
 
+
 void Parser:: rparen () 
 {
-		if ( c_type != LEX_RPAREN ) {
+		if ( cur_lex.type != LEX_RPAREN ) {
 			throw LexExeption ("Expected ')'", cur_lex);
 		}
 		get_lex ();
 }
 
+
 void Parser:: comma () 
 {
-		if ( c_type != LEX_COMMA ) {
+		if ( cur_lex.type != LEX_COMMA ) {
 			throw LexExeption ("Expected ','", cur_lex);
 		}
 		get_lex ();
 }
 
+
 void Parser:: ifthenelse ()
 {
 		D ();
 
-		if ( c_type == LEX_THEN ) {
+		if ( cur_lex.type == LEX_THEN ) {
 			get_lex ();
 			C ();	
 
-			if ( c_type == LEX_ELSE ) {
+			if ( cur_lex.type == LEX_ELSE ) {
 				get_lex ();
 				C ();
 			}
@@ -465,11 +479,12 @@ void Parser:: ifthenelse ()
 		}
 }
 
+
 void Parser:: whiledo ()
 {
 		D ();
 
-		if ( c_type == LEX_DO ) {
+		if ( cur_lex.type == LEX_DO ) {
 			get_lex ();
 			C ();
 		}
@@ -478,18 +493,20 @@ void Parser:: whiledo ()
 		}
 
 }
+
+
 void Parser:: array ()
 {
-		if ( c_type == LEX_LBRACKET ) {
+		if ( cur_lex.type == LEX_LBRACKET ) {
 			
 			get_lex ();
 			D ();
 
-			if ( c_type == LEX_RBRACKET ) {
+			if ( cur_lex.type == LEX_RBRACKET ) {
 				get_lex ();
 			}
 			else {
-				throw LexExeption ("Exepted ']'", cur_lex);
+				throw LexExeption ("Expected ']'", cur_lex);
 			}
 
 		}

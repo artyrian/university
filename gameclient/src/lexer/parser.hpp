@@ -1,12 +1,13 @@
 #ifndef _PARSER_HPP_
 #define _PARSER_HPP_
 
+
 #include "lexer.hpp"
+#include "tables.hpp"
+
 
 class Parser {
 	Lex		cur_lex;
-	type_of_lex	c_type;
-	int		c_val;
 	LexList		ll;
 	TableLexem	table;
 
@@ -20,10 +21,6 @@ class Parser {
 	void Z ();
 	void L ();
 
-	void get_lex ();
-
-	int look (type_of_lex type_lex, const type_of_lex * table);
-	
 	void ifthenelse ();
 	void whiledo ();
 	void array ();
@@ -32,9 +29,16 @@ class Parser {
 	void rparen ();
 	void comma ();
 	void elem ();
+
+	
+	void get_lex ();
+	int look (type_of_lex type_lex, const type_of_lex * table);
+	
 public:
 	Parser (const char * path);
+
 	void analyze ();
 };
+
 
 #endif

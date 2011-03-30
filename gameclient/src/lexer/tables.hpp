@@ -61,6 +61,7 @@ enum type_of_lex {
 
 
 
+
 class StorageTypeLex {
 	friend class TableStorageTypeLex;
 	char * 		name;
@@ -75,6 +76,8 @@ public:
 	virtual ~StorageTypeLex ();
 	virtual void operator= (const StorageTypeLex & str);
 };
+
+
 
 
 class TableStorageTypeLex: public StorageTypeLex {
@@ -94,6 +97,9 @@ public:
 
 };
 
+
+
+
 class TableArrayStorageTypeLex {
 	TableStorageTypeLex * 	t;
 	int 			size;
@@ -106,6 +112,9 @@ public:
 	int put (const char * buf);
 	~TableArrayStorageTypeLex ();
 };
+
+
+
 
 struct TableLexem {
 	static const char *		word [];
@@ -124,8 +133,12 @@ struct TableLexem {
 	TableArrayStorageTypeLex	array;
 };
 
+
+
+
 struct PrintTable {
 	static const char * 		lexem [];
 };
+
 
 #endif

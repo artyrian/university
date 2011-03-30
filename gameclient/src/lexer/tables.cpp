@@ -98,7 +98,6 @@ type_of_lex TableLexem:: lex_word [] =
 	LEX_PROD,			// 
 	LEX_BUILD,	
 	LEX_TURN,	// 
-
 	LEX_NULL
 };
 
@@ -293,6 +292,7 @@ int TableStorageTypeLex:: put (const char * buf)
 	return (top - 1);
 }
 
+
 void TableStorageTypeLex:: operator= (const TableStorageTypeLex & t)
 {
 	name = new char [ strlen (t.name) ];
@@ -328,10 +328,12 @@ void TableArrayStorageTypeLex:: extend_table ()
 	size = new_size;
 }
 
+
 TableStorageTypeLex:: ~TableStorageTypeLex ()
 {
 	delete [] s;
 }
+
 
 int TableArrayStorageTypeLex:: put (const char  * buf)
 {
@@ -351,6 +353,7 @@ int TableArrayStorageTypeLex:: put (const char  * buf)
 	return (top - 1);
 }
 
+
 TableArrayStorageTypeLex:: TableArrayStorageTypeLex ()
 	: size (PART_SIZE_TABLE)
 {
@@ -363,6 +366,7 @@ TableArrayStorageTypeLex:: ~TableArrayStorageTypeLex ()
 {
 	delete [] t;
 }
+
 
 TableStorageTypeLex & 
 TableArrayStorageTypeLex:: operator [] (int k)

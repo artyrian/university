@@ -1,6 +1,7 @@
 #ifndef _LEXER_HPP_
 #define _LEXER_HPP_
 
+
 #include "../buffer/buffer.hpp"
 #include "tables.hpp"
 #include <stdio.h>
@@ -15,10 +16,12 @@ public:
 };
 
 
+
+
 struct Lex {
+	int		strnum;
 	type_of_lex	type;
 	int 		value;
-	int		strnum;
 
 	Lex ();
 	Lex (int n);
@@ -28,27 +31,33 @@ struct Lex {
 };
 
 
+
+
 class LexList {
 	struct ListElem {
 		Lex		lex;
 		ListElem *	next;
-
-		ListElem ();
 	};
 
 	ListElem *	first;
 	ListElem *	snd;
 	ReadFrom 	rf;
 
-	ListElem * create (const Lex & l);
-	void add (const Lex & l);
+	ListElem * create_elem (const Lex & l);
+	void add_to_list (const Lex & l);
 public:
 	LexList (const char * path);
-	void save ();
-	Lex get_lex_from_list ();
-	void print ();
 	~LexList ();
+
+	void save_list ();
+
+	Lex get_lex_from_list ();
+
+	void print_list ();
+
 };
+
+
 
 
 class Scanner {

@@ -34,50 +34,35 @@ ReadFrom:: ~ReadFrom ()
 }
 
 
-
-
 Lex:: Lex ()
-	: type (LEX_NULL), value (0), strnum (0)
+	: strnum (0), type (LEX_NULL), value (0)
 {
 }
+
 
 Lex:: Lex (int n)
-	: type (LEX_NULL), value (0), strnum (n)
+	: strnum (n), type (LEX_NULL), value (0)
 {
 }
 
-Lex:: Lex (int k, type_of_lex t, int v)
+
+Lex:: Lex (int k , type_of_lex t , int v)
+	: strnum (k), type (t), value (v)
 {
-	strnum = k; 
-	type = t;
-	value = v; 
 }
+
 
 void Lex:: print () const
 {
 	PrintTable pt;
 	printf ("%s=(%d,%d);", pt.lexem [type], type, value);
-
 }
 
 
-
-
-LexList:: ListElem:: ListElem ()
-	: lex (0, LEX_NULL, 0)
-{
-}
-
-
-LexList:: LexList (const char * path)
-	: rf (path)
-{
-	first = 0;
-}
 
 
 LexList:: ListElem * 
-LexList:: create (const Lex & l)
+LexList:: create_elem (const Lex & l)
 {
 	ListElem * t = new ListElem ;
 	t->lex = l;
@@ -87,12 +72,12 @@ LexList:: create (const Lex & l)
 }
 
 
-void LexList:: add (const Lex & l)
+void LexList:: add_to_list (const Lex & l)
 {
 	ListElem * cur = first;
 
 	if ( first == 0 ) {
-		first = create (l);
+		first = create_elem (l);
 	}
 	else {
 		ListElem * prev;
@@ -100,15 +85,37 @@ void LexList:: add (const Lex & l)
 			prev = cur;
 			cur = cur->next;
 		}
-		cur = create (l);	
+		cur = create_elem (l);	
 		prev->next = cur;
 	}
 }
 
-void LexList:: save ()
+
+
+LexList:: LexList (const char * path)
+	: rf (path)
+{
+	first = 0;
+}
+
+
+LexList:: ~LexList ()
+{
+	ListElem * cur = first;
+
+	while ( cur != 0 ) {
+		first = cur;
+		cur = cur->next;	
+		delete first;
+	}
+}
+
+
+
+void LexList:: save_list ()
 {
 	Scanner la;
-	Lex lex (0, LEX_NULL, 0);
+	Lex lex;
 	int c;
 
 	while ( true ) {
@@ -119,13 +126,13 @@ void LexList:: save ()
 		lex = la.feed_symbol (c);
 
 		if ( lex.type != 0 ) {
-			add (lex);
+			add_to_list (lex);
 		}
 	}
 
 	lex = la.feed_symbol (' ');
 	if ( lex.type != 0 ) {
-		add (lex); 
+		add_to_list (lex); 
 	}
 
 	snd = first;
@@ -142,12 +149,12 @@ Lex LexList:: get_lex_from_list ()
 		return cur->lex;
 	}
 	else {
-		return Lex (0, LEX_NULL, 0);
+		return Lex ();
 	}
 }
 
 
-void LexList:: print ()
+void LexList:: print_list ()
 {
 	ListElem * cur = first;
 	
@@ -160,17 +167,6 @@ void LexList:: print ()
 
 }
 
-
-LexList:: ~LexList ()
-{
-	ListElem * cur = first;
-
-	while ( cur != 0 ) {
-		first = cur;
-		cur = cur->next;	
-		delete first;
-	}
-}
 
 
 
@@ -189,14 +185,12 @@ int Scanner:: isdelim (int c)
 }
 
 
-
 int Scanner::look (const char * buf, const char ** list)
 {
 	int i = 0;
 
 	while ( list [i] != 0 ) {
 		if ( strcmp (buf, list [i]) == 0 ) {
-			printf ("find №i=%d.\n", i);
 			return (i + 1);
 		}
 		++i;
@@ -214,6 +208,7 @@ Scanner:: Scanner ()
 	count_str = 1;
 	CS = H;
 }
+
 
 Lex Scanner:: feed_symbol (int c)
 {
@@ -340,6 +335,7 @@ Lex Scanner:: state_H (int c)
 	}
 }
 
+
 Lex Scanner:: state_NUM (int c)
 {
 	if ( isdigit (c) ) {
@@ -352,6 +348,7 @@ Lex Scanner:: state_NUM (int c)
 		return Lex (count_str, LEX_NUM, digit);
 	}
 }
+
 
 Lex Scanner:: state_IDENT (int c)
 {
@@ -374,6 +371,7 @@ Lex Scanner:: state_IDENT (int c)
 	}
 }
 
+
 Lex Scanner:: state_KW (int c)
 {
 	if ( isalpha (c) || isdigit (c) || (c == '_') ) {
@@ -393,17 +391,18 @@ Lex Scanner:: state_KW (int c)
 	}
 }
 
+
 Lex Scanner:: state_ASSIGN (int c)
 {
 	if ( c == '=' ) { 
 		CS = H;
-		//save = c;
 		return Lex (count_str, LEX_ASSIGN, 1);
 	}		
 	else {
 		throw LexExeption ("Error in assign.", Lex (count_str));
 	}
 }
+
 
 Lex Scanner:: state_STR (int c)
 {
@@ -434,12 +433,14 @@ Lex Scanner:: state_DELIM (int c)
 	}
 }
 
+
 Lex Scanner:: state_NEQ (int c)
 {
 	CS = H;
 	save_c = c;
 	return Lex (count_str, LEX_NEQ, 0);
 }
+
 
 Lex Scanner:: state_FN (int c)
 {
@@ -462,6 +463,7 @@ Lex Scanner:: state_FN (int c)
 	}
 }
 
+
 Lex Scanner:: state_COMMENT (int c)
 {
 	if ( c == '\'' ) {
@@ -470,6 +472,7 @@ Lex Scanner:: state_COMMENT (int c)
 
 	return Lex ();
 }
+
 
 Lex Scanner:: state_LABEL (int c)
 {
@@ -484,4 +487,3 @@ Lex Scanner:: state_LABEL (int c)
 	}
 
 }
-
