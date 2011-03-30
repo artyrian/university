@@ -158,8 +158,13 @@ void LexList:: print_list ()
 {
 	ListElem * cur = first;
 	
+	int cnt = 1;
 	printf ("Print LexList:\n");
 	while ( cur != 0 ) {
+		if ( cnt != cur->lex.strnum ) {
+			printf ("\n");
+			cnt = cur->lex.strnum;
+		}
 		cur->lex.print ();	
 		cur = cur->next;
 	}
