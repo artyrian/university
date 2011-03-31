@@ -197,8 +197,10 @@ void Parser:: G ()
 		get_lex ();
 		array ();
 	}
-	else if ( cur_lex.type == LEX_RAW ) {
-		get_lex ();
+//	else if ( cur_lex.type == LEX_RAW ) {
+	else if ( look (cur_lex.type, table.lex_function) ) {
+//int Parser:: look (type_of_lex type_lex, const type_of_lex * table)
+//		get_lex ();
 		Z ();	
 	}
 	else
@@ -279,41 +281,49 @@ void Parser:: W ()
 void Parser:: Z ()
 {
 	if ( cur_lex.type == LEX_CUR_MONTH ) {
+		get_lex ();
 		lparen ();
 
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_PLAYERS ) {
+		get_lex ();
 		lparen ();
 
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_ACTIVE_PLAYERS ) {
+		get_lex ();
 		lparen ();
 
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_SUPPLY ) {
+		get_lex ();
 		lparen ();
 
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_RAW_PRICE ) {
+		get_lex ();
 		lparen ();
 
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_DEMAND ) {
+		get_lex ();
 		lparen ();
 
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_PRODUCTION_PRICE ) {
+		get_lex ();
 		lparen ();
 
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_MONEY ) {
+		get_lex ();
 		lparen ();
 
 		D ();
@@ -321,6 +331,7 @@ void Parser:: Z ()
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_RAW ) {
+		get_lex ();
 		lparen ();
 
 		D ();
@@ -328,6 +339,7 @@ void Parser:: Z ()
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_PRODUCTION ) {
+		get_lex ();
 		lparen ();
 
 		D ();
@@ -335,6 +347,7 @@ void Parser:: Z ()
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_FACTORIES ) {
+		get_lex ();
 		lparen ();
 
 		D ();
@@ -342,6 +355,7 @@ void Parser:: Z ()
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_AUTO_FACTORIES ) {
+		get_lex ();
 		lparen ();
 
 		D ();
@@ -349,6 +363,7 @@ void Parser:: Z ()
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_MANUFACTURED ) {
+		get_lex ();
 		lparen ();
 
 		D ();
@@ -356,6 +371,7 @@ void Parser:: Z ()
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_RESULT_RAW_SOLD ) {
+		get_lex ();
 		lparen ();
 
 		D ();
@@ -363,6 +379,7 @@ void Parser:: Z ()
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_RESULT_RAW_PRICE ) {
+		get_lex ();
 		lparen ();
 
 		D ();
@@ -370,6 +387,7 @@ void Parser:: Z ()
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_RESULT_PROD_BOUGHT ) {
+		get_lex ();
 		lparen ();
 
 		D ();
@@ -377,6 +395,7 @@ void Parser:: Z ()
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_RESULT_PROD_PRICE ) {
+		get_lex ();
 		lparen ();
 
 		D ();
