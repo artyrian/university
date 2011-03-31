@@ -81,26 +81,29 @@ class Scanner {
 	int 		digit;
 	int		save_c;
 
+	Lex		save_lex;
+
 	int isdelim (int c);
 	int look (const char * buf, const char ** list);
 public:
 	Scanner ();
-	Lex feed_symbol (int);
+	bool feed_symbol (int);
 	~Scanner ();
+	Lex get_save_lex ();
 private:
-	Lex step (int);
+	bool step (int);
 
-	Lex state_H (int c);
-	Lex state_NUM (int c);
-	Lex state_IDENT (int c);
-	Lex state_KW (int c);
-	Lex state_ASSIGN (int c);
-	Lex state_STR (int c);
-	Lex state_DELIM (int c);
-	Lex state_NEQ (int c);
-	Lex state_FN (int c);
-	Lex state_COMMENT (int c);
-	Lex state_LABEL (int c);
+	bool state_H (int c);
+	bool state_NUM (int c);
+	bool state_IDENT (int c);
+	bool state_KW (int c);
+	bool state_ASSIGN (int c);
+	bool state_STR (int c);
+	bool state_DELIM (int c);
+	bool state_NEQ (int c);
+	bool state_FN (int c);
+	bool state_COMMENT (int c);
+	bool state_LABEL (int c);
 };
 
 #endif

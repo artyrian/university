@@ -117,22 +117,23 @@ void LexList:: save_list ()
 	Scanner la;
 	Lex lex;
 	int c;
+	bool p = 0;
 
 	while ( true ) {
 		if ( (c = rf.get_symbol ()) == EOF ) {
 			break;
 		}
 		
-		lex = la.feed_symbol (c);
+		p = la.feed_symbol (c);
 
-		if ( lex.type != 0 ) {
-			add_to_list (lex);
+		if ( p == true) {
+			add_to_list (la.get_save_lex ());
 		}
 	}
 
-	lex = la.feed_symbol (' ');
-	if ( lex.type != 0 ) {
-		add_to_list (lex); 
+	p = la.feed_symbol (' ');
+	if ( p == true ) {
+		add_to_list (la.get_save_lex ()); 
 	}
 
 	snd = first;
@@ -182,13 +183,18 @@ int Scanner:: isdelim (int c)
 
 	while ( smb[i] != '\0' ) {
 		if ( smb[i++] == c ) {
-			return 1;
+			return true;
 		}
 	}
 	
-	return 0;
+	return false;	
 }
 
+
+Lex Scanner:: get_save_lex ()
+{
+	return save_lex;
+}
 
 int Scanner::look (const char * buf, const char ** list)
 {
@@ -201,7 +207,7 @@ int Scanner::look (const char * buf, const char ** list)
 		++i;
 	}
 
-	return 0;
+	return false;	
 }
 
 
@@ -215,12 +221,14 @@ Scanner:: Scanner ()
 }
 
 
-Lex Scanner:: feed_symbol (int c)
+bool Scanner:: feed_symbol (int c)
 {
 	Lex lex;
 	save_c = 0;
+	bool p;
 
-	lex = step(c);
+	p = step(c);
+	// now in save_lex ready lexem
 
 	if ( c == '\n' ) {
 		count_str++;
@@ -230,7 +238,7 @@ Lex Scanner:: feed_symbol (int c)
 		step (save_c);
 	}
 
-	return lex;
+	return p;
 }
 
 
@@ -240,7 +248,7 @@ Scanner:: ~Scanner ()
 }
 
 
-Lex Scanner:: step (int c)
+bool Scanner:: step (int c)
 {
 	switch ( CS ) {
 	case H:
@@ -273,67 +281,77 @@ Lex Scanner:: step (int c)
 }
 
 
-Lex Scanner:: state_H (int c)
+bool Scanner:: state_H (int c)
 {
 	if ( c == '\n' || isspace (c) ) {
-		return Lex ();
+		//
+		return false;	
 	}
 	else if ( isdigit (c) ) {
 		digit = c - '0';
 		CS = NUM;
-		return Lex ();
+		//
+		return false;	
 	}
 	else if ( isalpha (c) ) {
 		buffer->clear ();
 		buffer->add (c);
 		CS = KW;
-		return Lex ();
+		//
+		return false;
 	}
 	else if ( c == '!' ) {
 		buffer->clear ();
 		buffer->add (c);
 		CS = NEQ;
-		return Lex ();
+		//
+		return false;
 	}
 	else if ( c == '?' ) {
 		buffer->clear ();
 		buffer->add (c);
 		CS = FN;
-		return Lex ();
+		//
+		return false; 
 	} 
 	else if ( c == '$' ) {
 		buffer->clear ();
 		buffer->add (c);
 		CS = IDENT;
-		return Lex ();
+		//
+		return false;
 	}
 	else if ( c == ':' ) {
 		buffer->clear ();
 		buffer->add (c);
 		CS = ASSIGN;
-		return Lex ();
+		//
+		return false;
 	}
 	else if ( c == '"') {
 		buffer->clear ();
 		CS = STR;
-		return Lex ();
+		//
+		return false;
 	} 
 	else if ( isdelim (c) != 0 ) {
 		buffer->clear ();
 		buffer->add (c);
 		CS = DELIM;
-		return Lex ();
+		//
+		return false;
 	}
 	else if ( c == '\'' ) {
 		buffer->clear ();
 		CS = COMMENT;
-		return Lex ();
+		return false;
 	}
 	else if ( c == '@' ) {
 		buffer->clear ();
 		buffer->add (c);
 		CS = LABEL;
-		return Lex ();
+		//
+		return false; 
 	}
 	else {
 		throw LexExeption ( "Undefined symbol. Can't set state. ", Lex (count_str));
@@ -341,54 +359,61 @@ Lex Scanner:: state_H (int c)
 }
 
 
-Lex Scanner:: state_NUM (int c)
+bool Scanner:: state_NUM (int c)
 {
 	if ( isdigit (c) ) {
 		digit = digit * 10 + ( c - '0');
-		return Lex ();
+		//
+		return false;
 	}
 	else {
 		CS = H;
 		save_c = c;
-		return Lex (count_str, LEX_NUM, digit);
+		save_lex = Lex (count_str, LEX_NUM, digit);
+		return true;
 	}
 }
 
 
-Lex Scanner:: state_IDENT (int c)
+bool Scanner:: state_IDENT (int c)
 {
 	if ( isalpha (c) || isdigit (c) || (c == '_') ) {
 		buffer->add (c);
-		return Lex ();
+		//
+		return false;
 	}
 	else if ( c == '[' ) {
 		int i = table.array.put (buffer->get ());
 		CS = H;
 		save_c = c;
-		return Lex (count_str, LEX_ARRAY, i);
+		save_lex = Lex (count_str, LEX_ARRAY, i);
+		return true;
 	} 
 	else {
 		int i = table.ident.put (buffer->get ());
 		CS = H;
 		buffer->add (c);
 		save_c = c;
-		return Lex (count_str, LEX_ID, i);
+		save_lex = Lex (count_str, LEX_ID, i);
+		return true;
 	}
 }
 
 
-Lex Scanner:: state_KW (int c)
+bool Scanner:: state_KW (int c)
 {
 	if ( isalpha (c) || isdigit (c) || (c == '_') ) {
 		buffer->add (c);
-		return Lex ();
+		//
+		return false;
 	}
 	else {
 		int i;
 		if ( (i = look (buffer->get (), table.word)) != 0 ) {
 			CS = H;
 			save_c = c;
-			return Lex (count_str, table.lex_word [i], i);
+			save_lex = Lex (count_str, table.lex_word [i], i);
+			return true;
 		} 
 		else {
 			throw LexExeption ("Not found keyword", Lex (count_str));
@@ -397,11 +422,12 @@ Lex Scanner:: state_KW (int c)
 }
 
 
-Lex Scanner:: state_ASSIGN (int c)
+bool Scanner:: state_ASSIGN (int c)
 {
 	if ( c == '=' ) { 
 		CS = H;
-		return Lex (count_str, LEX_ASSIGN, 1);
+		save_lex = Lex (count_str, LEX_ASSIGN, 1);
+		return true;
 	}		
 	else {
 		throw LexExeption ("Error in assign.", Lex (count_str));
@@ -409,28 +435,32 @@ Lex Scanner:: state_ASSIGN (int c)
 }
 
 
-Lex Scanner:: state_STR (int c)
+bool Scanner:: state_STR (int c)
 {
 	if ( c != '"' ) {
 		buffer->add (c);
-		return Lex ();
+		//
+		return false; 
 	}
 	else {
 		int i = table.string.put (buffer->get ());
 		CS = H;
-		return Lex (count_str, LEX_STR, i);
+		//
+		save_lex = Lex (count_str, LEX_STR, i);
+		return true;
 	}
 }
 
 
-Lex Scanner:: state_DELIM (int c)
+bool Scanner:: state_DELIM (int c)
 {
 	int i;
 
 	if ( (i = look (buffer->get (), table.delim)) != 0 ) {
 		CS = H;
 		save_c = c;
-		return Lex (count_str, table.lex_delim [i], i);
+		save_lex = Lex (count_str, table.lex_delim [i], i);
+		return true;
 	}
 	else {
 		printf ("%dbuf[%s]\n", i, buffer->get ());
@@ -439,27 +469,30 @@ Lex Scanner:: state_DELIM (int c)
 }
 
 
-Lex Scanner:: state_NEQ (int c)
+bool Scanner:: state_NEQ (int c)
 {
 	CS = H;
 	save_c = c;
-	return Lex (count_str, LEX_NEQ, 0);
+	save_lex = Lex (count_str, LEX_NEQ, 0);
+	return true;
 }
 
 
-Lex Scanner:: state_FN (int c)
+bool Scanner:: state_FN (int c)
 {
 	if ( isalpha (c) || isdigit (c) || (c == '_') ) {
 		buffer->add (c);
-		return Lex ();
+		//
+		return false;
 	}
 	else {
 		int i;
 		if ( (i = look (buffer->get (), table.function)) != 0 ) {
-			printf ("in buf[%s], i=%d.\n", buffer->get (), i);
 			CS = H;
 			save_c = c;
-			return Lex (count_str, table.lex_function [i], i);
+
+			save_lex = Lex (count_str, table.lex_function [i], i);
+			return true;
 		}
 		else {
 			perror ("Not found function.\n");
@@ -469,26 +502,29 @@ Lex Scanner:: state_FN (int c)
 }
 
 
-Lex Scanner:: state_COMMENT (int c)
+bool Scanner:: state_COMMENT (int c)
 {
 	if ( c == '\'' ) {
 		CS = H;
 	}
-
-	return Lex ();
+	//
+	return false;
 }
 
 
-Lex Scanner:: state_LABEL (int c)
+bool Scanner:: state_LABEL (int c)
 {
 	if ( isalpha (c) || isdigit (c) || ( c == '_') ) {
 		buffer->add (c);
-		return Lex ();
+		//
+		return false;
 	}
 	else {
 		int i = table.label.put (buffer->get ());
 		CS = H;	
-		return Lex (count_str, LEX_LABEL, i);
+		
+		save_lex = Lex (count_str, LEX_LABEL, i);
+		return true;
 	}
 
 }
