@@ -9,6 +9,7 @@ void f (int a, int b)
 	x = a+b;
 }
 
+
 class A {
 	int x;
 public:
@@ -39,6 +40,8 @@ public:
 	}
 
 };
+
+
 
 B ret (B & x, B & y) 
 {
