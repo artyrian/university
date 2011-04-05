@@ -34,19 +34,7 @@ ReadFrom:: ~ReadFrom ()
 }
 
 
-Lex:: Lex ()
-	: strnum (0), type (LEX_NULL), value (0)
-{
-}
-
-
-Lex:: Lex (int n)
-	: strnum (n), type (LEX_NULL), value (0)
-{
-}
-
-
-Lex:: Lex (int k , type_of_lex t , int v)
+Lex:: Lex (int k, type_of_lex t, int v)
 	: strnum (k), type (t), value (v)
 {
 }

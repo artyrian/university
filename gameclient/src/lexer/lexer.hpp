@@ -23,9 +23,7 @@ struct Lex {
 	type_of_lex	type;
 	int 		value;
 
-	Lex ();
-	Lex (int n);
-	Lex (int k, type_of_lex t, int v);
+	Lex (int = 0, type_of_lex = LEX_NULL, int = 0);
 
 	void print () const; 
 };
