@@ -105,12 +105,7 @@ void Parser:: C ()
 	else if ( cur_lex.type == LEX_GOTO ) {
 		get_lex ();
 
-		if ( cur_lex.type == LEX_LABEL ) {
-			get_lex ();
-		}
-		else {
-			throw LexException ("Error in label of goto", cur_lex);
-		}
+		gotolabel ();
 	}
 	else if ( 	cur_lex.type == LEX_BUY 	|| 
 			cur_lex.type == LEX_SELL 	|| 
@@ -188,25 +183,12 @@ void Parser:: G ()
 		D ();
 
 		rparen ();
-	/*	
-		get_lex ();
-		D ();
-		
-		if ( cur_lex.type != LEX_RPAREN ) {
-			throw LexExeption ("Expected ')'", cur_lex);
-		}
-		
-		get_lex ();
-	*/
 	}
 	else if ( cur_lex.type == LEX_ARRAY ) {
 		get_lex ();
 		array ();
 	}
-//	else if ( cur_lex.type == LEX_RAW ) {
 	else if ( look (cur_lex.type, table.lex_function) ) {
-//int Parser:: look (type_of_lex type_lex, const type_of_lex * table)
-//		get_lex ();
 		Z ();	
 	}
 	else
@@ -417,7 +399,7 @@ void Parser:: Z ()
 
 void Parser:: S ()
 {
-	elem ();
+	stringelem ();
 	
 	if ( cur_lex.type == LEX_COMMA ) {
 		get_lex ();
@@ -427,7 +409,7 @@ void Parser:: S ()
 }
 
 
-void Parser:: elem ()
+void Parser:: stringelem ()
 {
 	if ( cur_lex.type == LEX_STR ) {
 		get_lex ();
@@ -538,4 +520,15 @@ void Parser:: array ()
 		else {
 			throw LexException ("Expected '['.", cur_lex);
 		}
+}
+
+
+void Parser:: gotolabel ()
+{
+	if ( cur_lex.type == LEX_LABEL ) {
+		get_lex ();
+	}
+	else {
+		throw LexException ("Error in label of goto", cur_lex);
+	}
 }

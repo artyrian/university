@@ -28,7 +28,8 @@ class Parser {
 	void lparen ();
 	void rparen ();
 	void comma ();
-	void elem ();
+	void stringelem ();
+	void gotolabel ();
 
 	
 	void get_lex ();
