@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "lexer/parser.hpp"
-#include "exeption/exeption.hpp"
+#include "exception/exception.hpp"
 
 int main (int argc, char ** argv)
 {
@@ -10,13 +10,18 @@ int main (int argc, char ** argv)
 
 			p.analyze (); 
 		}
-		catch (const LexExeption & le) {
-			printf ("catch exeption.\n");
+		catch (const SymbolException & se) {
+			printf ("catch exception.\n");
+			se.print ();
+			return 1;
+		}
+		catch (const LexException & le) {
+			printf ("catch exception.\n");
 			le.print ();
 			return 1;
 		}
 		catch (...) {
-			printf ("Unknown exeption.\n");
+			printf ("Unknown exception.\n");
 			return 1;
 		}
 

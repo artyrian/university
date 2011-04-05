@@ -1,5 +1,5 @@
 #include "lexer.hpp"
-#include "../exeption/exeption.hpp"
+#include "../exception/exception.hpp"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -276,7 +276,7 @@ bool Scanner:: step (int c)
 	default:
 		CS = H;	
 		printf ( "c[%c]. Buf[%s]\n", c, buffer->get ());
-		throw LexExeption ("Error in switch.", Lex (count_str));
+		throw SymbolException ("Error in switch.", c,  count_str);
 	}
 }
 
@@ -354,7 +354,7 @@ bool Scanner:: state_H (int c)
 		return false; 
 	}
 	else {
-		throw LexExeption ( "Undefined symbol. Can't set state. ", Lex (count_str));
+		throw SymbolException ( "Undefined symbol. Can't set state. ", c, count_str);
 	}
 }
 
@@ -416,7 +416,7 @@ bool Scanner:: state_KW (int c)
 			return true;
 		} 
 		else {
-			throw LexExeption ("Not found keyword", Lex (count_str));
+			throw SymbolException ("Not found keyword", c, count_str);
 		}
 	}
 }
@@ -430,7 +430,7 @@ bool Scanner:: state_ASSIGN (int c)
 		return true;
 	}		
 	else {
-		throw LexExeption ("Error in assign.", Lex (count_str));
+		throw SymbolException ("Error in assign.", c, count_str);
 	}
 }
 
@@ -464,7 +464,7 @@ bool Scanner:: state_DELIM (int c)
 	}
 	else {
 		printf ("%dbuf[%s]\n", i, buffer->get ());
-		throw LexExeption ( "Not found delim (state DELIM).", Lex (count_str));
+		throw SymbolException ( "Not found delim (state DELIM).", c, count_str);
 	}
 }
 
@@ -496,7 +496,7 @@ bool Scanner:: state_FN (int c)
 		}
 		else {
 			perror ("Not found function.\n");
-			throw LexExeption ("Not found function.", Lex (count_str));
+			throw SymbolException ("Not found function.", c, count_str);
 		}
 	}
 }

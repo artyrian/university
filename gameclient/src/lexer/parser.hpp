@@ -19,7 +19,7 @@ class Parser {
 	void G ();
 	void W ();
 	void Z ();
-	void L ();
+	void S ();
 
 	void ifthenelse ();
 	void whiledo ();

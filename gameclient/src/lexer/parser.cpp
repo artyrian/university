@@ -1,5 +1,5 @@
 #include "parser.hpp"
-#include "../exeption/exeption.hpp"
+#include "../exception/exception.hpp"
 #include <stdlib.h>
 
 
@@ -28,7 +28,7 @@ void Parser:: get_lex ()
 {
 	cur_lex = ll.get_lex_from_list () ;
 	if ( cur_lex.type == LEX_NULL ) {
-		throw LexExeption ("End of file.", cur_lex);
+		throw LexException ("End of file.", cur_lex);
 	}
 
 }
@@ -51,7 +51,7 @@ void Parser:: analyze ()
 void Parser:: B ()
 {
 	if ( cur_lex.type != LEX_BEGIN ) {
-		throw LexExeption ("Expected 'begin'.", cur_lex);
+		throw LexException ("Expected 'begin'.", cur_lex);
 	}
 	
 	get_lex ();
@@ -59,7 +59,7 @@ void Parser:: B ()
 	C ();
 
 	if ( cur_lex.type != LEX_FIN ) {
-		throw LexExeption ("Expected ';'.", cur_lex);
+		throw LexException ("Expected ';'.", cur_lex);
 	}
 	
 	get_lex ();
@@ -69,7 +69,7 @@ void Parser:: B ()
 		C ();
 
 		if ( cur_lex.type != LEX_FIN ) {
-			throw LexExeption ("Expected ';'", cur_lex);
+			throw LexException ("Expected ';'", cur_lex);
 		} 
 
 		get_lex ();
@@ -109,7 +109,7 @@ void Parser:: C ()
 			get_lex ();
 		}
 		else {
-			throw LexExeption ("Error in label of goto", cur_lex);
+			throw LexException ("Error in label of goto", cur_lex);
 		}
 	}
 	else if ( 	cur_lex.type == LEX_BUY 	|| 
@@ -123,9 +123,9 @@ void Parser:: C ()
 		W ();
 	}
 	else {
-		throw LexExeption ("Invdalid left-handed expression.", cur_lex);
+		throw LexException ("Invdalid left-handed expression.", cur_lex);
 	}
-}
+} // C();
 
 
 void Parser:: D ()
@@ -183,7 +183,12 @@ void Parser:: G ()
 		G ();
 	}
 	else if ( cur_lex.type == LEX_LPAREN ) {
-		
+		lparen ();
+
+		D ();
+
+		rparen ();
+	/*	
 		get_lex ();
 		D ();
 		
@@ -192,6 +197,7 @@ void Parser:: G ()
 		}
 		
 		get_lex ();
+	*/
 	}
 	else if ( cur_lex.type == LEX_ARRAY ) {
 		get_lex ();
@@ -205,10 +211,10 @@ void Parser:: G ()
 	}
 	else
 	{
-		throw LexExeption ("Unknown symbol of expression.", cur_lex);
+		throw LexException ("Unknown symbol of expression.", cur_lex);
 	}
 
-}
+} // G();
 
 
 void Parser:: W ()
@@ -267,12 +273,12 @@ void Parser:: W ()
 
 		lparen ();
 
-		L ();
+		S ();
 
 		rparen ();
 	}
 	else {
-		throw LexExeption ("Syntax error. Not allowed expression.", 
+		throw LexException ("Syntax error. Not allowed expression.", 
 								cur_lex);
 	}
 }
@@ -404,18 +410,18 @@ void Parser:: Z ()
 	}
 	else 
 	{
-		throw LexExeption ("Not found function with return.", cur_lex);
+		throw LexException ("Not found function with return.", cur_lex);
 	}
 }
 
 
-void Parser:: L ()
+void Parser:: S ()
 {
 	elem ();
 	
 	if ( cur_lex.type == LEX_COMMA ) {
 		get_lex ();
-		L ();
+		S ();
 	}
 	
 }
@@ -436,7 +442,7 @@ void Parser:: elem ()
 		D ();	
 	}
 	else {
-		throw LexExeption ("Expected expression or string.", cur_lex);
+		throw LexException ("Expected expression or string.", cur_lex);
 	}
 }
 
@@ -448,7 +454,7 @@ void Parser:: assign ()
 		D ();
 	}
 	else {
-		throw LexExeption ("Expected assign", cur_lex);
+		throw LexException ("Expected assign", cur_lex);
 	}
 }
 
@@ -456,7 +462,7 @@ void Parser:: assign ()
 void Parser:: lparen () 
 {
 		if ( cur_lex.type != LEX_LPAREN ) {
-			throw LexExeption ("Expected '('", cur_lex);
+			throw LexException ("Expected '('", cur_lex);
 		}
 		get_lex ();
 }
@@ -465,7 +471,7 @@ void Parser:: lparen ()
 void Parser:: rparen () 
 {
 		if ( cur_lex.type != LEX_RPAREN ) {
-			throw LexExeption ("Expected ')'", cur_lex);
+			throw LexException ("Expected ')'", cur_lex);
 		}
 		get_lex ();
 }
@@ -474,7 +480,7 @@ void Parser:: rparen ()
 void Parser:: comma () 
 {
 		if ( cur_lex.type != LEX_COMMA ) {
-			throw LexExeption ("Expected ','", cur_lex);
+			throw LexException ("Expected ','", cur_lex);
 		}
 		get_lex ();
 }
@@ -494,7 +500,7 @@ void Parser:: ifthenelse ()
 			}
 		}
 		else {
-			throw LexExeption ("Expected 'then'", cur_lex);
+			throw LexException ("Expected 'then'", cur_lex);
 		}
 }
 
@@ -508,7 +514,7 @@ void Parser:: whiledo ()
 			C ();
 		}
 		else {
-			throw LexExeption ("Expected 'do'.", cur_lex);
+			throw LexException ("Expected 'do'.", cur_lex);
 		}
 
 }
@@ -525,11 +531,11 @@ void Parser:: array ()
 				get_lex ();
 			}
 			else {
-				throw LexExeption ("Expected ']'", cur_lex);
+				throw LexException ("Expected ']'", cur_lex);
 			}
 
 		}
 		else {
-			throw LexExeption ("Expected '['.", cur_lex);
+			throw LexException ("Expected '['.", cur_lex);
 		}
 }
