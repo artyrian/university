@@ -2,7 +2,7 @@
 # Взято отсюда: http://habrahabr.ru/blogs/development/111691/
 #
 root_source_dir  := src
-source_subdirs   := . robot buffer lexer exeption exec
+source_subdirs   := . robot buffer lexer exception exec
 compile_flags    := -Wall
 link_flags       :=
 libraries        := 
