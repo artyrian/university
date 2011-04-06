@@ -403,6 +403,12 @@ bool Scanner:: state_KW (int c)
 			save_lex = Lex (count_str, table.lex_word [i], i);
 			return true;
 		} 
+		else if ( (i = look (buffer->get (), table.action)) != 0 ) {
+			CS = H;
+			save_c = c;
+			save_lex = Lex (count_str, table.lex_action [i], i);
+			return true;
+		} 
 		else {
 			throw SymbolException ("Not found keyword", c, count_str);
 		}

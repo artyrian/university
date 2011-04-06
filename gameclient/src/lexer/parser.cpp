@@ -42,20 +42,26 @@ void Parser:: analyze ()
 	printf ("Begin parse.\n");
 
 	get_lex ();
-	B ();
+	O ();
 
 	printf ("Syntax analyze:\tOK.\n"); 
 }
 
 
-void Parser:: B ()
+void Parser:: O ()
 {
 	if ( cur_lex.type != LEX_BEGIN ) {
 		throw LexException ("Expected 'begin'.", cur_lex);
 	}
-	
+
 	get_lex ();
 
+	B ();
+}
+
+
+void Parser:: B ()
+{
 	C ();
 
 	if ( cur_lex.type != LEX_FIN ) {
@@ -73,17 +79,16 @@ void Parser:: B ()
 		} 
 
 		get_lex ();
-	}
+	}	// while not found '}'
 }
+
 
 void Parser:: C ()
 {
 	if ( cur_lex.type == LEX_IF ) {
-		get_lex ();
-		ifthenelse ();
+		ifthen ();
 	}
 	else if ( cur_lex.type == LEX_WHILE ) {
-		get_lex ();
 		whiledo ();
 	}
 	else if ( cur_lex.type == LEX_ID ) {
@@ -91,20 +96,16 @@ void Parser:: C ()
 		assign ();
 	}
 	else if ( cur_lex.type == LEX_ARRAY ) {
-		get_lex ();
 		array ();
 		assign ();
 	}
 	else if ( cur_lex.type == LEX_BEGIN ) {
-		B ();
-		get_lex ();
+		body ();
 	}
 	else if ( cur_lex.type == LEX_LABEL ) {
 		get_lex ();
 	}
 	else if ( cur_lex.type == LEX_GOTO ) {
-		get_lex ();
-
 		gotolabel ();
 	}
 	else if ( 	cur_lex.type == LEX_BUY 	|| 
@@ -185,7 +186,6 @@ void Parser:: G ()
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_ARRAY ) {
-		get_lex ();
 		array ();
 	}
 	else if ( look (cur_lex.type, table.lex_function) ) {
@@ -443,92 +443,117 @@ void Parser:: assign ()
 
 void Parser:: lparen () 
 {
-		if ( cur_lex.type != LEX_LPAREN ) {
-			throw LexException ("Expected '('", cur_lex);
-		}
-		get_lex ();
+	if ( cur_lex.type != LEX_LPAREN ) {
+		throw LexException ("Expected '('", cur_lex);
+	}
+	get_lex ();
 }
 
 
 void Parser:: rparen () 
 {
-		if ( cur_lex.type != LEX_RPAREN ) {
-			throw LexException ("Expected ')'", cur_lex);
-		}
-		get_lex ();
+	if ( cur_lex.type != LEX_RPAREN ) {
+		throw LexException ("Expected ')'", cur_lex);
+	}
+	get_lex ();
 }
 
 
 void Parser:: comma () 
 {
-		if ( cur_lex.type != LEX_COMMA ) {
-			throw LexException ("Expected ','", cur_lex);
-		}
-		get_lex ();
+	if ( cur_lex.type != LEX_COMMA ) {
+		throw LexException ("Expected ','", cur_lex);
+	}
+	get_lex ();
 }
 
 
-void Parser:: ifthenelse ()
+void Parser:: ifthen ()
 {
-		D ();
+	if ( cur_lex.type != LEX_IF ) {
+		throw LexException ("Must be if there. Source code.", cur_lex);
+	}
 
-		if ( cur_lex.type == LEX_THEN ) {
-			get_lex ();
-			C ();	
+	get_lex ();
 
-			if ( cur_lex.type == LEX_ELSE ) {
-				get_lex ();
-				C ();
-			}
-		}
-		else {
-			throw LexException ("Expected 'then'", cur_lex);
-		}
+	D ();
+
+	if ( cur_lex.type == LEX_THEN ) {
+		get_lex ();
+		C ();	
+	}
+	else {
+		throw LexException ("Expected 'then'", cur_lex);
+	}
 }
 
 
 void Parser:: whiledo ()
 {
-		D ();
+	if ( cur_lex.type != LEX_WHILE ) {
+		throw LexException ("Must be while. Source code", cur_lex);
+	}
 
-		if ( cur_lex.type == LEX_DO ) {
-			get_lex ();
-			C ();
-		}
-		else {
-			throw LexException ("Expected 'do'.", cur_lex);
-		}
+	get_lex ();
 
+	D ();
+
+	if ( cur_lex.type == LEX_DO ) {
+		get_lex ();
+		C ();
+	}
+	else {
+		throw LexException ("Expected 'do'.", cur_lex);
+	}
 }
 
 
 void Parser:: array ()
 {
-		if ( cur_lex.type == LEX_LBRACKET ) {
-			
+	if ( cur_lex.type != LEX_ARRAY ) {
+		throw LexException ("Must be array. Source code", cur_lex);
+	}
+
+	get_lex ();
+
+	if ( cur_lex.type == LEX_LBRACKET ) {
+		
+		get_lex ();
+		D ();
+
+		if ( cur_lex.type == LEX_RBRACKET ) {
 			get_lex ();
-			D ();
-
-			if ( cur_lex.type == LEX_RBRACKET ) {
-				get_lex ();
-			}
-			else {
-				throw LexException ("Expected ']'", cur_lex);
-			}
-
 		}
 		else {
-			throw LexException ("Expected '['.", cur_lex);
+			throw LexException ("Expected ']'", cur_lex);
 		}
+
+	}
+	else {
+		throw LexException ("Expected '['.", cur_lex);
+	}
 }
 
 
 void Parser:: gotolabel ()
 {
+	if ( cur_lex.type != LEX_GOTO ) {
+		throw LexException ("Must be 'goto'. Source code.", cur_lex);
+	}
+	
+	get_lex ();
+
 	if ( cur_lex.type == LEX_LABEL ) {
 		get_lex ();
 	}
 	else {
 		throw LexException ("Error in label of goto", cur_lex);
 	}
+}
+
+
+void Parser:: body () {
+	get_lex ();
+	B ();
+	get_lex ();
 }

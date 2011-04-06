@@ -6,7 +6,6 @@ enum type_of_lex {
 	LEX_NULL,			// 0
 	LEX_DO,				// 1
 	LEX_GOTO,			// 2
-	LEX_ELSE,			// 3
 	LEX_IF,				// 4
 	LEX_THEN,			// 5
 	LEX_WHILE,			// 6
@@ -119,6 +118,9 @@ public:
 struct TableLexem {
 	static const char *		word [];
 	static type_of_lex 		lex_word [];
+
+	static const char * 		action [];
+	static type_of_lex		lex_action [];
 
 	static const char *		delim [];
 	static type_of_lex 		lex_delim [];

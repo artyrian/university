@@ -10,7 +10,8 @@ class Parser {
 	Lex		cur_lex;
 	LexList		ll;
 	TableLexem	table;
-
+	
+	void O ();
 	void B ();
 	void C ();
 	void D ();
@@ -21,7 +22,7 @@ class Parser {
 	void Z ();
 	void S ();
 
-	void ifthenelse ();
+	void ifthen ();
 	void whiledo ();
 	void array ();
 	void assign ();
@@ -30,6 +31,7 @@ class Parser {
 	void comma ();
 	void stringelem ();
 	void gotolabel ();
+	void body ();
 
 	
 	void get_lex ();

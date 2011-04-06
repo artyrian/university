@@ -9,7 +9,6 @@ const char * PrintTable:: lexem [] =
 	"",
 	"LEX_DO",
 	"LEX_GOTO",
-	"LEX_ELSE",
 	"LEX_IF",
 	"LEX_THEN",
 	"LEX_WHILE",
@@ -69,7 +68,6 @@ const char * TableLexem:: word [] =
 	""		// 0 dont use.
 	"do", 		// 1
 	"goto",		// 2
-	"else",		// 3
 	"if",		// 4
 	"then",		// 5
 	"while",	// 6
@@ -88,16 +86,35 @@ type_of_lex TableLexem:: lex_word [] =
 	LEX_NULL,			// 0
 	LEX_DO,				// 1
 	LEX_GOTO,			// 2
-	LEX_ELSE,			// 3
 	LEX_IF,				// 4
 	LEX_THEN,			// 5
 	LEX_WHILE,			// 6
+	LEX_NULL
+};
+
+
+const char * TableLexem:: action [] =
+{
+	""		// 0 dont use.
+	"print",
+	"buy",
+	"sell",
+	"prod",
+	"build",
+	"turn",
+	0
+};
+
+
+type_of_lex TableLexem:: lex_action [] =
+{
+	LEX_NULL,
 	LEX_PRINT,
 	LEX_BUY,
 	LEX_SELL,
 	LEX_PROD,			// 
 	LEX_BUILD,	
-	LEX_TURN,	// 
+	LEX_TURN,	 
 	LEX_NULL
 };
 
