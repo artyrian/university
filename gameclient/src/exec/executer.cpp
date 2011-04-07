@@ -1,5 +1,5 @@
 #include "executer.hpp"
-
+/*
 void Executer:: execute (Poliz & prg)
 {
 
@@ -20,3 +20,4 @@ void Interpretator:: interpretation()
 
 //	exec.execute (pars.prg);
 }
+*/

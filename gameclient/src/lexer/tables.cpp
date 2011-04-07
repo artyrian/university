@@ -71,12 +71,6 @@ const char * TableLexem:: word [] =
 	"if",		// 4
 	"then",		// 5
 	"while",	// 6
-	"print",
-	"buy",
-	"sell",
-	"prod",
-	"build",
-	"turn",
 	0
 };
 
@@ -96,12 +90,12 @@ type_of_lex TableLexem:: lex_word [] =
 const char * TableLexem:: action [] =
 {
 	""		// 0 dont use.
-	"print",
 	"buy",
 	"sell",
 	"prod",
 	"build",
 	"turn",
+	"print",
 	0
 };
 
@@ -109,12 +103,12 @@ const char * TableLexem:: action [] =
 type_of_lex TableLexem:: lex_action [] =
 {
 	LEX_NULL,
-	LEX_PRINT,
 	LEX_BUY,
 	LEX_SELL,
 	LEX_PROD,			// 
 	LEX_BUILD,	
 	LEX_TURN,	 
+	LEX_PRINT,
 	LEX_NULL
 };
 

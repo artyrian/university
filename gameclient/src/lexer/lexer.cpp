@@ -370,6 +370,9 @@ bool Scanner:: state_IDENT (int c)
 		//
 		return false;
 	}
+	else if ( isspace (c) ) {
+		return false;
+	}
 	else if ( c == '[' ) {
 		int i = table.array.put (buffer->get ());
 		CS = H;
@@ -410,6 +413,7 @@ bool Scanner:: state_KW (int c)
 			return true;
 		} 
 		else {
+			printf ("Now in buf: [%s]", buffer->get () );
 			throw SymbolException ("Not found keyword", c, count_str);
 		}
 	}
