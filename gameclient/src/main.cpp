@@ -13,7 +13,7 @@ int main (int argc, char ** argv)
 
 			Parser p;
 
-//			p.analyze (& ll); 
+			p.analyze (& ll); 
 		}
 		catch (const SymbolException & se) {
 			printf ("catch exception.\n");

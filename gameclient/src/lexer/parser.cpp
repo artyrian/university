@@ -4,12 +4,6 @@
 
 
 Parser:: Parser ()
-	: tbl ()
-{
-}
-
-
-Parser:: ~Parser ()
 {
 }
 
@@ -116,10 +110,11 @@ void Parser:: C ()
 	else if ( cur_lex->type == LEX_GOTO ) {
 		gotolabel ();
 	}
-	else if ( look (cur_lex->type, tbl.lex_action) ) 
+	else if ( look (cur_lex->type, TableLexem:: lex_action) ) 
 	{
 		W ();
 	}
+
 	else {
 		throw LexException ("Invdalid left-handed expression.", *cur_lex);
 	}
@@ -190,7 +185,7 @@ void Parser:: G ()
 	else if ( cur_lex->type == LEX_ARRAY ) {
 		array ();
 	}
-	else if ( look (cur_lex->type, tbl.lex_function) ) {
+	else if ( look (cur_lex->type, TableLexem:: lex_function) ) {
 		Z ();	
 	}
 	else
@@ -419,7 +414,7 @@ void Parser:: stringelem ()
 		cur_lex->type == LEX_NUM || 
 		cur_lex->type == LEX_ID || 
 		cur_lex->type == LEX_ARRAY ||
-		look (cur_lex->type , tbl.lex_function) != 0
+		look (cur_lex->type , TableLexem:: lex_function) != 0
 		)
 	{
 		D ();	

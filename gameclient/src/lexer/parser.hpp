@@ -9,7 +9,6 @@
 class Parser {
 	Lex * cur_lex;
 	LexList	* lexl;
-	TableLexem tbl;
 	
 	void O ();
 	void B ();
@@ -41,8 +40,6 @@ public:
 	Parser ();
 
 	void analyze (LexList * ll);
-
-	~Parser ();
 };
 
 
