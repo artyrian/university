@@ -18,5 +18,5 @@ void Interpretator:: interpretation()
 {
 	pars.analyze ();
 
-	exec.execute (pars.prg);
+//	exec.execute (pars.prg);
 }
