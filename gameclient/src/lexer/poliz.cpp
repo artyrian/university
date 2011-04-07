@@ -88,3 +88,102 @@ lizElem *operand2 = Pop(stack);
 	return new PolizInt(res);
 }
 */
+
+
+Poliz:: Poliz ()
+{
+	first = 0;
+	size = 0;
+}
+
+
+Poliz:: ~Poliz ()
+{
+	ListElem * cur = first;
+
+	while ( cur != 0 ) {
+		first = cur;
+		cur = cur->next;	
+		delete first;
+	}
+}
+
+
+Poliz:: ListElem * 
+Poliz:: create_elem (const Lex & l)
+{
+	ListElem * t = new ListElem ;
+	t->lex = l;
+	t->next = 0;
+
+	return t;
+}
+
+
+void Poliz:: put_lex (const Lex & l)
+{
+	ListElem * cur = first;
+
+	if ( first == 0 ) {
+		first = create_elem (l);
+	}
+	else {
+		ListElem * prev;
+		while ( cur != 0 ) {
+			prev = cur;
+			cur = cur->next;
+		}
+		cur = create_elem (l);	
+		prev->next = cur;
+	}
+
+	++ size;
+}
+
+
+
+void Poliz:: put_lex (Lex l, int place)
+{
+	if ( place > size ) {
+		throw "POLIZ: indefinite element of array";
+	}
+
+	ListElem * cur = first;
+	int cnt = 0;
+
+	while ( cnt != place ) {
+		cur->lex.print ();	
+		cur = cur->next;
+		++ cnt;
+	}
+}
+
+
+void Poliz:: blank ()
+{
+	++ size;
+}
+
+
+int Poliz:: get_size ()
+{
+	return size;
+}
+
+
+void Poliz:: print ()
+{
+	ListElem * cur = first;
+	
+	int cnt = 1;
+	printf ("Print Poliz List:\n");
+	while ( cur != 0 ) {
+		if ( cnt != cur->lex.strnum ) {
+			printf ("\n");
+			cnt = cur->lex.strnum;
+		}
+		cur->lex.print ();	
+		cur = cur->next;
+	}
+	printf ("\nEnd of Poliz List.\n");
+}

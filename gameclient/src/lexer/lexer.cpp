@@ -60,7 +60,7 @@ LexList:: create_elem (const Lex & l)
 }
 
 
-void LexList:: add_to_list (const Lex & l)
+void LexList:: put_lex (const Lex & l)
 {
 	ListElem * cur = first;
 
@@ -80,8 +80,7 @@ void LexList:: add_to_list (const Lex & l)
 
 
 
-LexList:: LexList (const char * path)
-	: rf (path)
+LexList:: LexList ()
 {
 	first = 0;
 }
@@ -99,11 +98,12 @@ LexList:: ~LexList ()
 }
 
 
-
-void LexList:: save_list ()
+void LexList:: fill (const char * path)
 {
 	Scanner la;
+	ReadFrom rf (path);
 	Lex lex;
+
 	int c;
 	bool p = 0;
 
@@ -115,35 +115,35 @@ void LexList:: save_list ()
 		p = la.feed_symbol (c);
 
 		if ( p == true) {
-			add_to_list (la.get_save_lex ());
+			put_lex (la.get_save_lex ());
 		}
 	}
 
 	p = la.feed_symbol (' ');
 	if ( p == true ) {
-		add_to_list (la.get_save_lex ()); 
+		put_lex (la.get_save_lex ()); 
 	}
 
 	snd = first;
 }
 
 
-Lex * LexList:: get_lex_from_list ()
+Lex LexList:: get_lex_from_list ()
 {
 	ListElem * cur;
 
 	if ( (snd != 0) && (snd->lex.type != 0) ) {
 		cur = snd;
 		snd = snd->next;
-		return &(cur->lex);
+		return cur->lex;
 	}
 	else {
-		return 0;
+		return Lex ();
 	}
 }
 
 
-void LexList:: print_list ()
+void LexList:: print ()
 {
 	ListElem * cur = first;
 	

@@ -1,6 +1,8 @@
 #ifndef _POLIZ_HPP_
 #define _POLIZ_HPP_
 
+#include "lexer.hpp"
+
 /*
 class Stack {
 	
@@ -73,9 +75,26 @@ public:
 };
 */
 
-class Poliz {
+class Poliz: public LexList {
+	struct ListElem {
+		Lex		lex;
+		ListElem *	next;
+	};
+	ListElem *	first;
 
+	ListElem * create_elem (const Lex & l);
+	int size;
+public:
+	Poliz ();
+	~Poliz ();
+
+	void put_lex (const Lex & l);
+	void put_lex (Lex l, int place);
+
+	void blank ();
+	int get_size ();
+
+	void print ();
 };
-
 
 #endif

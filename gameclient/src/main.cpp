@@ -7,9 +7,10 @@ int main (int argc, char ** argv)
 {
 	if ( argc > 1 ) {
 		try {
-			LexList	ll (argv [1]);
-			ll.save_list ();
-			ll.print_list ();
+			LexList	ll;
+
+			ll.fill (argv [1]);
+			ll.print ();
 
 			Parser p;
 

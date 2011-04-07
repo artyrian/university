@@ -41,6 +41,7 @@ const char * PrintTable:: lexem [] =
 	"LEX_PROD",
 	"LEX_BUILD",
 	"LEX_TURN",
+	"LEX_PRINT",
 	"LEX_CUR_MONTH",
 	"LEX_PLAYERS",
 	"LEX_ACTIVE_PLAYERS",
@@ -58,7 +59,9 @@ const char * PrintTable:: lexem [] =
 	"LEX_RESULT_RAW_PRICE",
 	"LEX_RESULT_PROD_BOUGHT",
 	"LEX_RESULT_PROD_PRICE",
-	"LEX_PRINT",
+	"POLIZ_GO",
+	"POLIZ_LABEL",
+	"POLIZ_FGO",
 	0
 };
 

@@ -36,23 +36,21 @@ class LexList {
 		Lex		lex;
 		ListElem *	next;
 	};
-
 	ListElem *	first;
 	ListElem *	snd;
-	ReadFrom 	rf;
+
 
 	ListElem * create_elem (const Lex & l);
-	void add_to_list (const Lex & l);
+	void put_lex (const Lex & l);
 public:
-	LexList (const char * path);
+	LexList ();
 	~LexList ();
 
-	void save_list ();
+	void fill (const char * path);
 
-	Lex * get_lex_from_list ();
+	Lex get_lex_from_list ();
 
-	void print_list ();
-
+	void print ();
 };
 
 
