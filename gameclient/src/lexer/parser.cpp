@@ -108,12 +108,15 @@ void Parser:: C ()
 	else if ( cur_lex.type == LEX_GOTO ) {
 		gotolabel ();
 	}
-	else if ( 	cur_lex.type == LEX_BUY 	|| 
+	else if ( look (cur_lex.type, table.lex_action) 
+/*	
+			cur_lex.type == LEX_BUY 	|| 
 			cur_lex.type == LEX_SELL 	|| 
 			cur_lex.type == LEX_PROD 	||
 			cur_lex.type == LEX_BUILD 	|| 
 			cur_lex.type == LEX_TURN 	|| 
 			cur_lex.type == LEX_PRINT 
+*/
 		) 
 	{
 		W ();
