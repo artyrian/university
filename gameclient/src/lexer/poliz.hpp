@@ -2,6 +2,20 @@
 #define _POLIZ_HPP_
 
 /*
+class Stack {
+	
+	int top;
+public:
+	Stack ();
+	void reset ();
+	void push (	);
+		pop ();
+	bool is_empty ();
+	bool is_full ();
+};
+*/
+
+/*
 class PolizItem {
 public:
 
