@@ -128,17 +128,17 @@ void LexList:: save_list ()
 }
 
 
-Lex LexList:: get_lex_from_list ()
+Lex * LexList:: get_lex_from_list ()
 {
 	ListElem * cur;
 
 	if ( (snd != 0) && (snd->lex.type != 0) ) {
 		cur = snd;
 		snd = snd->next;
-		return cur->lex;
+		return &(cur->lex);
 	}
 	else {
-		return Lex ();
+		return 0;
 	}
 }
 
@@ -200,8 +200,8 @@ int Scanner::look (const char * buf, const char ** list)
 
 
 Scanner:: Scanner ()
-	: table ()
 {
+	table = new TableLexem;
 	buffer = new Buffer;
 
 	count_str = 1;
@@ -233,6 +233,7 @@ bool Scanner:: feed_symbol (int c)
 Scanner:: ~Scanner ()
 {
 	delete buffer;
+	delete table;
 }
 
 
@@ -374,14 +375,14 @@ bool Scanner:: state_IDENT (int c)
 		return false;
 	}
 	else if ( c == '[' ) {
-		int i = table.array.put (buffer->get ());
+		int i = table->array.put (buffer->get ());
 		CS = H;
 		save_c = c;
 		save_lex = Lex (count_str, LEX_ARRAY, i);
 		return true;
 	} 
 	else {
-		int i = table.ident.put (buffer->get ());
+		int i = table->ident.put (buffer->get ());
 		CS = H;
 		buffer->add (c);
 		save_c = c;
@@ -400,16 +401,16 @@ bool Scanner:: state_KW (int c)
 	}
 	else {
 		int i;
-		if ( (i = look (buffer->get (), table.word)) != 0 ) {
+		if ( (i = look (buffer->get (), table->word)) != 0 ) {
 			CS = H;
 			save_c = c;
-			save_lex = Lex (count_str, table.lex_word [i], i);
+			save_lex = Lex (count_str, table->lex_word [i], i);
 			return true;
 		} 
-		else if ( (i = look (buffer->get (), table.action)) != 0 ) {
+		else if ( (i = look (buffer->get (), table->action)) != 0 ) {
 			CS = H;
 			save_c = c;
-			save_lex = Lex (count_str, table.lex_action [i], i);
+			save_lex = Lex (count_str, table->lex_action [i], i);
 			return true;
 		} 
 		else {
@@ -441,7 +442,7 @@ bool Scanner:: state_STR (int c)
 		return false; 
 	}
 	else {
-		int i = table.string.put (buffer->get ());
+		int i = table->string.put (buffer->get ());
 		CS = H;
 		//
 		save_lex = Lex (count_str, LEX_STR, i);
@@ -454,10 +455,10 @@ bool Scanner:: state_DELIM (int c)
 {
 	int i;
 
-	if ( (i = look (buffer->get (), table.delim)) != 0 ) {
+	if ( (i = look (buffer->get (), table->delim)) != 0 ) {
 		CS = H;
 		save_c = c;
-		save_lex = Lex (count_str, table.lex_delim [i], i);
+		save_lex = Lex (count_str, table->lex_delim [i], i);
 		return true;
 	}
 	else {
@@ -485,11 +486,11 @@ bool Scanner:: state_FN (int c)
 	}
 	else {
 		int i;
-		if ( (i = look (buffer->get (), table.function)) != 0 ) {
+		if ( (i = look (buffer->get (), table->function)) != 0 ) {
 			CS = H;
 			save_c = c;
 
-			save_lex = Lex (count_str, table.lex_function [i], i);
+			save_lex = Lex (count_str, table->lex_function [i], i);
 			return true;
 		}
 		else {
@@ -518,7 +519,7 @@ bool Scanner:: state_LABEL (int c)
 		return false;
 	}
 	else {
-		int i = table.label.put (buffer->get ());
+		int i = table->label.put (buffer->get ());
 		CS = H;	
 		
 		save_lex = Lex (count_str, LEX_LABEL, i);

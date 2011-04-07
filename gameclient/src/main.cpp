@@ -1,14 +1,19 @@
 #include <stdio.h>
 #include "lexer/parser.hpp"
+#include "lexer/lexer.hpp"
 #include "exception/exception.hpp"
 
 int main (int argc, char ** argv)
 {
 	if ( argc > 1 ) {
 		try {
-			Parser p (argv[1]);
+			LexList	ll (argv [1]);
+			ll.save_list ();
+			ll.print_list ();
 
-			p.analyze (); 
+			Parser p;
+
+//			p.analyze (& ll); 
 		}
 		catch (const SymbolException & se) {
 			printf ("catch exception.\n");

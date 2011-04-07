@@ -7,9 +7,9 @@
 
 
 class Parser {
-	Lex		cur_lex;
-	LexList		ll;
-	TableLexem	table;
+	Lex * cur_lex;
+	LexList	* lexl;
+	TableLexem tbl;
 	
 	void O ();
 	void B ();
@@ -38,9 +38,11 @@ class Parser {
 	int look (type_of_lex type_lex, const type_of_lex * table);
 	
 public:
-	Parser (const char * path);
+	Parser ();
 
-	void analyze ();
+	void analyze (LexList * ll);
+
+	~Parser ();
 };
 
 

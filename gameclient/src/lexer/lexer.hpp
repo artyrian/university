@@ -49,7 +49,7 @@ public:
 
 	void save_list ();
 
-	Lex get_lex_from_list ();
+	Lex * get_lex_from_list ();
 
 	void print_list ();
 
@@ -59,20 +59,20 @@ public:
 
 
 class Scanner {
-	enum		state 	{ 
-					H, 
-					NUM, 
-					IDENT, 
-					KW, 
-					ASSIGN, 
-					STR, 
-					DELIM, 
-					NEQ, 
-					FN, 
-					COMMENT,
-					LABEL
-				};
-	TableLexem	table;
+	enum	state 	{ 
+		H, 
+		NUM, 
+		IDENT, 
+		KW, 
+		ASSIGN, 
+		STR, 
+		DELIM, 
+		NEQ, 
+		FN, 
+		COMMENT,
+		LABEL
+	};
+	TableLexem *	table;
 	state		CS;
 	int		count_str;
 	Buffer * 	buffer;
