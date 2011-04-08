@@ -94,22 +94,21 @@ lizElem *operand2 = Pop(stack);
 
 Poliz:: Poliz ()
 {
+	first = 0;
 	last = 0;
-	count = 0;
 	size = 0;
-	last = create_elem ( Lex (0, POLIZ_NOP));
 }
 
 
 Poliz:: ~Poliz ()
 {
-	PolizElem * cur = last;
+	PolizElem * cur = first;
 
 	while ( cur != 0 ) {
-		last = cur;
+		first = cur;
 		cur = cur->next;	
-		delete last->lex;
-		delete last;
+		delete first->lex;
+		delete first;
 	}
 }
 
@@ -119,10 +118,8 @@ Poliz:: create_elem (const Lex & l)
 {
 	PolizElem * t = new PolizElem ;
 	t->lex = new Lex (l);
-	t->number = count;
-	t->next = last;
-
-	++ count;
+	t->number = size;
+	t->next = 0;
 
 	return t;
 }
@@ -130,7 +127,20 @@ Poliz:: create_elem (const Lex & l)
 
 void Poliz:: put_lex (const Lex & l)
 {
-	last = create_elem (l);
+	PolizElem * cur = first;
+
+	if ( first == 0 ) {
+		first = create_elem (l);
+	}
+	else {
+		PolizElem * prev;
+		while ( cur != 0 ) {
+			prev = cur;
+			cur = cur->next;
+		}
+		cur = create_elem (l);	
+		prev->next = cur;
+	}
 
 	++ size;
 }
@@ -143,26 +153,21 @@ void Poliz:: put_lex (const Lex & l, int place)
 		throw "POLIZ: indefinite element of array";
 	}
 
-	PolizElem * cur = last;
+	PolizElem * cur = first;
 
-	while ( size != place ) {
+	int cnt = 0;
+	while ( cnt != place ) {
 		cur = cur->next;
+		++ cnt;
 	}
-/*
-	PolizElem * t = new PolizElem ;
-	t->lex = new Lex (l);
-	t->number = count;
-	t->next = last;
-III!:!!:!JLKJF:LKDJF:O LIO J:OHA
 
-
-*/
-	cur->lex = Lex (l);
+	*(cur->lex) = Lex (l);
 }
 
 
 void Poliz:: blank ()
 {
+	put_lex ( Lex () ); 
 	++ size;
 }
 
@@ -177,14 +182,9 @@ void Poliz:: print ()
 {
 	PolizElem * cur = first; 
 
-	int cnt = 1;
 	printf ("Print Poliz List:\n");
 	while ( cur != 0 ) {
-		if ( cnt != cur->lex.strnum ) {
-			printf ("\n");
-			cnt = cur->lex.strnum;
-		}
-		cur->lex.print ();	
+		cur->lex->print ();	
 		cur = cur->next; }
 	printf ("\nEnd of Poliz List.\n");
 }

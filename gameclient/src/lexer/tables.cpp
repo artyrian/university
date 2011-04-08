@@ -59,6 +59,7 @@ const char * PrintTable:: lexem [] =
 	"LEX_RESULT_RAW_PRICE",
 	"LEX_RESULT_PROD_BOUGHT",
 	"LEX_RESULT_PROD_PRICE",
+	"POLIZ_ADDRESS",
 	"POLIZ_GO",
 	"POLIZ_LABEL",
 	"POLIZ_FGO",

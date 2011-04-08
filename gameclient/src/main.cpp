@@ -12,9 +12,11 @@ int main (int argc, char ** argv)
 			ll.fill (argv [1]);
 			ll.print ();
 
-			Parser p;
+			Parser pars;
 
-			p.analyze (& ll); 
+			pars.analyze (& ll); 
+			
+			pars.prg.print ();
 		}
 		catch (const SymbolException & se) {
 			printf ("catch exception.\n");

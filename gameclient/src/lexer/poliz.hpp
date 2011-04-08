@@ -86,7 +86,6 @@ class Poliz {
 
 	PolizElem * create_elem (const Lex & l);
 	int size;
-	int count;
 public:
 	Poliz ();
 	~Poliz ();

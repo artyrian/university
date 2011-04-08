@@ -90,10 +90,12 @@ void Parser:: C ()
 		whiledo ();
 	}
 	else if ( cur_lex.type == LEX_ID ) {
+		prg.put_lex ( Lex (0, POLIZ_ADDRESS, cur_lex.value) );
 		get_lex ();
 		assign ();
 	}
 	else if ( cur_lex.type == LEX_ARRAY ) {
+		prg.put_lex ( Lex (0, POLIZ_ADDRESS, cur_lex.value ) );
 		array ();
 		assign ();
 	}
@@ -101,9 +103,11 @@ void Parser:: C ()
 		body ();
 	}
 	else if ( cur_lex.type == LEX_LABEL ) {
+		prg.put_lex (cur_lex);
 		get_lex ();
 	}
 	else if ( cur_lex.type == LEX_GOTO ) {
+		prg.put_lex (cur_lex);
 		gotolabel ();
 	}
 	else if ( look (cur_lex.type, TableLexem:: lex_action) ) 
@@ -125,9 +129,10 @@ void Parser:: D ()
 		cur_lex.type == LEX_GREATER || 
 		cur_lex.type == LEX_LESS) 
 	{
-
+		//
 		get_lex ();
 		E ();
+		prg.put_lex (cur_lex);
 	}
 }
 
@@ -140,8 +145,10 @@ void Parser:: E ()
 		cur_lex.type == LEX_MINUS || 
 		cur_lex.type == LEX_OR) 
 	{
+		//
 		get_lex ();
 		F ();
+		prg.put_lex (cur_lex);
 	}
 }
 
@@ -154,8 +161,10 @@ void Parser:: F ()
 		cur_lex.type == LEX_DIVISION || 
 		cur_lex.type == LEX_AND) 
 	{
+		//
 		get_lex ();
 		G ();
+		prg.put_lex (cur_lex);
 	}
 }
 
@@ -171,7 +180,7 @@ void Parser:: G ()
 		get_lex ();	
 	}
 	else if ( cur_lex.type == LEX_NEQ ) {
-		//PROBLEM
+		prg.put_lex (cur_lex);
 		get_lex ();
 		G ();
 	}
@@ -430,6 +439,7 @@ void Parser:: assign ()
 	if ( cur_lex.type == LEX_ASSIGN ) {
 		get_lex ();
 		D ();
+		prg.put_lex ( cur_lex );
 	}
 	else {
 		throw LexException ("Expected assign", cur_lex);
@@ -552,6 +562,7 @@ void Parser:: gotolabel ()
 		throw LexException ("Must be 'goto'. Source code.", cur_lex);
 	}
 	
+	prg.put_lex (cur_lex);
 	get_lex ();
 
 	if ( cur_lex.type == LEX_LABEL ) {
