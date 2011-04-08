@@ -62,6 +62,7 @@ const char * PrintTable:: lexem [] =
 	"POLIZ_GO",
 	"POLIZ_LABEL",
 	"POLIZ_FGO",
+	"POLIZ_NOP",
 	0
 };
 

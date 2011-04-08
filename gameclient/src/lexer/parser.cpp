@@ -472,7 +472,7 @@ void Parser:: ifthen ()
 
 	int pl1 = prg.get_size ();
 	prg.blank ();
-	prg.pur_lex (cur_lex);
+	prg.put_lex (cur_lex);
 
 	get_lex ();
 
@@ -480,7 +480,7 @@ void Parser:: ifthen ()
 
 	if ( cur_lex.type == LEX_THEN ) {
 		prg.put_lex (Lex (0, POLIZ_GO));
-		prg.put_lex (Lex (0, POLIZ_LABEL, prg.get_free ()), pl1);
+		prg.put_lex (Lex (0, POLIZ_LABEL, prg.get_size ()), pl1);
 		get_lex ();
 		C ();	
 	}

@@ -75,21 +75,24 @@ public:
 };
 */
 
-class Poliz: public LexList {
-	struct ListElem {
-		Lex		lex;
-		ListElem *	next;
+class Poliz {
+	struct PolizElem {
+		Lex *		lex;
+		int 		number;
+		PolizElem *	next;
 	};
-	ListElem *	first;
+	PolizElem *	first;
+	PolizElem *	last;
 
-	ListElem * create_elem (const Lex & l);
+	PolizElem * create_elem (const Lex & l);
 	int size;
+	int count;
 public:
 	Poliz ();
 	~Poliz ();
 
 	void put_lex (const Lex & l);
-	void put_lex (Lex l, int place);
+	void put_lex (const Lex & l, int place);
 
 	void blank ();
 	int get_size ();

@@ -1,4 +1,6 @@
 #include "poliz.hpp"
+#include "tables.hpp"
+
 /*
 PolizElem:: ~PolizElem ()
 {
@@ -92,29 +94,35 @@ lizElem *operand2 = Pop(stack);
 
 Poliz:: Poliz ()
 {
-	first = 0;
+	last = 0;
+	count = 0;
 	size = 0;
+	last = create_elem ( Lex (0, POLIZ_NOP));
 }
 
 
 Poliz:: ~Poliz ()
 {
-	ListElem * cur = first;
+	PolizElem * cur = last;
 
 	while ( cur != 0 ) {
-		first = cur;
+		last = cur;
 		cur = cur->next;	
-		delete first;
+		delete last->lex;
+		delete last;
 	}
 }
 
 
-Poliz:: ListElem * 
+Poliz:: PolizElem * 
 Poliz:: create_elem (const Lex & l)
 {
-	ListElem * t = new ListElem ;
-	t->lex = l;
-	t->next = 0;
+	PolizElem * t = new PolizElem ;
+	t->lex = new Lex (l);
+	t->number = count;
+	t->next = last;
+
+	++ count;
 
 	return t;
 }
@@ -122,40 +130,34 @@ Poliz:: create_elem (const Lex & l)
 
 void Poliz:: put_lex (const Lex & l)
 {
-	ListElem * cur = first;
-
-	if ( first == 0 ) {
-		first = create_elem (l);
-	}
-	else {
-		ListElem * prev;
-		while ( cur != 0 ) {
-			prev = cur;
-			cur = cur->next;
-		}
-		cur = create_elem (l);	
-		prev->next = cur;
-	}
+	last = create_elem (l);
 
 	++ size;
 }
 
 
 
-void Poliz:: put_lex (Lex l, int place)
+void Poliz:: put_lex (const Lex & l, int place)
 {
 	if ( place > size ) {
 		throw "POLIZ: indefinite element of array";
 	}
 
-	ListElem * cur = first;
-	int cnt = 0;
+	PolizElem * cur = last;
 
-	while ( cnt != place ) {
-		cur->lex.print ();	
+	while ( size != place ) {
 		cur = cur->next;
-		++ cnt;
 	}
+/*
+	PolizElem * t = new PolizElem ;
+	t->lex = new Lex (l);
+	t->number = count;
+	t->next = last;
+III!:!!:!JLKJF:LKDJF:O LIO J:OHA
+
+
+*/
+	cur->lex = Lex (l);
 }
 
 
@@ -173,8 +175,8 @@ int Poliz:: get_size ()
 
 void Poliz:: print ()
 {
-	ListElem * cur = first;
-	
+	PolizElem * cur = first; 
+
 	int cnt = 1;
 	printf ("Print Poliz List:\n");
 	while ( cur != 0 ) {
@@ -183,7 +185,6 @@ void Poliz:: print ()
 			cnt = cur->lex.strnum;
 		}
 		cur->lex.print ();	
-		cur = cur->next;
-	}
+		cur = cur->next; }
 	printf ("\nEnd of Poliz List.\n");
 }

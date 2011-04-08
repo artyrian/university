@@ -58,7 +58,8 @@ enum type_of_lex {
 	LEX_RESULT_PROD_PRICE,
 	POLIZ_GO,
 	POLIZ_LABEL,
-	POLIZ_FGO
+	POLIZ_FGO,
+	POLIZ_NOP
 };
 
 
