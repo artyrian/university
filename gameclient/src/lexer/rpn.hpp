@@ -1,5 +1,5 @@
-#ifndef _POLIZ_HPP_
-#define _POLIZ_HPP_
+#ifndef _RPN_HPP_
+#define _RPN_HPP_
 
 #include "lexer.hpp"
 
