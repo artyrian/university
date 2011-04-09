@@ -4,24 +4,30 @@
 #include "lexer.hpp"
 
 /*
-class Stack {
-	
+template <class T> class Stack {
+	int max_size;
+	T s [100];
 	int top;
 public:
 	Stack ();
 	void reset ();
-	void push (	);
-		pop ();
+	void push (T i);
+	T pop ();
 	bool is_empty ();
 	bool is_full ();
 };
 */
 
-/*
-class PolizItem {
-public:
 
+
+class PolizElem; 
+
+
+struct PolizItem {
+	PolizElem * p;
+	PolizItem * next;
 };
+
 
 class PolizElem {
 public:
@@ -33,8 +39,12 @@ protected:
 	static PolizElem * 	pop (PolizItem ** stack);
 };
 
-class PolizConst  {
 
+class PolizConst : public PolizElem  {
+public:
+	virtual PolizElem * clone () const;
+	virtual void evaluate ( PolizItem ** stack, 
+				PolizItem ** cur_cmd) const;
 };
 
 class PolizInt : public PolizConst {
@@ -57,6 +67,8 @@ public:
 
 };
 
+
+/*
 class PolizOpGo : public PolizElem {
 public:
 	PolizOpGo ();
@@ -64,9 +76,10 @@ public:
 	void evaluate ( PolizItem ** stack,
 			PolizItem ** cur_cmd) const;
 };
+*/
 
-Here class PolizFunction 
-
+//Here class PolizFunction 
+/*
 class PolizFunPlus : public PolizFunPlus {
 public:
 	PolizFunPlus ();

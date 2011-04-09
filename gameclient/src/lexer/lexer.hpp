@@ -65,7 +65,7 @@ class Scanner {
 		ASSIGN, 
 		STR, 
 		DELIM, 
-		NEQ, 
+		NEG, 
 		FN, 
 		COMMENT,
 		LABEL
@@ -96,7 +96,7 @@ private:
 	bool state_ASSIGN (int c);
 	bool state_STR (int c);
 	bool state_DELIM (int c);
-	bool state_NEQ (int c);
+	bool state_NEG (int c);
 	bool state_FN (int c);
 	bool state_COMMENT (int c);
 	bool state_LABEL (int c);

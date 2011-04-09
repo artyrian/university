@@ -2,8 +2,99 @@
 #include "tables.hpp"
 
 /*
+template <class T>
+Stack <T>:: Stack ()
+{
+	max_size = 100;
+	top = 0;
+}
+
+
+template <class T>
+void Stack <T>:: reset ()
+{
+	top = 0;
+}
+
+
+template <class T>
+void Stack <T>:: push (T i)
+{
+	if  ( !is_full () ) {
+		s [top] = i;
+		++ top;
+	}
+	else {
+		throw "Stack is full";
+	}
+}
+
+
+
+template <class T>
+T Stack <T>:: pop ()
+{
+	if ( !is_empty () ) {
+		-- top;
+		return s [top];
+	}
+	else {
+		throw "Stack is empty";
+	}
+}
+
+
+template <class T>
+bool Stack <T>:: is_empty ()
+{
+	return ( top == 0);
+}
+
+
+template <class T>
+bool Stack <T>:: is_full ()
+{
+	return ( top == max_size );
+}
+*/
+
+////
+////
+////
+
 PolizElem:: ~PolizElem ()
 {
+}
+
+void PolizElem:: push (PolizItem ** stack, PolizElem * cur_cmd)
+{
+
+}
+
+
+PolizElem * PolizElem:: pop (PolizItem ** stack)
+{
+	return 0;	
+}
+
+
+PolizElem * PolizConst:: clone () const
+{
+	return new PolizConst ();
+}
+
+
+void PolizConst:: evaluate ( PolizItem ** stack, PolizItem ** cur_cmd) const
+{
+	push (stack, clone ());
+	*cur_cmd = (* cur_cmd)->next;
+/*
+	PolizElem * res = evaluate_fun (stack);
+	if ( res ) {
+		push (stack, res);
+	}
+	* cur_cmd = (* cur_cmd)->next;
+*/
 }
 
 
@@ -12,48 +103,57 @@ PolizInt:: PolizInt (int a)
 	value = a;
 }
 
+
 PolizInt:: ~PolizInt ()
 {
 }
+
 
 PolizElem * PolizInt:: clone () const
 {
 	return new PolizInt (value);
 }
 
+
 int PolizInt:: get () const
 {
 	return value;
 }
 
-PolizLabel:: PolizLabel ()
+
+PolizLabel:: PolizLabel (PolizItem * a)
 {
 	value = a;
 }
 
+
 PolizLabel:: ~PolizLabel ()
 {
 }
+
 
 PolizElem * PolizLabel:: clone () const
 {
 	return new PolizLabel (value);
 }
 
-PolizElem * PolizLabel:: get () const
+
+PolizItem * PolizLabel:: get () const
 {
 	return value;
 }
 
 
-
+/*
 PolizOpGo:: PolizOpGo ()
 {
 }
 
+
 PolizOpGo:: ~ PolizOpGo ()
 {
 }
+
 
 void PolizOpGo:: evaluate ( PolizItem ** stack,
 			    PolizItem ** cur_cmd)
@@ -66,7 +166,9 @@ const
 	* cur_cmd = addr;
 	delete operand1;
 }
+*/
 
+/*
 PolizFunPlus:: PolizFunPlus ()
 {
 }
@@ -91,6 +193,11 @@ lizElem *operand2 = Pop(stack);
 }
 */
 
+
+
+////
+////
+////
 
 Poliz:: Poliz ()
 {
@@ -127,6 +234,10 @@ Poliz:: create_elem (const Lex & l)
 
 void Poliz:: put_lex (const Lex & l)
 {
+	printf ("Paste lex:");
+	l.print ();
+	printf ("\n");
+
 	PolizElem * cur = first;
 
 	if ( first == 0 ) {
@@ -152,6 +263,10 @@ void Poliz:: put_lex (const Lex & l, int place)
 	if ( place > size ) {
 		throw "POLIZ: indefinite element of array";
 	}
+
+	printf ("Paste lex (place):");
+	l.print ();
+	printf ("\n");
 
 	PolizElem * cur = first;
 

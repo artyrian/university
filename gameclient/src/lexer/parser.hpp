@@ -3,14 +3,13 @@
 
 
 #include "lexer.hpp"
-#include "poliz.hpp"
 #include "tables.hpp"
 
 
 class Parser {
 	Lex cur_lex;
 	LexList	* lexl;
-	
+
 	void O ();
 	void B ();
 	void C ();
@@ -39,8 +38,6 @@ class Parser {
 	
 public:
 	Parser ();
-
-	Poliz prg;
 
 	void analyze (LexList * ll);
 };

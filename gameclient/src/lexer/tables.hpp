@@ -26,7 +26,7 @@ enum type_of_lex {
 	LEX_RBRACKET,			// 
 	LEX_OR,				// 2
 	LEX_AND,			// 2
-	LEX_NEQ,			// 27
+	LEX_NEG,			// 27
 	LEX_ASSIGN,			// 28
 	LEX_NUM,			// 29
 	LEX_ID,				// 

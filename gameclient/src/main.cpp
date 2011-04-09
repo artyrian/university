@@ -15,8 +15,6 @@ int main (int argc, char ** argv)
 			Parser pars;
 
 			pars.analyze (& ll); 
-			
-			pars.prg.print ();
 		}
 		catch (const SymbolException & se) {
 			printf ("catch exception.\n");

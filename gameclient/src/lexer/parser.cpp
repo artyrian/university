@@ -55,6 +55,8 @@ void Parser:: O ()
 	get_lex ();
 
 	B ();
+
+	printf ("P_NOP\t");
 }
 
 
@@ -90,12 +92,11 @@ void Parser:: C ()
 		whiledo ();
 	}
 	else if ( cur_lex.type == LEX_ID ) {
-		prg.put_lex ( Lex (0, POLIZ_ADDRESS, cur_lex.value) );
+		printf ("P_ID\t");
 		get_lex ();
 		assign ();
 	}
 	else if ( cur_lex.type == LEX_ARRAY ) {
-		prg.put_lex ( Lex (0, POLIZ_ADDRESS, cur_lex.value ) );
 		array ();
 		assign ();
 	}
@@ -103,18 +104,16 @@ void Parser:: C ()
 		body ();
 	}
 	else if ( cur_lex.type == LEX_LABEL ) {
-		prg.put_lex (cur_lex);
+		printf ("[go here]\t");
 		get_lex ();
 	}
 	else if ( cur_lex.type == LEX_GOTO ) {
-		prg.put_lex (cur_lex);
 		gotolabel ();
 	}
 	else if ( look (cur_lex.type, TableLexem:: lex_action) ) 
 	{
 		W ();
 	}
-
 	else {
 		throw LexException ("Invdalid left-handed expression.", cur_lex);
 	}
@@ -129,10 +128,10 @@ void Parser:: D ()
 		cur_lex.type == LEX_GREATER || 
 		cur_lex.type == LEX_LESS) 
 	{
-		//
 		get_lex ();
 		E ();
-		prg.put_lex (cur_lex);
+
+		printf ("P___EQ/GREATER/LESS\t");
 	}
 }
 
@@ -145,10 +144,10 @@ void Parser:: E ()
 		cur_lex.type == LEX_MINUS || 
 		cur_lex.type == LEX_OR) 
 	{
-		//
 		get_lex ();
 		F ();
-		prg.put_lex (cur_lex);
+
+		printf ("P___PLUS/MINUS/OR\t");
 	}
 }
 
@@ -161,10 +160,10 @@ void Parser:: F ()
 		cur_lex.type == LEX_DIVISION || 
 		cur_lex.type == LEX_AND) 
 	{
-		//
 		get_lex ();
 		G ();
-		prg.put_lex (cur_lex);
+
+		printf ("P___MUL/DIV/AND\t");
 	}
 }
 
@@ -172,17 +171,17 @@ void Parser:: F ()
 void Parser:: G ()
 {
 	if ( cur_lex.type == LEX_ID ) {
-		prg.put_lex (cur_lex);
 		get_lex ();	
+		printf ("P_ID\t");
 	}
 	else if ( cur_lex.type == LEX_NUM ) {
-		prg.put_lex (cur_lex);
 		get_lex ();	
+		printf ("P_NUM\t");
 	}
-	else if ( cur_lex.type == LEX_NEQ ) {
-		prg.put_lex (cur_lex);
+	else if ( cur_lex.type == LEX_NEG ) {
 		get_lex ();
 		G ();
+		printf ("P_NEG");	// must be NEG!
 	}
 	else if ( cur_lex.type == LEX_LPAREN ) {
 		lparen ();
@@ -204,7 +203,6 @@ void Parser:: G ()
 
 } // G();
 
-
 void Parser:: W ()
 {
 	if ( cur_lex.type == LEX_BUY ) {
@@ -219,6 +217,8 @@ void Parser:: W ()
 		D ();
 
 		rparen ();
+
+		printf ("P_BUY(2)\t");
 	}
 	else if ( cur_lex.type == LEX_SELL ) {
 		get_lex ();
@@ -232,6 +232,8 @@ void Parser:: W ()
 		D ();
 
 		rparen ();
+
+		printf ("P_SELL(2)\t");
 	}
 	else if ( cur_lex.type == LEX_PROD ) {
 		get_lex ();
@@ -241,6 +243,8 @@ void Parser:: W ()
 		D ();
 
 		rparen ();
+
+		printf ("P_PROD(1)\t");
 	}
 	else if ( cur_lex.type == LEX_BUILD ) {
 		get_lex ();
@@ -248,6 +252,8 @@ void Parser:: W ()
 		lparen ();
 
 		rparen ();
+
+		printf ("P_BUILD(0)\t");
 	}
 	else if (cur_lex.type == LEX_TURN ) {
 		get_lex ();
@@ -255,6 +261,8 @@ void Parser:: W ()
 		lparen ();
 
 		rparen ();
+
+		printf ("P_TURN(0)\t");
 	}
 	else if (cur_lex.type == LEX_PRINT ) {
 		get_lex ();
@@ -264,6 +272,8 @@ void Parser:: W ()
 		S ();
 
 		rparen ();
+
+		printf ("P_PRINT(x)\t");
 	}
 	else {
 		throw LexException ("Syntax error. Not allowed expression.", cur_lex);
@@ -278,42 +288,55 @@ void Parser:: Z ()
 		lparen ();
 
 		rparen ();
+
+		printf ("P_CUR_MONTH\t");
 	}
 	else if ( cur_lex.type == LEX_PLAYERS ) {
 		get_lex ();
 		lparen ();
 
 		rparen ();
+		printf ("P_PLAYERS\t");
 	}
 	else if ( cur_lex.type == LEX_ACTIVE_PLAYERS ) {
 		get_lex ();
 		lparen ();
 
 		rparen ();
+
+		printf ("P_ACTIVE_PLAYERS\t");
 	}
 	else if ( cur_lex.type == LEX_SUPPLY ) {
 		get_lex ();
 		lparen ();
 
 		rparen ();
+
+		printf ("P_SUPPLY\t");
 	}
 	else if ( cur_lex.type == LEX_RAW_PRICE ) {
 		get_lex ();
 		lparen ();
 
 		rparen ();
+
+		printf ("P_RAW_PRICE\t");
 	}
 	else if ( cur_lex.type == LEX_DEMAND ) {
 		get_lex ();
 		lparen ();
 
 		rparen ();
+
+		printf ("P_DEMAND\t");
 	}
 	else if ( cur_lex.type == LEX_PRODUCTION_PRICE ) {
 		get_lex ();
 		lparen ();
 
 		rparen ();
+
+		printf ("P_PRODUCTION_PRICE\t");
 	}
 	else if ( cur_lex.type == LEX_MONEY ) {
 		get_lex ();
@@ -322,6 +345,8 @@ void Parser:: Z ()
 		D ();
 
 		rparen ();
+
+		printf ("P_MONEY(1)\t");
 	}
 	else if ( cur_lex.type == LEX_RAW ) {
 		get_lex ();
@@ -330,6 +355,8 @@ void Parser:: Z ()
 		D ();
 
 		rparen ();
+
+		printf ("P_RAW(1)\t");
 	}
 	else if ( cur_lex.type == LEX_PRODUCTION ) {
 		get_lex ();
@@ -338,6 +365,8 @@ void Parser:: Z ()
 		D ();
 
 		rparen ();
+
+		printf ("P_PRODUCTION(1)\t");
 	}
 	else if ( cur_lex.type == LEX_FACTORIES ) {
 		get_lex ();
@@ -346,6 +375,8 @@ void Parser:: Z ()
 		D ();
 
 		rparen ();
+
+		printf ("P_FACTORIES(1)\t");
 	}
 	else if ( cur_lex.type == LEX_AUTO_FACTORIES ) {
 		get_lex ();
@@ -354,6 +385,8 @@ void Parser:: Z ()
 		D ();
 
 		rparen ();
+
+		printf ("P_AUTOFACTORIES(1)\t");
 	}
 	else if ( cur_lex.type == LEX_MANUFACTURED ) {
 		get_lex ();
@@ -362,6 +395,8 @@ void Parser:: Z ()
 		D ();
 
 		rparen ();
+
+		printf ("P_MANUFACTURED(1)\t");
 	}
 	else if ( cur_lex.type == LEX_RESULT_RAW_SOLD ) {
 		get_lex ();
@@ -370,6 +405,8 @@ void Parser:: Z ()
 		D ();
 
 		rparen ();
+
+		printf ("P_RESULT_RAW_SOLD(1)\t");
 	}
 	else if ( cur_lex.type == LEX_RESULT_RAW_PRICE ) {
 		get_lex ();
@@ -378,6 +415,8 @@ void Parser:: Z ()
 		D ();
 
 		rparen ();
+
+		printf ("P_RESULT_RAW_PRICE(1)\t");
 	}
 	else if ( cur_lex.type == LEX_RESULT_PROD_BOUGHT ) {
 		get_lex ();
@@ -386,6 +425,8 @@ void Parser:: Z ()
 		D ();
 
 		rparen ();
+
+		printf ("P_RESULT_PROD_BOUGHT(1)\t");
 	}
 	else if ( cur_lex.type == LEX_RESULT_PROD_PRICE ) {
 		get_lex ();
@@ -394,6 +435,8 @@ void Parser:: Z ()
 		D ();
 
 		rparen ();
+
+		printf ("P_RESULT_PROD_PRICE(1)\t");
 	}
 	else 
 	{
@@ -439,7 +482,7 @@ void Parser:: assign ()
 	if ( cur_lex.type == LEX_ASSIGN ) {
 		get_lex ();
 		D ();
-		prg.put_lex ( cur_lex );
+		printf ("P_ASSIGN\t");
 	}
 	else {
 		throw LexException ("Expected assign", cur_lex);
@@ -480,23 +523,23 @@ void Parser:: ifthen ()
 		throw LexException ("Must be if there. Source code.", cur_lex);
 	}
 
-	int pl1 = prg.get_size ();
-	prg.blank ();
-	prg.put_lex (cur_lex);
 
 	get_lex ();
 
 	D ();
 
+	printf ("P_L\t");
+	printf ("P_GO_FALSE\t");
+
 	if ( cur_lex.type == LEX_THEN ) {
-		prg.put_lex (Lex (0, POLIZ_GO));
-		prg.put_lex (Lex (0, POLIZ_LABEL, prg.get_size ()), pl1);
 		get_lex ();
 		C ();	
 	}
 	else {
 		throw LexException ("Expected 'then'", cur_lex);
 	}
+
+	printf ("[<--]\t");
 }
 
 
@@ -506,25 +549,24 @@ void Parser:: whiledo ()
 		throw LexException ("Must be while. Source code", cur_lex);
 	}
 	
-	int pl1 = prg.get_size ();
+
 	get_lex ();
 
 	D ();
 
-	int pl2 = prg.get_size ();
-	prg.blank ();
-	prg.put_lex ( Lex (POLIZ_FGO) );
+	printf ("P_L1\t");
+	printf ("P_GO_FALSE\t");
 
 	if ( cur_lex.type == LEX_DO ) {
 		get_lex ();
 		C ();
-		prg.put_lex ( Lex (0, POLIZ_LABEL, pl1));
-		prg.put_lex ( Lex (0, POLIZ_GO));
-		prg.put_lex ( Lex (0, POLIZ_LABEL, prg.get_size ()), pl2);
 	}
 	else {
 		throw LexException ("Expected 'do'.", cur_lex);
 	}
+
+	printf ("P_L2\t");
+	printf ("P_GO\t");
 }
 
 
@@ -534,7 +576,7 @@ void Parser:: array ()
 		throw LexException ("Must be array. Source code", cur_lex);
 	}
 	
-	prg.put_lex (cur_lex);
+	printf ("P_ID_ARR");
 	get_lex ();
 
 	if ( cur_lex.type == LEX_LBRACKET ) {
@@ -553,6 +595,8 @@ void Parser:: array ()
 	else {
 		throw LexException ("Expected '['.", cur_lex);
 	}
+	
+	printf ("P_ARR\t");
 }
 
 
@@ -562,7 +606,6 @@ void Parser:: gotolabel ()
 		throw LexException ("Must be 'goto'. Source code.", cur_lex);
 	}
 	
-	prg.put_lex (cur_lex);
 	get_lex ();
 
 	if ( cur_lex.type == LEX_LABEL ) {
@@ -571,6 +614,9 @@ void Parser:: gotolabel ()
 	else {
 		throw LexException ("Error in label of goto", cur_lex);
 	}
+	
+	printf ("P_L\t");
+	printf ("P_GO\t");
 }
 
 

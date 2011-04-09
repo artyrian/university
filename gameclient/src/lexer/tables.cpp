@@ -29,7 +29,7 @@ const char * PrintTable:: lexem [] =
 	"LEX_RBRACKET",
 	"LEX_OR",
 	"LEX_AND",
-	"LEX_NEQ",
+	"LEX_NEG",
 	"LEX_ASSIGN",
 	"LEX_NUM",
 	"LEX_ID",
@@ -161,7 +161,7 @@ type_of_lex TableLexem:: lex_delim [] =
 	LEX_RBRACKET,		//
 	LEX_OR,			
 	LEX_AND,		// 20
-	LEX_NEQ,
+	LEX_NEG,
 	LEX_BEGIN,
 	LEX_END,
 	LEX_NULL

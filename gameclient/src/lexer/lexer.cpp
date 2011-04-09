@@ -254,8 +254,8 @@ bool Scanner:: step (int c)
 		return state_STR (c);
 	case DELIM:
 		return state_DELIM (c);
-	case NEQ:
-		return state_NEQ (c);
+	case NEG:
+		return state_NEG (c);
 	case FN:
 		return state_FN (c);
 	case COMMENT:
@@ -292,7 +292,7 @@ bool Scanner:: state_H (int c)
 	else if ( c == '!' ) {
 		buffer->clear ();
 		buffer->add (c);
-		CS = NEQ;
+		CS = NEG;
 		//
 		return false;
 	}
@@ -468,11 +468,11 @@ bool Scanner:: state_DELIM (int c)
 }
 
 
-bool Scanner:: state_NEQ (int c)
+bool Scanner:: state_NEG (int c)
 {
 	CS = H;
 	save_c = c;
-	save_lex = Lex (count_str, LEX_NEQ, 0);
+	save_lex = Lex (count_str, LEX_NEG, 0);
 	return true;
 }
 
