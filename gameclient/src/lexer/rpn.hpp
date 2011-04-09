@@ -19,9 +19,7 @@ public:
 */
 
 
-
-class PolizElem; 
-
+class PolizElem;
 
 struct PolizItem {
 	PolizElem * p;
@@ -34,10 +32,19 @@ public:
 	virtual ~PolizElem ();
 	virtual void evaluate (	PolizItem ** stack, 
 				PolizItem ** cur_cmd) const = 0;
+	virtual print () const = 0;
 protected:
 	static void 		push (PolizItem ** stack, PolizElem * elem);
 	static PolizElem * 	pop (PolizItem ** stack);
 };
+
+
+class PolizTest {
+
+public:
+	void evaluate (PolizItem ** stack, PolizItem ** cur_cmd) const;
+	void printf () const;
+}
 
 
 class PolizConst : public PolizElem  {
@@ -88,21 +95,10 @@ public:
 };
 */
 
+/*
 class Poliz {
-	struct PolizElem {
-		Lex *		lex;
-		int 		number;
-		PolizElem *	next;
-	};
-	PolizElem *	first;
-	PolizElem *	last;
-
-	PolizElem * create_elem (const Lex & l);
 	int size;
 public:
-	Poliz ();
-	~Poliz ();
-
 	void put_lex (const Lex & l);
 	void put_lex (const Lex & l, int place);
 
@@ -111,5 +107,17 @@ public:
 
 	void print ();
 };
+*/
+
+class PolizList {
+	PolizItem * first;
+	PolizItem * create_item (PolizElem * p);
+public:
+	PolizList ();
+	~PolizList ();
+	void put_lex (PolizElem * p);
+	void print ();
+};
+
 
 #endif

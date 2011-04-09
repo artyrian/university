@@ -198,7 +198,7 @@ lizElem *operand2 = Pop(stack);
 ////
 ////
 ////
-
+/*
 Poliz:: Poliz ()
 {
 	first = 0;
@@ -291,15 +291,71 @@ int Poliz:: get_size ()
 {
 	return size;
 }
+*/
 
 
-void Poliz:: print ()
+PolizItem * create_item (PolizElem * p)
 {
-	PolizElem * cur = first; 
+	PolizItem * tmp = new PolizItem;
+	tmp->p = p;
+	tmp->next = 0;
 
-	printf ("Print Poliz List:\n");
-	while ( cur != 0 ) {
-		cur->lex->print ();	
-		cur = cur->next; }
-	printf ("\nEnd of Poliz List.\n");
+	return tmp;
 }
+
+
+
+void PolizList:: put_lex (PolizElem * p)
+{
+	PolizItem * cur = first;
+
+	if ( first == 0 ) {
+		first = create_item (p); 
+	}
+	else {
+		PolizItem * prev;
+		while ( cur != 0 ) {
+			prev = cur;
+			cur = cur->next;
+		}
+		cur = create_item (p);	
+		prev->next = cur;
+	}
+}
+
+
+
+PolizList:: PolizList ()
+{
+	first = 0;
+}
+
+
+PolizList:: ~PolizList ()
+{
+	PolizItem * cur = first;
+
+	while ( cur != 0 ) {
+		first = cur;
+		cur = cur->next;	
+		delete first;
+	}
+}
+
+
+
+void PolizList:: print ()
+{
+	PolizItem * cur = first;
+	
+	printf ("Print PolizList:\n");
+
+	while ( cur != 0 ) {
+		cur->p->print ();	
+		cur = cur->next;
+	}
+
+	printf ("\nEnd of PolizList.\n");
+}
+
+
