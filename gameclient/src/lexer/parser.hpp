@@ -4,6 +4,7 @@
 
 #include "lexer.hpp"
 #include "tables.hpp"
+#include "rpn.hpp"
 
 
 class Parser {
@@ -38,6 +39,9 @@ class Parser {
 	
 public:
 	Parser ();
+	~Parser ();
+
+	PolizList rpn;
 
 	void analyze (LexList * ll);
 };

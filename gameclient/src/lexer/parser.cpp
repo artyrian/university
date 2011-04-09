@@ -8,6 +8,11 @@ Parser:: Parser ()
 }
 
 
+Parser:: ~Parser ()
+{
+}
+
+
 int Parser:: look (type_of_lex type_lex, const type_of_lex * table)
 {
 	int i = 1;
