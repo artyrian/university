@@ -308,6 +308,7 @@ void PolizTest:: print () const
 PolizItem * PolizList:: create_item (PolizElem * p)
 {
 	PolizItem * tmp = new PolizItem;
+	tmp->number = size ++; 
 	tmp->p = p;
 	tmp->next = 0;
 
@@ -335,10 +336,28 @@ void PolizList:: add_to_list (PolizElem * p)
 }
 
 
+int PolizList:: get_size ()
+{
+	return size;
+}
+
+
+void PolizList:: add_to_list (PolizElem * p, int place)
+{
+	PolizItem * cur = first;
+
+	while ( cur->number != place ) {
+		cur = cur->next;
+	}
+
+	cur->p = p;
+}
+
 
 PolizList:: PolizList ()
 {
 	first = 0;
+	size = 1;
 }
 
 
@@ -354,7 +373,6 @@ PolizList:: ~PolizList ()
 }
 
 
-
 void PolizList:: print ()
 {
 	PolizItem * cur = first;
@@ -362,11 +380,11 @@ void PolizList:: print ()
 	printf ("Print PolizList:\n");
 
 	while ( cur != 0 ) {
+		printf ("%d: ", cur->number);
 		cur->p->print ();	
 		cur = cur->next;
+		printf ("\n");
 	}
 
 	printf ("\nEnd of PolizList.\n");
 }
-
-

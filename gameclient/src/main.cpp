@@ -10,7 +10,6 @@ int main (int argc, char ** argv)
 			LexList	ll;
 
 			ll.fill (argv [1]);
-			ll.print ();
 
 			Parser pars;
 

@@ -23,7 +23,11 @@ class Parser {
 	void S ();
 
 	void ifthen ();
+	void create_if_labels ();
+	void fill_if_labels (int p1);
 	void whiledo ();
+	void create_while_labels ();
+	void fill_while_labels (int p1, int p2);
 	void array ();
 	void assign ();
 	void lparen ();

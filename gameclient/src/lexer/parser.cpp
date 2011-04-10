@@ -517,10 +517,9 @@ void Parser:: ifthen ()
 
 	D ();
 
-	printf ("POLIZ_LABEL\t");
-	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_LABEL)) );
-	printf ("POLIZ_FGO\t");
-	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_FGO)) );
+	int place1 = rpn.get_size ();
+
+	create_if_labels ();
 
 	if ( cur_lex.type == LEX_THEN ) {
 		get_lex ();
@@ -530,7 +529,27 @@ void Parser:: ifthen ()
 		throw LexException ("Expected 'then'", cur_lex);
 	}
 
+	fill_if_labels (place1);
+}
+
+
+void Parser:: create_if_labels ()
+{
+	printf ("POLIZ_LABEL\t");
+	rpn.add_to_list ( new PolizTest (0) );
+
+	printf ("POLIZ_FGO\t");
+	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_FGO)) );
+}
+
+
+void Parser:: fill_if_labels (int p1)
+{
 	printf ("[<--]\t");
+	rpn.add_to_list ( 
+		new PolizTest ( Lex (0, POLIZ_LABEL, rpn.get_size ())),
+	  	p1 
+	);
 }
 
 
@@ -540,15 +559,15 @@ void Parser:: whiledo ()
 		throw LexException ("Must be while. Source code", cur_lex);
 	}
 	
+	int place1 = rpn.get_size ();
 
 	get_lex ();
 
 	D ();
 
-	printf ("POLIZ_LABEL\t");
-	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_LABEL)) );
-	printf ("POLIZ_FGO\t");
-	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_FGO)) );
+	int place2 = rpn.get_size ();
+
+	create_while_labels ();
 
 	if ( cur_lex.type == LEX_DO ) {
 		get_lex ();
@@ -558,10 +577,33 @@ void Parser:: whiledo ()
 		throw LexException ("Expected 'do'.", cur_lex);
 	}
 
-	printf ("P_L2\t");
-	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_LABEL)) );
+	fill_while_labels (place1, place2);
+}
+
+
+void Parser:: create_while_labels ()
+{
+	printf ("POLIZ_LABEL\t");
+	rpn.add_to_list ( new PolizTest (0) );
+
+	printf ("POLIZ_FGO\t");
+	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_FGO)) );
+}
+
+
+void Parser:: fill_while_labels (int p1, int p2)
+{
+	printf ("[<--]\t");
+	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_LABEL, p1)));
+
 	printf ("P_GO\t");
 	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_GO)) );
+
+	printf ("[<--]\t");
+	rpn.add_to_list ( 
+		new PolizTest (Lex (0, POLIZ_LABEL, rpn.get_size ())), 
+		p2
+	);
 }
 
 
@@ -614,7 +656,9 @@ void Parser:: gotolabel ()
 	}
 	
 	printf ("P_L\t");
+	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_LABEL)) );
 	printf ("P_GO\t");
+	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_GO)) );
 }
 
 

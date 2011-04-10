@@ -22,6 +22,7 @@ public:
 class PolizElem;
 
 struct PolizItem {
+	int number;
 	PolizElem * p;
 	PolizItem * next;
 };
@@ -112,13 +113,17 @@ public:
 };
 */
 
+
 class PolizList {
 	PolizItem * first;
 	PolizItem * create_item (PolizElem * p);
+	int size;
 public:
 	PolizList ();
 	~PolizList ();
 	void add_to_list (PolizElem * p);
+	void add_to_list (PolizElem * p, int place);
+	int get_size ();
 	void print ();
 };
 
