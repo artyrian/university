@@ -32,6 +32,9 @@ class Parser {
 	void stringelem ();
 	void gotolabel ();
 	void body ();
+	void arg0 ();
+	void arg1 ();
+	void arg2 ();
 
 	
 	void get_lex ();

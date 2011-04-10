@@ -61,7 +61,8 @@ void Parser:: O ()
 
 	B ();
 
-	printf ("P_NOP\t");
+	printf ("P_NOP\t\n");
+	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_NOP)) );
 }
 
 
@@ -98,6 +99,7 @@ void Parser:: C ()
 	}
 	else if ( cur_lex.type == LEX_ID ) {
 		printf ("P_ID\t");
+		rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_ADDRESS)) );
 		get_lex ();
 		assign ();
 	}
@@ -127,16 +129,19 @@ void Parser:: C ()
 
 void Parser:: D ()
 {
+
 	E ();
 
 	if (	cur_lex.type == LEX_EQ || 
 		cur_lex.type == LEX_GREATER || 
 		cur_lex.type == LEX_LESS) 
 	{
+		Lex p_lex = cur_lex;
 		get_lex ();
 		E ();
 
 		printf ("P___EQ/GREATER/LESS\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 }
 
@@ -149,10 +154,12 @@ void Parser:: E ()
 		cur_lex.type == LEX_MINUS || 
 		cur_lex.type == LEX_OR) 
 	{
+		Lex p_lex = cur_lex;
 		get_lex ();
 		F ();
 
 		printf ("P___PLUS/MINUS/OR\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 }
 
@@ -165,10 +172,12 @@ void Parser:: F ()
 		cur_lex.type == LEX_DIVISION || 
 		cur_lex.type == LEX_AND) 
 	{
+		Lex p_lex = cur_lex;
 		get_lex ();
 		G ();
 
 		printf ("P___MUL/DIV/AND\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 }
 
@@ -176,17 +185,29 @@ void Parser:: F ()
 void Parser:: G ()
 {
 	if ( cur_lex.type == LEX_ID ) {
+		Lex p_lex  = cur_lex;
+
 		get_lex ();	
+
 		printf ("P_ID\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_NUM ) {
+		Lex p_lex  = cur_lex;
+
 		get_lex ();	
+
 		printf ("P_NUM\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_NEG ) {
+		Lex p_lex  = cur_lex;
+
 		get_lex ();
+
 		G ();
 		printf ("P_NEG");	// must be NEG!
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_LPAREN ) {
 		lparen ();
@@ -211,74 +232,55 @@ void Parser:: G ()
 void Parser:: W ()
 {
 	if ( cur_lex.type == LEX_BUY ) {
-		get_lex ();
+		Lex p_lex  = cur_lex;
 
-		lparen ();
-
-		D ();
-
-		comma ();
-
-		D ();
-
-		rparen ();
+		arg2 ();
 
 		printf ("P_BUY(2)\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_SELL ) {
-		get_lex ();
+		Lex p_lex  = cur_lex;
 
-		lparen ();
-
-		D ();
-
-		comma ();
-
-		D ();
-
-		rparen ();
+		arg2 ();
 
 		printf ("P_SELL(2)\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_PROD ) {
-		get_lex ();
+		Lex p_lex  = cur_lex;
 
-		lparen ();
-
-		D ();
-
-		rparen ();
+		arg1 ();
 
 		printf ("P_PROD(1)\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_BUILD ) {
-		get_lex ();
+		Lex p_lex  = cur_lex;
 
-		lparen ();
-
-		rparen ();
+		arg0 ();
 
 		printf ("P_BUILD(0)\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if (cur_lex.type == LEX_TURN ) {
-		get_lex ();
+		Lex p_lex  = cur_lex;
 
-		lparen ();
-
-		rparen ();
+		arg0 ();
 
 		printf ("P_TURN(0)\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if (cur_lex.type == LEX_PRINT ) {
+		Lex p_lex  = cur_lex;
 		get_lex ();
 
 		lparen ();
-
 		S ();
-
 		rparen ();
 
 		printf ("P_PRINT(x)\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else {
 		throw LexException ("Syntax error. Not allowed expression.", cur_lex);
@@ -289,159 +291,140 @@ void Parser:: W ()
 void Parser:: Z ()
 {
 	if ( cur_lex.type == LEX_CUR_MONTH ) {
-		get_lex ();
-		lparen ();
+		Lex p_lex  = cur_lex;
 
-		rparen ();
+		arg0 ();
 
 		printf ("P_CUR_MONTH\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_PLAYERS ) {
-		get_lex ();
-		lparen ();
+		Lex p_lex  = cur_lex;
+		
+		arg0 ();
 
-		rparen ();
 		printf ("P_PLAYERS\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_ACTIVE_PLAYERS ) {
-		get_lex ();
-		lparen ();
+		Lex p_lex  = cur_lex;
 
-		rparen ();
+		arg0 ();
 
 		printf ("P_ACTIVE_PLAYERS\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_SUPPLY ) {
-		get_lex ();
-		lparen ();
+		Lex p_lex  = cur_lex;
 
-		rparen ();
+		arg0 ();
 
 		printf ("P_SUPPLY\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_RAW_PRICE ) {
-		get_lex ();
-		lparen ();
+		Lex p_lex  = cur_lex;
 
-		rparen ();
+		arg0 ();
 
 		printf ("P_RAW_PRICE\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_DEMAND ) {
-		get_lex ();
-		lparen ();
+		Lex p_lex  = cur_lex;
 
-		rparen ();
+		arg0 ();
 
 		printf ("P_DEMAND\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_PRODUCTION_PRICE ) {
-		get_lex ();
-		lparen ();
+		Lex p_lex  = cur_lex;
 
-		rparen ();
+		arg0 ();
 
 		printf ("P_PRODUCTION_PRICE\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_MONEY ) {
-		get_lex ();
-		lparen ();
+		Lex p_lex  = cur_lex;
 
-		D ();
-
-		rparen ();
+		arg1 ();
 
 		printf ("P_MONEY(1)\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_RAW ) {
-		get_lex ();
-		lparen ();
+		Lex p_lex  = cur_lex;
 
-		D ();
-
-		rparen ();
+		arg1 ();
 
 		printf ("P_RAW(1)\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_PRODUCTION ) {
-		get_lex ();
-		lparen ();
+		Lex p_lex  = cur_lex;
 
-		D ();
-
-		rparen ();
+		arg1 ();
 
 		printf ("P_PRODUCTION(1)\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_FACTORIES ) {
-		get_lex ();
-		lparen ();
+		Lex p_lex  = cur_lex;
 
-		D ();
-
-		rparen ();
+		arg1 ();
 
 		printf ("P_FACTORIES(1)\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_AUTO_FACTORIES ) {
-		get_lex ();
-		lparen ();
+		Lex p_lex  = cur_lex;
 
-		D ();
-
-		rparen ();
+		arg1 ();
 
 		printf ("P_AUTOFACTORIES(1)\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_MANUFACTURED ) {
-		get_lex ();
-		lparen ();
+		Lex p_lex  = cur_lex;
 
-		D ();
-
-		rparen ();
-
+		arg1 ();
+		
 		printf ("P_MANUFACTURED(1)\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_RESULT_RAW_SOLD ) {
-		get_lex ();
-		lparen ();
+		Lex p_lex  = cur_lex;
 
-		D ();
-
-		rparen ();
+		arg1 ();
 
 		printf ("P_RESULT_RAW_SOLD(1)\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_RESULT_RAW_PRICE ) {
-		get_lex ();
-		lparen ();
+		Lex p_lex  = cur_lex;
 
-		D ();
-
-		rparen ();
+		arg1 ();
 
 		printf ("P_RESULT_RAW_PRICE(1)\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_RESULT_PROD_BOUGHT ) {
-		get_lex ();
-		lparen ();
+		Lex p_lex  = cur_lex;
 
-		D ();
-
-		rparen ();
+		arg1 ();
 
 		printf ("P_RESULT_PROD_BOUGHT(1)\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else if ( cur_lex.type == LEX_RESULT_PROD_PRICE ) {
-		get_lex ();
-		lparen ();
+		Lex p_lex  = cur_lex;
 
-		D ();
-
-		rparen ();
+		arg1 ();
 
 		printf ("P_RESULT_PROD_PRICE(1)\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else 
 	{
@@ -485,9 +468,11 @@ void Parser:: stringelem ()
 void Parser:: assign ()
 {
 	if ( cur_lex.type == LEX_ASSIGN ) {
+		Lex p_lex  = cur_lex;
 		get_lex ();
 		D ();
 		printf ("P_ASSIGN\t");
+		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else {
 		throw LexException ("Expected assign", cur_lex);
@@ -528,13 +513,14 @@ void Parser:: ifthen ()
 		throw LexException ("Must be if there. Source code.", cur_lex);
 	}
 
-
 	get_lex ();
 
 	D ();
 
-	printf ("P_L\t");
-	printf ("P_GO_FALSE\t");
+	printf ("POLIZ_LABEL\t");
+	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_LABEL)) );
+	printf ("POLIZ_FGO\t");
+	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_FGO)) );
 
 	if ( cur_lex.type == LEX_THEN ) {
 		get_lex ();
@@ -559,8 +545,10 @@ void Parser:: whiledo ()
 
 	D ();
 
-	printf ("P_L1\t");
-	printf ("P_GO_FALSE\t");
+	printf ("POLIZ_LABEL\t");
+	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_LABEL)) );
+	printf ("POLIZ_FGO\t");
+	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_FGO)) );
 
 	if ( cur_lex.type == LEX_DO ) {
 		get_lex ();
@@ -571,7 +559,9 @@ void Parser:: whiledo ()
 	}
 
 	printf ("P_L2\t");
+	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_LABEL)) );
 	printf ("P_GO\t");
+	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_GO)) );
 }
 
 
@@ -582,6 +572,8 @@ void Parser:: array ()
 	}
 	
 	printf ("P_ID_ARR");
+	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_ID_ARRAY)) );
+
 	get_lex ();
 
 	if ( cur_lex.type == LEX_LBRACKET ) {
@@ -602,6 +594,7 @@ void Parser:: array ()
 	}
 	
 	printf ("P_ARR\t");
+	rpn.add_to_list ( new PolizTest (Lex (0, LEX_ARRAY)) );
 }
 
 
@@ -629,4 +622,31 @@ void Parser:: body () {
 	get_lex ();
 	B ();
 	get_lex ();
+}
+
+
+void Parser:: arg0 ()
+{
+	lparen ();
+	rparen ();
+}
+
+
+void Parser:: arg1 ()
+{
+	get_lex ();
+	lparen ();
+	D ();
+	rparen ();
+}
+
+
+void Parser:: arg2 ()
+{
+	get_lex ();
+	lparen ();
+	D ();
+	comma ();
+	D ();
+	rparen ();
 }

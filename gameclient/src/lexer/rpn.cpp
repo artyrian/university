@@ -293,8 +293,19 @@ int Poliz:: get_size ()
 }
 */
 
+PolizTest:: PolizTest (const Lex & lex)
+{
+	l = lex;
+}
 
-PolizItem * create_item (PolizElem * p)
+
+void PolizTest:: print () const
+{
+	l.print ();
+}
+
+
+PolizItem * PolizList:: create_item (PolizElem * p)
 {
 	PolizItem * tmp = new PolizItem;
 	tmp->p = p;
@@ -305,7 +316,7 @@ PolizItem * create_item (PolizElem * p)
 
 
 
-void PolizList:: put_lex (PolizElem * p)
+void PolizList:: add_to_list (PolizElem * p)
 {
 	PolizItem * cur = first;
 

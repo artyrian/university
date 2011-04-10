@@ -32,19 +32,22 @@ public:
 	virtual ~PolizElem ();
 	virtual void evaluate (	PolizItem ** stack, 
 				PolizItem ** cur_cmd) const = 0;
-	virtual print () const = 0;
+	virtual void print () const {};
 protected:
 	static void 		push (PolizItem ** stack, PolizElem * elem);
 	static PolizElem * 	pop (PolizItem ** stack);
 };
 
 
-class PolizTest {
-
+class PolizTest: public PolizElem {
+	Lex	l;
 public:
-	void evaluate (PolizItem ** stack, PolizItem ** cur_cmd) const;
-	void printf () const;
-}
+	virtual void evaluate (	PolizItem ** stack, 
+				PolizItem ** cur_cmd) const {};
+//	PolizTest (type_of_lex type);
+	PolizTest (const Lex & lex);
+	void print () const;
+};
 
 
 class PolizConst : public PolizElem  {
@@ -115,7 +118,7 @@ class PolizList {
 public:
 	PolizList ();
 	~PolizList ();
-	void put_lex (PolizElem * p);
+	void add_to_list (PolizElem * p);
 	void print ();
 };
 
