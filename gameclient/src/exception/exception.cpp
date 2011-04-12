@@ -34,6 +34,7 @@ void SymbolException:: print () const
 }
 
 
+//----------------------------------------------------------
 
 
 LexException:: LexException (const char * s, const Lex & l)
@@ -61,3 +62,18 @@ void LexException:: print () const
 	lex.print ();
 	printf (", str number:%d.\n", lex.strnum);
 }
+
+
+//----------------------------------------------------------
+
+PolizExceptionNotInt:: PolizExceptionNotInt (PolizElem * op)
+{
+}
+
+
+PolizExceptionNotLabel:: PolizExceptionNotLabel (PolizElem * op)
+{
+}
+
+//----------------------------------------------------------
+

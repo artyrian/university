@@ -62,7 +62,7 @@ void Parser:: O ()
 	B ();
 
 	printf ("P_NOP\t\n");
-	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_NOP)) );
+	rpn.add_to_list ( new PolizNop );
 }
 
 
@@ -98,7 +98,7 @@ void Parser:: C ()
 		whiledo ();
 	}
 	else if ( cur_lex.type == LEX_ID ) {
-		printf ("P_ID\t");
+		printf ("P_ADDRESS\t");
 		rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_ADDRESS)) );
 		get_lex ();
 		assign ();
@@ -136,12 +136,12 @@ void Parser:: D ()
 		cur_lex.type == LEX_GREATER || 
 		cur_lex.type == LEX_LESS) 
 	{
-		Lex p_lex = cur_lex;
+		type_of_lex type = cur_lex.type;
+
 		get_lex ();
 		E ();
 
-		printf ("P___EQ/GREATER/LESS\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		add_switch_D (type);
 	}
 }
 
@@ -154,12 +154,12 @@ void Parser:: E ()
 		cur_lex.type == LEX_MINUS || 
 		cur_lex.type == LEX_OR) 
 	{
-		Lex p_lex = cur_lex;
+		type_of_lex type = cur_lex.type;
+
 		get_lex ();
 		F ();
 
-		printf ("P___PLUS/MINUS/OR\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		add_switch_E (type);
 	}
 }
 
@@ -172,12 +172,12 @@ void Parser:: F ()
 		cur_lex.type == LEX_DIVISION || 
 		cur_lex.type == LEX_AND) 
 	{
-		Lex p_lex = cur_lex;
+		type_of_lex type = cur_lex.type;
+
 		get_lex ();
 		G ();
 
-		printf ("P___MUL/DIV/AND\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		add_switch_F (type);
 	}
 }
 
@@ -206,8 +206,8 @@ void Parser:: G ()
 		get_lex ();
 
 		G ();
-		printf ("P_NEG");	// must be NEG!
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		printf ("P_NEG");
+		rpn.add_to_list ( new PolizFunNeg () );
 	}
 	else if ( cur_lex.type == LEX_LPAREN ) {
 		lparen ();
@@ -424,6 +424,7 @@ void Parser:: Z ()
 		arg1 ();
 
 		printf ("P_RESULT_PROD_PRICE(1)\t");
+	
 		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else 
@@ -694,3 +695,61 @@ void Parser:: arg2 ()
 	D ();
 	rparen ();
 }
+
+
+void Parser:: add_switch_D (type_of_lex type) 
+{
+	printf ("P___EQ/GREATER/LESS\t");
+
+	if ( type == LEX_EQ ) {
+		rpn.add_to_list ( new PolizFunEq () );
+	}
+	else if ( type == LEX_GREATER ) {
+		rpn.add_to_list ( new PolizFunGreater () );
+	}
+	else if ( type == LEX_LESS ) {
+		rpn.add_to_list ( new PolizFunLess () );
+	}
+	else {
+		throw ("Must be EQ/GREATER/LESS. Source code");
+	}
+}
+
+
+void Parser:: add_switch_E (type_of_lex type)
+{
+	printf ("P___PLUS/MINUS/OR\t");
+
+	if ( type == LEX_PLUS ) {
+		rpn.add_to_list ( new PolizFunPlus () );
+	}
+	else if ( type == LEX_MINUS ) {
+		rpn.add_to_list ( new PolizFunMinus () );
+	}
+	else if ( type == LEX_OR) {
+		rpn.add_to_list ( new PolizFunOr () );
+	}
+	else {
+		throw ("Must be PLUS/MINUS/OR. Source error.");
+	}
+}
+
+
+void Parser:: add_switch_F (type_of_lex type)
+{
+	printf ("P___MUL/DIV/AND\t");
+
+	if ( type == LEX_MULTIPLY ) {
+		rpn.add_to_list ( new PolizFunMul () );
+	}	
+	else if ( type == LEX_DIVISION ) {
+		rpn.add_to_list ( new PolizFunDiv () );
+	}
+	else if ( type == LEX_AND ) {
+		rpn.add_to_list ( new PolizFunAnd () );
+	}
+	else {
+		throw ("Must be (MUL/DIV/AND. Source error.");
+	}
+}
+

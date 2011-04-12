@@ -86,7 +86,7 @@ public:
 
 
 class TableStorageTypeLex: public StorageTypeLex {
-	StorageTypeLex *s;
+	StorageTypeLex * s;
 	int		size;
 	int		top;
 

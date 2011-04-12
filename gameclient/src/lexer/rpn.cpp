@@ -1,66 +1,60 @@
 #include "rpn.hpp"
 #include "tables.hpp"
+#include "../exception/exception.hpp"
 
-/*
-template <class T>
-Stack <T>:: Stack ()
+
+Stack:: Stack ()
 {
-	max_size = 100;
-	top = 0;
+	first = 0;
+	size = 1;
 }
 
 
-template <class T>
-void Stack <T>:: reset ()
+Stack:: ~Stack ()
 {
-	top = 0;
-}
+	PolizItem * cur = first;
 
-
-template <class T>
-void Stack <T>:: push (T i)
-{
-	if  ( !is_full () ) {
-		s [top] = i;
-		++ top;
-	}
-	else {
-		throw "Stack is full";
+	while (first != 0) {
+		cur = first;
+		first = first->next;
+		delete cur; 
 	}
 }
 
 
-
-template <class T>
-T Stack <T>:: pop ()
+PolizItem * Stack:: create_item (PolizElem * cur_cmd)
 {
-	if ( !is_empty () ) {
-		-- top;
-		return s [top];
-	}
-	else {
-		throw "Stack is empty";
-	}
+	return new PolizItem (size ++, cur_cmd, first);
 }
 
 
-template <class T>
-bool Stack <T>:: is_empty ()
+void Stack:: push (PolizElem * cur_cmd)
 {
-	return ( top == 0);
+	first = create_item (cur_cmd);
 }
 
 
-template <class T>
-bool Stack <T>:: is_full ()
+PolizElem * Stack:: pop ()
 {
-	return ( top == max_size );
-}
-*/
+	PolizItem * cur = first;
+	PolizElem * elem = first->p;
 
-////
-////
-////
+	first = first->next;
+	delete cur;
+
+	return elem;
+}
+
+
+//----------------------------------------------------------
+
+
+PolizItem:: PolizItem (int n, PolizElem * ptr, PolizItem * p_next)
+	: number (n), p (ptr), next (p_next)
+{
+}
+
+//----------------------------------------------------------
 
 PolizElem:: ~PolizElem ()
 {
@@ -68,7 +62,6 @@ PolizElem:: ~PolizElem ()
 
 void PolizElem:: push (PolizItem ** stack, PolizElem * cur_cmd)
 {
-
 }
 
 
@@ -77,6 +70,25 @@ PolizElem * PolizElem:: pop (PolizItem ** stack)
 	return 0;	
 }
 
+void PolizElem:: print () const
+{
+	printf ("! Unkown POLIZ print.");
+}
+
+//----------------------------------------------------------
+
+void PolizNop:: 
+evaluate (PolizItem ** stack, PolizItem ** cur_cmd) const
+{
+}
+
+
+void PolizNop:: print () const
+{
+	printf ("! POLIZ_NOP");
+}
+
+//----------------------------------------------------------
 
 PolizElem * PolizConst:: clone () const
 {
@@ -88,15 +100,9 @@ void PolizConst:: evaluate ( PolizItem ** stack, PolizItem ** cur_cmd) const
 {
 	push (stack, clone ());
 	*cur_cmd = (* cur_cmd)->next;
-/*
-	PolizElem * res = evaluate_fun (stack);
-	if ( res ) {
-		push (stack, res);
-	}
-	* cur_cmd = (* cur_cmd)->next;
-*/
 }
 
+//----------------------------------------------------------
 
 PolizInt:: PolizInt (int a)
 {
@@ -120,6 +126,11 @@ int PolizInt:: get () const
 	return value;
 }
 
+void PolizInt:: print () const
+{
+	printf ("! POLIZ_INT (v. = %d)", value);
+}
+//----------------------------------------------------------
 
 PolizLabel:: PolizLabel (PolizItem * a)
 {
@@ -143,8 +154,8 @@ PolizItem * PolizLabel:: get () const
 	return value;
 }
 
+//----------------------------------------------------------
 
-/*
 PolizOpGo:: PolizOpGo ()
 {
 }
@@ -155,54 +166,422 @@ PolizOpGo:: ~ PolizOpGo ()
 }
 
 
-void PolizOpGo:: evaluate ( PolizItem ** stack,
-			    PolizItem ** cur_cmd)
-const
+void PolizOpGo :: 
+evaluate ( PolizItem ** stack, PolizItem ** cur_cmd) const
 {
 	PolizElem * operand1 = pop (stack);
+
 	PolizLabel * lab = dynamic_cast<PolizLabel *>(operand1);
-	if ( !lab ) throw PolizExNoLabel (operand1);
+
+	if ( !lab ) {
+		throw PolizExceptionNotLabel (operand1);
+	}
+
 	PolizItem * addr = lab->get ();
+
 	* cur_cmd = addr;
+
 	delete operand1;
 }
+
+//----------------------------------------------------------
+
+void PolizFunction:: 
+evaluate (PolizItem ** stack, PolizItem ** cur_cmd) const
+{
+	PolizElem * res = evaluate_fun (stack);
+
+	if ( res != 0 ) {
+		push (stack, res);
+	}
+
+	(* cur_cmd) = (* cur_cmd)->next;
+}
+
+PolizFunction:: ~PolizFunction ()
+{
+}
+
+//----------------------------------------------------------
+
+/*
+PolizFunEq:: PolizFunEq ()
+{
+}
 */
+
+PolizElem * PolizFunEq:: evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
+
+	if ( ! i1 ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+
+	PolizElem * operand2 = pop (stack);
+
+	PolizInt * i2 = dynamic_cast <PolizInt*> (operand2);
+
+	if ( !i2 ) {
+		throw PolizExceptionNotInt (operand2);
+	}
+
+	int res = i1->get() ==  i2->get();
+
+	delete operand1;
+	delete operand2;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunEq:: print () const
+{
+	printf ("! POLIZ_EQ");
+}
+
+
+/*
+PolizFunGreater:: PolizFunGreater ()
+{
+}
+*/
+
+
+PolizElem * PolizFunGreater:: evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
+
+	if ( ! i1 ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+
+	PolizElem * operand2 = pop (stack);
+
+	PolizInt * i2 = dynamic_cast <PolizInt*> (operand2);
+
+	if ( !i2 ) {
+		throw PolizExceptionNotInt (operand2);
+	}
+
+	int res = i1->get() > i2->get();
+
+	delete operand1;
+	delete operand2;
+
+	return new PolizInt (res);
+}
+
+void PolizFunGreater:: print () const
+{
+	printf ("! POLIZ_GREATER");
+}
+
+/*
+PolizFunLess:: PolizFunLess ()
+{
+}
+*/
+
+
+PolizElem * PolizFunLess:: evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
+
+	if ( ! i1 ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+
+	PolizElem * operand2 = pop (stack);
+
+	PolizInt * i2 = dynamic_cast <PolizInt*> (operand2);
+
+	if ( !i2 ) {
+		throw PolizExceptionNotInt (operand2);
+	}
+
+	int res = i1->get() < i2->get();
+
+	delete operand1;
+	delete operand2;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunLess:: print () const
+{
+	printf ("! POLIZ_LESS");
+}
 
 /*
 PolizFunPlus:: PolizFunPlus ()
 {
 }
+*/
 
-PolizFunPlus:: ~PolizFunPlus ()
-{
-}
 
-PolizFunPlus:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunPlus:: evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
-	PolizLabel *i1 = dynamic_cast<PolizInt *>(operand1);
-	if ( ! i1 ) throw PolizExNotInt (operand1);
-}
-lizElem *operand2 = Pop(stack);
-	PolizLabel *i2 = dynamic_cast<PolizInt*>(operand2);
-	if(!i2) throw PolizExNotInt(operand2);
-	int res = i1->Get() + i2->Get();
+	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
+
+	if ( ! i1 ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+
+	PolizElem * operand2 = pop (stack);
+
+	PolizInt * i2 = dynamic_cast <PolizInt*> (operand2);
+
+	if ( !i2 ) {
+		throw PolizExceptionNotInt (operand2);
+	}
+
+	int res = i1->get() + i2->get();
+
 	delete operand1;
 	delete operand2;
-	return new PolizInt(res);
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunPlus:: print () const
+{
+	printf ("! POLIZ_PLUS");
+}
+
+/*
+PolizFunMinus:: PolizFunMinus ()
+{
+}
+*/
+
+PolizElem * PolizFunMinus:: evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
+
+	if ( ! i1 ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+
+	PolizElem * operand2 = pop (stack);
+
+	PolizInt * i2 = dynamic_cast <PolizInt*> (operand2);
+
+	if ( !i2 ) {
+		throw PolizExceptionNotInt (operand2);
+	}
+
+	int res = i1->get() - i2->get();
+
+	delete operand1;
+	delete operand2;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunMinus:: print () const
+{
+	printf ("! POLIZ_MINUS");
+}
+
+/*
+PolizFunOr:: PolizFunOr ()
+{
 }
 */
 
 
+PolizElem * PolizFunOr:: evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
 
-////
-////
-////
+	if ( ! i1 ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
 
+	PolizElem * operand2 = pop (stack);
+
+	PolizInt * i2 = dynamic_cast <PolizInt*> (operand2);
+
+	if ( !i2 ) {
+		throw PolizExceptionNotInt (operand2);
+	}
+
+	int res = i1->get() || i2->get();
+
+	delete operand1;
+	delete operand2;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunOr:: print () const
+{
+	printf ("! POLIZ_OR");
+}
+
+/*
+PolizFunMul:: PolizFunMul ()
+{
+}
+*/
+
+PolizElem * PolizFunMul:: evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
+
+	if ( ! i1 ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+
+	PolizElem * operand2 = pop (stack);
+
+	PolizInt * i2 = dynamic_cast <PolizInt*> (operand2);
+
+	if ( !i2 ) {
+		throw PolizExceptionNotInt (operand2);
+	}
+
+	int res = i1->get() * i2->get();
+
+	delete operand1;
+	delete operand2;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunMul:: print () const
+{
+	printf ("! POLIZ_MUL");
+}
+
+/*
+PolizFunDiv:: PolizFunDiv()
+{
+}
+*/
+
+
+PolizElem * PolizFunDiv:: evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
+
+	if ( ! i1 ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+
+	PolizElem * operand2 = pop (stack);
+
+	PolizInt * i2 = dynamic_cast <PolizInt*> (operand2);
+
+	if ( !i2 ) {
+		throw PolizExceptionNotInt (operand2);
+	}
+
+	int res = i1->get() / i2->get();
+
+	delete operand1;
+	delete operand2;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunDiv:: print () const
+{
+	printf ("! POLIZ_DIV");
+}
+
+/*
+PolizFunAnd:: PolizFunAnd ()
+{
+}
+*/
+
+
+PolizElem * PolizFunAnd:: evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
+
+	if ( ! i1 ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+
+	PolizElem * operand2 = pop (stack);
+
+	PolizInt * i2 = dynamic_cast <PolizInt*> (operand2);
+
+	if ( !i2 ) {
+		throw PolizExceptionNotInt (operand2);
+	}
+
+	int res = i1->get () && i2->get ();
+
+	delete operand1;
+	delete operand2;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunAnd:: print () const
+{
+	printf ("! POLIZ_AND");
+}
+
+
+
+PolizElem * PolizFunNeg:: evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand = pop (stack);
+	PolizInt * i = dynamic_cast<PolizInt *>(operand);
+
+	if ( ! i ) {
+		throw PolizExceptionNotInt (operand);
+	}
+
+	int res = ! i->get ();
+	
+	delete operand;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunNeg:: print () const
+{
+	printf ("! POLIZ_NEG");
+}
+
+//----------------------------------------------------------
+////
+////
+////
+//----------------------------------------------------------
 
 PolizTest:: PolizTest (const Lex & lex)
 {
 	l = lex;
+}
+
+
+void PolizTest:: 
+evaluate (PolizItem ** stack, PolizItem ** cur_cmd) const 
+{
 }
 
 
@@ -211,15 +590,11 @@ void PolizTest:: print () const
 	l.print ();
 }
 
+//----------------------------------------------------------
 
-PolizItem * PolizList:: create_item (PolizElem * p)
+PolizItem * PolizList:: create_item (PolizElem * cur_cmd)
 {
-	PolizItem * tmp = new PolizItem;
-	tmp->number = size ++; 
-	tmp->p = p;
-	tmp->next = 0;
-
-	return tmp;
+	return new PolizItem (size ++, cur_cmd, 0);
 }
 
 
@@ -295,3 +670,5 @@ void PolizList:: print ()
 
 	printf ("\nEnd of PolizList.\n");
 }
+
+//----------------------------------------------------------

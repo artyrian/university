@@ -39,6 +39,9 @@ class Parser {
 	void arg0 ();
 	void arg1 ();
 	void arg2 ();
+	void add_switch_D (type_of_lex type);
+	void add_switch_E (type_of_lex type);
+	void add_switch_F (type_of_lex type);
 
 	
 	void get_lex ();
