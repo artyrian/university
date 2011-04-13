@@ -322,7 +322,7 @@ int TableStorageTypeLex:: put (const char * buf)
 
 int TableStorageTypeLex:: get_size () const
 {
-	return top;
+	return (top - 1);
 }
 
 

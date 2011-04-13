@@ -83,12 +83,15 @@ void LexList:: put_lex (const Lex & l)
 LexList:: LexList ()
 {
 	first = 0;
+	table = new TableLexem;
 }
 
 
 LexList:: ~LexList ()
 {
 	ListElem * cur = first;
+
+	delete table;
 
 	while ( cur != 0 ) {
 		first = cur;
@@ -100,7 +103,7 @@ LexList:: ~LexList ()
 
 void LexList:: fill (const char * path)
 {
-	Scanner la;
+	Scanner la (table);
 	ReadFrom rf (path);
 	Lex lex;
 
@@ -140,6 +143,12 @@ Lex LexList:: get_lex_from_list ()
 	else {
 		return Lex ();
 	}
+}
+
+
+TableLexem * LexList:: get_pointer_to_table ()
+{
+	return table;
 }
 
 
@@ -199,10 +208,10 @@ int Scanner::look (const char * buf, const char ** list)
 }
 
 
-Scanner:: Scanner ()
+Scanner:: Scanner (TableLexem * p_table)
 {
-	table = new TableLexem;
 	buffer = new Buffer;
+	table = p_table;
 
 	count_str = 1;
 	CS = H;
@@ -233,7 +242,6 @@ bool Scanner:: feed_symbol (int c)
 Scanner:: ~Scanner ()
 {
 	delete buffer;
-	delete table;
 }
 
 

@@ -39,6 +39,7 @@ class LexList {
 	ListElem *	first;
 	ListElem *	snd;
 
+	TableLexem *	table;
 
 	ListElem * create_elem (const Lex & l);
 	void put_lex (const Lex & l);
@@ -49,6 +50,8 @@ public:
 	void fill (const char * path);
 
 	Lex get_lex_from_list ();
+
+	TableLexem * get_pointer_to_table ();
 
 	void print ();
 };
@@ -82,7 +85,7 @@ class Scanner {
 	int isdelim (int c);
 	int look (const char * buf, const char ** list);
 public:
-	Scanner ();
+	Scanner (TableLexem * table);
 	bool feed_symbol (int);
 	~Scanner ();
 	Lex get_save_lex ();

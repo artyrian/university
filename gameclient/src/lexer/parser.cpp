@@ -42,6 +42,7 @@ void Parser:: get_lex ()
 void Parser:: analyze (LexList * ll)
 {
 	lexl = ll;
+	table = ll->get_pointer_to_table ();
 	printf ("Begin parse.\n");
 
 	get_lex ();
@@ -182,13 +183,11 @@ void Parser:: F ()
 void Parser:: G ()
 {
 	if ( cur_lex.type == LEX_ID ) {
-		//Lex p_lex = cur_lex;
 		int value = cur_lex.value;
 
 		get_lex ();	
 
 		printf ("P_ID\t");
-		//rpn.add_to_list ( new PolizTest (p_lex) );
 		int res = table->ident [value].get_value ();
 		rpn.add_to_list ( new PolizInt ( res ) ); 
 	}
@@ -201,8 +200,6 @@ void Parser:: G ()
 		rpn.add_to_list ( new PolizInt (value) );
 	}
 	else if ( cur_lex.type == LEX_NEG ) {
-		Lex p_lex  = cur_lex;
-
 		get_lex ();
 
 		G ();
@@ -232,44 +229,34 @@ void Parser:: G ()
 void Parser:: W ()
 {
 	if ( cur_lex.type == LEX_BUY ) {
-		Lex p_lex  = cur_lex;
-
 		arg2 ();
 
 		printf ("P_BUY(2)\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunBuy () );
 	}
 	else if ( cur_lex.type == LEX_SELL ) {
-		Lex p_lex  = cur_lex;
-
 		arg2 ();
 
 		printf ("P_SELL(2)\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunSell () );
 	}
 	else if ( cur_lex.type == LEX_PROD ) {
-		Lex p_lex  = cur_lex;
-
 		arg1 ();
 
 		printf ("P_PROD(1)\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunProd () );
 	}
 	else if ( cur_lex.type == LEX_BUILD ) {
-		Lex p_lex  = cur_lex;
-
 		arg0 ();
 
 		printf ("P_BUILD(0)\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunBuild () );
 	}
 	else if (cur_lex.type == LEX_TURN ) {
-		Lex p_lex  = cur_lex;
-
 		arg0 ();
 
 		printf ("P_TURN(0)\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunTurn () );
 	}
 	else if (cur_lex.type == LEX_PRINT ) {
 		Lex p_lex  = cur_lex;
@@ -283,7 +270,9 @@ void Parser:: W ()
 		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else {
-		throw LexException ("Syntax error. Not allowed expression.", cur_lex);
+		throw LexException ("Syntax error. Not allowed expression.", 
+			cur_lex
+		);
 	}
 }
 
@@ -291,76 +280,58 @@ void Parser:: W ()
 void Parser:: Z ()
 {
 	if ( cur_lex.type == LEX_CUR_MONTH ) {
-		Lex p_lex  = cur_lex;
-
 		arg0 ();
 
 		printf ("P_CUR_MONTH\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunCurMonth () );
 	}
 	else if ( cur_lex.type == LEX_PLAYERS ) {
-		Lex p_lex  = cur_lex;
-		
 		arg0 ();
 
 		printf ("P_PLAYERS\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunPlayers () );
 	}
 	else if ( cur_lex.type == LEX_ACTIVE_PLAYERS ) {
-		Lex p_lex  = cur_lex;
-
 		arg0 ();
 
 		printf ("P_ACTIVE_PLAYERS\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunActivePlayers () );
 	}
 	else if ( cur_lex.type == LEX_SUPPLY ) {
-		Lex p_lex  = cur_lex;
-
 		arg0 ();
 
 		printf ("P_SUPPLY\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunSupply () );
 	}
 	else if ( cur_lex.type == LEX_RAW_PRICE ) {
-		Lex p_lex  = cur_lex;
-
 		arg0 ();
 
 		printf ("P_RAW_PRICE\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunRawPrice () );
 	}
 	else if ( cur_lex.type == LEX_DEMAND ) {
-		Lex p_lex  = cur_lex;
-
 		arg0 ();
 
 		printf ("P_DEMAND\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunDemand () );
 	}
 	else if ( cur_lex.type == LEX_PRODUCTION_PRICE ) {
-		Lex p_lex  = cur_lex;
-
 		arg0 ();
 
 		printf ("P_PRODUCTION_PRICE\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunProductionPrice () );
 	}
 	else if ( cur_lex.type == LEX_MONEY ) {
-		Lex p_lex  = cur_lex;
-
 		arg1 ();
 
 		printf ("P_MONEY(1)\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunMoney () );
 	}
 	else if ( cur_lex.type == LEX_RAW ) {
-		Lex p_lex  = cur_lex;
-
 		arg1 ();
 
 		printf ("P_RAW(1)\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunRaw () );
 	}
 	else if ( cur_lex.type == LEX_PRODUCTION ) {
 		Lex p_lex  = cur_lex;
