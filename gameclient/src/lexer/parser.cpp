@@ -48,7 +48,7 @@ void Parser:: analyze (LexList * ll)
 	get_lex ();
 	O ();
 
-	printf ("Syntax analyze:\tOK.\n"); 
+	printf ("\nSyntax analyze:\tOK.\n"); 
 }
 
 
@@ -221,7 +221,9 @@ void Parser:: G ()
 	}
 	else
 	{
-		throw LexException ("Unknown symbol of expression.", cur_lex);
+		throw LexException ("Unknown symbol of expression.",
+			cur_lex
+		);
 	}
 
 } // G();
@@ -259,18 +261,15 @@ void Parser:: W ()
 		rpn.add_to_list ( new PolizFunTurn () );
 	}
 	else if (cur_lex.type == LEX_PRINT ) {
-		Lex p_lex  = cur_lex;
 		get_lex ();
 
 		lparen ();
 		S ();
 		rparen ();
-
-		printf ("P_PRINT(x)\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
 	}
 	else {
-		throw LexException ("Syntax error. Not allowed expression.", 
+		throw LexException (
+			"Syntax error. Not allowed expression.", 
 			cur_lex
 		);
 	}
@@ -334,73 +333,60 @@ void Parser:: Z ()
 		rpn.add_to_list ( new PolizFunRaw () );
 	}
 	else if ( cur_lex.type == LEX_PRODUCTION ) {
-		Lex p_lex  = cur_lex;
-
 		arg1 ();
 
 		printf ("P_PRODUCTION(1)\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunProduction () );
 	}
 	else if ( cur_lex.type == LEX_FACTORIES ) {
-		Lex p_lex  = cur_lex;
-
 		arg1 ();
 
 		printf ("P_FACTORIES(1)\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunFactories () );
 	}
 	else if ( cur_lex.type == LEX_AUTO_FACTORIES ) {
-		Lex p_lex  = cur_lex;
-
 		arg1 ();
 
 		printf ("P_AUTOFACTORIES(1)\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunAutoFactories () );
 	}
 	else if ( cur_lex.type == LEX_MANUFACTURED ) {
-		Lex p_lex  = cur_lex;
-
 		arg1 ();
 		
 		printf ("P_MANUFACTURED(1)\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunManufactured () );
 	}
 	else if ( cur_lex.type == LEX_RESULT_RAW_SOLD ) {
-		Lex p_lex  = cur_lex;
-
 		arg1 ();
 
 		printf ("P_RESULT_RAW_SOLD(1)\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunResultRawSold () );
 	}
 	else if ( cur_lex.type == LEX_RESULT_RAW_PRICE ) {
-		Lex p_lex  = cur_lex;
-
 		arg1 ();
 
 		printf ("P_RESULT_RAW_PRICE(1)\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunResultRawPrice () );
 	}
 	else if ( cur_lex.type == LEX_RESULT_PROD_BOUGHT ) {
-		Lex p_lex  = cur_lex;
-
 		arg1 ();
 
 		printf ("P_RESULT_PROD_BOUGHT(1)\t");
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunResultProdBought () );
 	}
 	else if ( cur_lex.type == LEX_RESULT_PROD_PRICE ) {
-		Lex p_lex  = cur_lex;
-
 		arg1 ();
 
 		printf ("P_RESULT_PROD_PRICE(1)\t");
 	
-		rpn.add_to_list ( new PolizTest (p_lex) );
+		rpn.add_to_list ( new PolizFunResultProdPrice () );
 	}
 	else 
 	{
-		throw LexException ("Not found function with return.", cur_lex);
+		throw LexException (
+			"Not found function with return.", 
+			cur_lex
+		);
 	}
 }
 
@@ -424,9 +410,12 @@ void Parser:: stringelem ()
 
 		get_lex ();
 
-		printf ("LES_STR\t");
+		printf ("LEX_STR\t");
 		char * str = table->string [value].get_name ();
 		rpn.add_to_list ( new PolizString (str) );
+
+		printf ("POLIZ_PRINT\t");
+		rpn.add_to_list ( new PolizFunPrint (LEX_STR) );
 	}
 	else if ( 
 		cur_lex.type == LEX_NUM || 
@@ -436,9 +425,13 @@ void Parser:: stringelem ()
 		)
 	{
 		D ();	
+		printf ("POLIZ_PRINT\t");
+		rpn.add_to_list ( new PolizFunPrint (LEX_NUM) );
 	}
 	else {
-		throw LexException ("Expected expression or string.", cur_lex);
+		throw LexException ("Expected expression or string.",
+			cur_lex
+		);
 	}
 }
 

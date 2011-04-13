@@ -50,8 +50,9 @@ class Parser {
 
 	
 	void get_lex ();
-	int look (type_of_lex type_lex, const type_of_lex * table);
-	
+	int look (type_of_lex type_lex, 
+		const type_of_lex * table
+	);
 public:
 	Parser ();
 	~Parser ();

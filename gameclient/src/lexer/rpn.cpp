@@ -70,7 +70,8 @@ PolizElem * PolizElem:: pop (PolizItem ** stack)
 	return 0;	
 }
 
-void PolizElem:: print () const
+void PolizElem:: 
+print () const
 {
 	printf ("! Unkown POLIZ print.\t");
 }
@@ -83,7 +84,8 @@ evaluate (PolizItem ** stack, PolizItem ** cur_cmd) const
 }
 
 
-void PolizNop:: print () const
+void PolizNop:: 
+print () const
 {
 	printf ("! POLIZ_NOP\t\t");
 }
@@ -127,7 +129,8 @@ int PolizInt:: get () const
 }
 
 
-void PolizInt:: print () const
+void PolizInt:: 
+print () const
 {
 	printf ("! POLIZ_INT ( %d )\t", value);
 }
@@ -152,9 +155,10 @@ char * PolizString:: get () const
 	return value;
 }
 
-void PolizString:: print () const
+void PolizString:: 
+print () const
 {
-	printf ("! POLIZ_STR\t");
+	printf ("! POLIZ_STR\t\t");
 }
 
 //----------------------------------------------------------
@@ -182,7 +186,8 @@ int * PolizVarAddress:: get () const
 }
 
 
-void PolizVarAddress:: print () const
+void PolizVarAddress:: 
+print () const
 {
 	printf ("! POLIZ_VAR_ADDRESS\t");
 }
@@ -211,7 +216,8 @@ PolizItem * PolizLabel:: get () const
 	return value;
 }
 
-void PolizLabel:: print () const
+void PolizLabel:: 
+print () const
 {
 	printf ("! P_LABEL p=%d.\t", reinterpret_cast<int> (value) );
 }
@@ -246,7 +252,8 @@ evaluate ( PolizItem ** stack, PolizItem ** cur_cmd) const
 	delete operand1;
 }
 
-void PolizOpGo:: print () const
+void PolizOpGo:: 
+print () const
 {
 	printf ("! POLIZ_OP_GO\t\t");
 }
@@ -289,14 +296,16 @@ evaluate ( PolizItem ** stack, PolizItem ** cur_cmd) const
 }
 
 
-void PolizOpGoFalse:: print () const
+void PolizOpGoFalse:: 
+print () const
 {
 	printf ("! P_OP_GO_FALSE\t\t");
 }
 
 //----------------------------------------------------------
 
-PolizElem * PolizAssign:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizAssign:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
 	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
@@ -318,7 +327,8 @@ PolizElem * PolizAssign:: evaluate_fun (PolizItem ** stack) const
 	return 0;
 }
 
-void PolizAssign:: print () const
+void PolizAssign:: 
+print () const
 {
 	printf ("! POLIZ_ASSIGN\t\t");
 }
@@ -349,7 +359,8 @@ PolizFunEq:: PolizFunEq ()
 }
 */
 
-PolizElem * PolizFunEq:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunEq:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
 	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
@@ -375,7 +386,8 @@ PolizElem * PolizFunEq:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunEq:: print () const
+void PolizFunEq:: 
+print () const
 {
 	printf ("! POLIZ_EQ\t\t");
 }
@@ -388,7 +400,8 @@ PolizFunGreater:: PolizFunGreater ()
 */
 
 
-PolizElem * PolizFunGreater:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunGreater:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
 	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
@@ -413,7 +426,8 @@ PolizElem * PolizFunGreater:: evaluate_fun (PolizItem ** stack) const
 	return new PolizInt (res);
 }
 
-void PolizFunGreater:: print () const
+void PolizFunGreater:: 
+print () const
 {
 	printf ("! POLIZ_GREATER\t\t");
 }
@@ -425,7 +439,8 @@ PolizFunLess:: PolizFunLess ()
 */
 
 
-PolizElem * PolizFunLess:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunLess:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
 	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
@@ -451,7 +466,8 @@ PolizElem * PolizFunLess:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunLess:: print () const
+void PolizFunLess:: 
+print () const
 {
 	printf ("! POLIZ_LESS\t\t");
 }
@@ -463,7 +479,8 @@ PolizFunPlus:: PolizFunPlus ()
 */
 
 
-PolizElem * PolizFunPlus:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunPlus:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
 	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
@@ -489,7 +506,8 @@ PolizElem * PolizFunPlus:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunPlus:: print () const
+void PolizFunPlus:: 
+print () const
 {
 	printf ("! POLIZ_PLUS\t\t");
 }
@@ -500,7 +518,8 @@ PolizFunMinus:: PolizFunMinus ()
 }
 */
 
-PolizElem * PolizFunMinus:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunMinus:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
 	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
@@ -526,7 +545,8 @@ PolizElem * PolizFunMinus:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunMinus:: print () const
+void PolizFunMinus:: 
+print () const
 {
 	printf ("! POLIZ_MINUS\t\t");
 }
@@ -538,7 +558,8 @@ PolizFunOr:: PolizFunOr ()
 */
 
 
-PolizElem * PolizFunOr:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunOr:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
 	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
@@ -564,7 +585,8 @@ PolizElem * PolizFunOr:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunOr:: print () const
+void PolizFunOr:: 
+print () const
 {
 	printf ("! POLIZ_OR\t\t");
 }
@@ -575,7 +597,8 @@ PolizFunMul:: PolizFunMul ()
 }
 */
 
-PolizElem * PolizFunMul:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunMul:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
 	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
@@ -601,7 +624,8 @@ PolizElem * PolizFunMul:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunMul:: print () const
+void PolizFunMul:: 
+print () const
 {
 	printf ("! POLIZ_MUL\t\t");
 }
@@ -613,7 +637,8 @@ PolizFunDiv:: PolizFunDiv()
 */
 
 
-PolizElem * PolizFunDiv:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunDiv:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
 	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
@@ -639,7 +664,8 @@ PolizElem * PolizFunDiv:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunDiv:: print () const
+void PolizFunDiv:: 
+print () const
 {
 	printf ("! POLIZ_DIV\t\t");
 }
@@ -651,7 +677,8 @@ PolizFunAnd:: PolizFunAnd ()
 */
 
 
-PolizElem * PolizFunAnd:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunAnd:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
 	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
@@ -677,14 +704,16 @@ PolizElem * PolizFunAnd:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunAnd:: print () const
+void PolizFunAnd:: 
+print () const
 {
 	printf ("! POLIZ_AND\t\t");
 }
 
 
 
-PolizElem * PolizFunNeg:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunNeg:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand = pop (stack);
 	PolizInt * i = dynamic_cast<PolizInt *>(operand);
@@ -701,14 +730,16 @@ PolizElem * PolizFunNeg:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunNeg:: print () const
+void PolizFunNeg:: 
+print () const
 {
 	printf ("! POLIZ_NEG\t\t");
 }
 
 //----------------------------------------------------------
 
-PolizElem * PolizFunBuy:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunBuy:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
 	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
@@ -731,14 +762,16 @@ PolizElem * PolizFunBuy:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunBuy:: print () const
+void PolizFunBuy:: 
+print () const
 {
 	printf ("! POLIZ_BUY\t\t");
 }
 
 //----------------------------------------------------------
 
-PolizElem * PolizFunSell:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunSell:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
 	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
@@ -761,14 +794,16 @@ PolizElem * PolizFunSell:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunSell:: print () const
+void PolizFunSell:: 
+print () const
 {
 	printf ("! POLIZ_SELL\t\t");
 }
 
 //----------------------------------------------------------
 
-PolizElem * PolizFunProd:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunProd:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
 	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
@@ -784,14 +819,16 @@ PolizElem * PolizFunProd:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunProd:: print () const
+void PolizFunProd:: 
+print () const
 {
 	printf ("! POLIZ_PROD\t\t");
 }
 
 //----------------------------------------------------------
 
-PolizElem * PolizFunBuild:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunBuild:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	printf ("Here call build ().\n");
 	
@@ -799,14 +836,16 @@ PolizElem * PolizFunBuild:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunBuild:: print () const
+void PolizFunBuild:: 
+print () const
 {
 	printf ("! POLIZ_BUILD\t\t");
 }
 
 //----------------------------------------------------------
 
-PolizElem * PolizFunTurn:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunTurn:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	printf ("Here call turn ().\n");
 	
@@ -814,29 +853,54 @@ PolizElem * PolizFunTurn:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunTurn:: print () const
+void PolizFunTurn:: 
+print () const
 {
 	printf ("! POLIZ_TURN\t\t");
 }
 
 //----------------------------------------------------------
 
-PolizElem * PolizFunPrint:: evaluate_fun (PolizItem ** stack) const
+PolizFunPrint:: PolizFunPrint (type_of_lex p_type)
 {
-	printf ("Here call print ( ? ).\n");
-	
+	type = p_type;
+}
+
+
+PolizElem * PolizFunPrint:: 
+evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	if ( type == LEX_STR ) {
+		PolizInt * i1 = dynamic_cast 
+			<PolizInt *> (operand1);
+		printf ("call print (%d).\n", i1->get ());
+		delete operand1;
+	}
+	else if ( type == LEX_NUM ) {
+		PolizString * i1 = dynamic_cast
+			<PolizString *> (operand1);
+		printf ("call print (%s).\n", i1->get ());
+		delete operand1;
+	}
+	else {
+		throw ("Error in choose parameters print");
+	}
+
 	return 0;
 }
 
 
-void PolizFunPrint:: print () const
+void PolizFunPrint:: 
+print () const
 {
 	printf ("! POLIZ_PRINT\t\t");
 }
 
 //----------------------------------------------------------
 
-PolizElem * PolizFunCurMonth:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunCurMonth:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	printf ("Here call cur_month ()\n");
 	
@@ -844,14 +908,16 @@ PolizElem * PolizFunCurMonth:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunCurMonth:: print () const
+void PolizFunCurMonth:: 
+print () const
 {
 	printf ("! POLIZ_CUR_MONTH\t\t");
 }
 
 //----------------------------------------------------------
 
-PolizElem * PolizFunPlayers:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunPlayers:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	printf ("Here call players ()\n");
 	
@@ -859,14 +925,16 @@ PolizElem * PolizFunPlayers:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunPlayers:: print () const
+void PolizFunPlayers:: 
+print () const
 {
 	printf ("! POLIZ_PLAYERS\t\t");
 }
 
 //----------------------------------------------------------
 
-PolizElem * PolizFunActivePlayers:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunActivePlayers:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	printf ("Here call acitve_players ()\n");
 	
@@ -874,12 +942,14 @@ PolizElem * PolizFunActivePlayers:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunActivePlayers:: print () const
+void PolizFunActivePlayers:: 
+print () const
 {
 	printf ("! POLIZ_ACTIVE_PLAYERS\t");
 }
 
-PolizElem * PolizFunSupply:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunSupply:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	printf ("Here call supply ()\n");
 	
@@ -887,12 +957,14 @@ PolizElem * PolizFunSupply:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunSupply:: print () const
+void PolizFunSupply:: 
+print () const
 {
 	printf ("! POLIZ_SUPLLY\t");
 }
 
-PolizElem * PolizFunRawPrice:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunRawPrice:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	printf ("Here call raw_price ()\n");
 	
@@ -900,12 +972,14 @@ PolizElem * PolizFunRawPrice:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunRawPrice:: print () const
+void PolizFunRawPrice:: 
+print () const
 {
 	printf ("! POLIZ_RAW_PRICE\t");
 }
 
-PolizElem * PolizFunDemand:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunDemand:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	printf ("Here call demand ()\n");
 	
@@ -913,12 +987,14 @@ PolizElem * PolizFunDemand:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunDemand:: print () const
+void PolizFunDemand:: 
+print () const
 {
 	printf ("! POLIZ_DEMAND\t");
 }
 
-PolizElem * PolizFunProductionPrice:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunProductionPrice:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	printf ("Here call production_price ()\n");
 	
@@ -926,13 +1002,15 @@ PolizElem * PolizFunProductionPrice:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunProductionPrice:: print () const
+void PolizFunProductionPrice:: 
+print () const
 {
 	printf ("! POLIZ_PRODUCTION_PRICE\t");
 }
 
 
-PolizElem * PolizFunMoney:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunMoney:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
 	PolizInt * i1 = dynamic_cast <PolizInt *> (operand1);
@@ -949,13 +1027,15 @@ PolizElem * PolizFunMoney:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunMoney:: print () const
+void PolizFunMoney:: 
+print () const
 {
 	printf ("! POLIZ_MONEY\t\t");
 }
 
 
-PolizElem * PolizFunRaw:: evaluate_fun (PolizItem ** stack) const
+PolizElem * PolizFunRaw:: 
+evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
 	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
@@ -972,20 +1052,217 @@ PolizElem * PolizFunRaw:: evaluate_fun (PolizItem ** stack) const
 }
 
 
-void PolizFunRaw:: print () const
+void PolizFunRaw:: 
+print () const
 {
 	printf ("! POLIZ_RAW\t\t");
 }
 
 
+PolizElem * PolizFunProduction:: 
+evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
+	if ( !i ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+	
+	int res = 0;
+	printf (" Here call production (%d)", i->get ());
+
+	delete operand1;
+
+	return new PolizInt (res);
+}
 
 
+void PolizFunProduction:: 
+print () const
+{
+	printf ("! POLIZ_PRODUCTION\t\t");
+}
 
 
-//----------------------------------------------------------
-////
-////
-////
+PolizElem * PolizFunFactories:: 
+evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
+	if ( !i ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+	
+	int res = 0;
+	printf (" Here call factories (%d)", i->get ());
+
+	delete operand1;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunFactories:: 
+print () const
+{
+	printf ("! POLIZ_FACTORIES\t\t");
+}
+
+
+PolizElem * PolizFunAutoFactories:: 
+evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
+	if ( !i ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+	
+	int res = 0;
+	printf (" Here call auto_factories (%d)", i->get ());
+
+	delete operand1;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunAutoFactories:: 
+print () const
+{
+	printf ("! POLIZ_AUTO_FACTORIES\t\t");
+}
+
+
+PolizElem * PolizFunManufactured:: 
+evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
+	if ( !i ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+	
+	int res = 0;
+	printf (" Here call manufactured (%d)", i->get ());
+
+	delete operand1;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunManufactured:: 
+print () const
+{
+	printf ("! POLIZ_MANUFACTURED\t\t");
+}
+
+
+PolizElem * PolizFunResultRawSold:: 
+evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
+	if ( !i ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+	
+	int res = 0;
+	printf (" Here call result_raw_sold (%d)", i->get ());
+
+	delete operand1;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunResultRawSold:: 
+print () const
+{
+	printf ("! POLIZ_RESULT_RAW_SOLD\t\t");
+}
+
+
+PolizElem * PolizFunResultRawPrice:: 
+
+evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
+	if ( !i ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+	
+	int res = 0;
+	printf (" Here call result_raw_PRICE (%d)", i->get ());
+
+	delete operand1;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunResultRawPrice::
+print () const
+{
+	printf ("! POLIZ_RESULT_RAW_PRICE\t");
+}
+
+
+PolizElem * PolizFunResultProdBought:: 
+
+evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
+	if ( !i ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+	
+	int res = 0;
+	printf (" Here call result_prod_bought (%d)", i->get ());
+
+	delete operand1;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunResultProdBought:: 
+print () const
+{
+	printf ("! POLIZ_RESULT_PROD_BOUGHT\t");
+
+}
+
+
+PolizElem * PolizFunResultProdPrice:: 
+evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
+	if ( !i ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+	
+	int res = 0;
+	printf (" Here call result_prod_price (%d)", i->get ());
+
+	delete operand1;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunResultProdPrice:: 
+print () const
+{
+	printf ("! POLIZ_RESULT_PROD_PRICE\t");
+
+}
+
+
 //----------------------------------------------------------
 
 PolizTest:: PolizTest (const Lex & lex)
@@ -1000,7 +1277,8 @@ evaluate (PolizItem ** stack, PolizItem ** cur_cmd) const
 }
 
 
-void PolizTest:: print () const
+void PolizTest:: 
+print () const
 {
 	l.print ();
 }
@@ -1093,7 +1371,8 @@ PolizList:: ~PolizList ()
 }
 
 
-void PolizList:: print () const
+void PolizList:: 
+print () const
 {
 	PolizItem * cur = first;
 	

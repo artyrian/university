@@ -249,11 +249,13 @@ public:
 	void print () const;
 };
 
+
 class PolizFunBuild: public PolizFunction {
 public:
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
+
 
 class PolizFunTurn: public PolizFunction {
 public:
@@ -261,8 +263,11 @@ public:
 	void print () const;
 };
 
+
 class PolizFunPrint: public PolizFunction {
+	type_of_lex type;
 public:
+	PolizFunPrint (type_of_lex type);
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
@@ -275,11 +280,13 @@ public:
 	void print () const;
 };
 
+
 class PolizFunPlayers : public PolizFunction {
 public:
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
+
 
 class PolizFunActivePlayers : public PolizFunction {
 public:
@@ -287,11 +294,13 @@ public:
 	void print () const;
 };
 
+
 class PolizFunSupply : public PolizFunction {
 public:
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
+
 
 class PolizFunRawPrice: public PolizFunction {
 public:
@@ -299,11 +308,13 @@ public:
 	void print () const;
 };
 
+
 class PolizFunDemand: public PolizFunction {
 public:
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
+
 
 class PolizFunProductionPrice: public PolizFunction {
 public:
@@ -311,11 +322,13 @@ public:
 	void print () const;
 };
 
+
 class PolizFunMoney : public PolizFunction {
 public:
 	PolizElem * evaluate_fun (PolizItem ** stack) const;
 	void print () const;
 };
+
 
 class PolizFunRaw : public PolizFunction {
 public:
@@ -324,11 +337,61 @@ public:
 };
 
 
+class PolizFunProduction : public PolizFunction {
+public:
+	PolizElem * evaluate_fun (PolizItem ** stack) const;
+	void print () const;
+};
 
-//----------------------------------------------------------
-////
-////
-////
+
+class PolizFunFactories : public PolizFunction {
+public:
+	PolizElem * evaluate_fun (PolizItem ** stack) const;
+	void print () const;
+};
+
+
+class PolizFunAutoFactories : public PolizFunction {
+public:
+	PolizElem * evaluate_fun (PolizItem ** stack) const;
+	void print () const;
+};
+
+
+class PolizFunManufactured : public PolizFunction {
+public:
+	PolizElem * evaluate_fun (PolizItem ** stack) const;
+	void print () const;
+};
+
+
+class PolizFunResultRawSold : public PolizFunction {
+public:
+	PolizElem * evaluate_fun (PolizItem ** stack) const;
+	void print () const;
+};
+
+
+class PolizFunResultRawPrice : public PolizFunction {
+public:
+	PolizElem * evaluate_fun (PolizItem ** stack) const;
+	void print () const;
+};
+
+
+class PolizFunResultProdBought : public PolizFunction {
+public:
+	PolizElem * evaluate_fun (PolizItem ** stack) const;
+	void print () const;
+};
+
+
+class PolizFunResultProdPrice : public PolizFunction {
+public:
+	PolizElem * evaluate_fun (PolizItem ** stack) const;
+	void print () const;
+};
+
 //----------------------------------------------------------
 
 class PolizTest: public PolizElem {
