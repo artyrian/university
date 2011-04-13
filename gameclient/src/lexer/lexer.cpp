@@ -384,7 +384,7 @@ bool Scanner:: state_IDENT (int c)
 	else {
 		int i = table->ident.put (buffer->get ());
 		CS = H;
-		buffer->add (c);
+	//	buffer->add (c);
 		save_c = c;
 		save_lex = Lex (count_str, LEX_ID, i);
 		return true;
@@ -521,6 +521,7 @@ bool Scanner:: state_LABEL (int c)
 	else {
 		int i = table->label.put (buffer->get ());
 		CS = H;	
+		save_c = c;
 		
 		save_lex = Lex (count_str, LEX_LABEL, i);
 		return true;

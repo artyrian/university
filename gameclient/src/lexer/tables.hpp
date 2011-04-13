@@ -74,8 +74,10 @@ class StorageTypeLex {
 	int 		value;
 public:
 	char * get_name ();
+	int * get_address_id ();
+	int get_value () const;
 	void put_name (const char * str);
-	type_of_lex get_type ();
+	type_of_lex get_type () const;
 	void put_type (type_of_lex t);
 
 	virtual ~StorageTypeLex ();
@@ -95,6 +97,7 @@ public:
 	TableStorageTypeLex ();
 	StorageTypeLex & operator [] (int k);
 	int put (const char * buf);
+	int get_size () const;
 
 	virtual ~TableStorageTypeLex ();
 
@@ -119,6 +122,25 @@ public:
 };
 
 
+class TableLabel {
+	struct Item {
+		int label;
+		int place;
+	};
+	
+	Item * arr;
+	int size;
+	int top;
+
+	void extend_table ();
+public:
+	TableLabel ();
+	~TableLabel ();
+	int get_size ();
+	int put (int value, int place);
+	int look (int val);
+	Item operator [] (int k);
+};
 
 
 struct TableLexem {

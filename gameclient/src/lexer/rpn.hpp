@@ -76,12 +76,24 @@ public:
 //----------------------------------------------------------
 
 class PolizString : public PolizConst {
-
+	char * value;
+public:
+	PolizString (char * value);
+	virtual ~PolizString ();
+	virtual PolizElem * clone () const;
+	char * get () const;
+	void print () const;
 };
 //----------------------------------------------------------
 
 class PolizVarAddress : public PolizConst {
-
+	int * value;
+public:
+	PolizVarAddress (int * value);
+	virtual ~PolizVarAddress ();
+	virtual PolizElem * clone () const;
+	int * get () const;
+	void print () const;
 };
 //----------------------------------------------------------
 
@@ -92,7 +104,7 @@ public:
 	virtual ~PolizLabel ();
 	virtual PolizElem * clone () const;
 	PolizItem * get () const;
-
+	void print () const;
 };
 
 //----------------------------------------------------------
@@ -101,14 +113,18 @@ class PolizOpGo : public PolizElem {
 public:
 	PolizOpGo ();
 	virtual ~PolizOpGo ();
-	void evaluate ( PolizItem ** stack,
-			PolizItem ** cur_cmd) const;
+	void evaluate ( PolizItem ** stack, PolizItem ** cur_cmd) const;
+	void print () const;
 };
 
 //----------------------------------------------------------
 
 class PolizOpGoFalse : public PolizElem {
-
+public:
+	PolizOpGoFalse ();
+	virtual ~PolizOpGoFalse ();
+	void evaluate ( PolizItem ** stack, PolizItem ** cur_cmd) const;
+	void print () const;
 };
 
 //----------------------------------------------------------
@@ -125,7 +141,14 @@ public:
 
 //----------------------------------------------------------
 
-class PolizFunEq: public PolizFunction {
+class PolizAssign : public PolizFunction {
+public:
+	PolizElem * evaluate_fun ( PolizItem ** stack ) const;
+	void print () const;
+};
+
+
+class PolizFunEq : public PolizFunction {
 public:
 //	PolizFunEq ();
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
@@ -224,6 +247,7 @@ public:
 
 class PolizList {
 	PolizItem * first;
+	PolizItem * nop;
 	int size;
 	Stack st;
 
@@ -233,8 +257,9 @@ public:
 	~PolizList ();
 	void add_to_list (PolizElem * p);
 	void add_to_list (PolizElem * p, int place);
-	int get_size ();
-	void print ();
+	int get_size () const;
+	PolizItem * get_pointer (int place) const;
+	void print () const;
 };
 
 

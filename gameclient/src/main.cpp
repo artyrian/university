@@ -10,6 +10,7 @@ int main (int argc, char ** argv)
 			LexList	ll;
 
 			ll.fill (argv [1]);
+			ll.print ();
 
 			Parser pars;
 
@@ -25,6 +26,9 @@ int main (int argc, char ** argv)
 			printf ("catch exception.\n");
 			le.print ();
 			return 1;
+		}
+		catch (const char * str) {
+			printf ("catch exception: %s.\n", str);
 		}
 		catch (...) {
 			printf ("Unknown exception.\n");

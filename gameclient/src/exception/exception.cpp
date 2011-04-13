@@ -75,5 +75,12 @@ PolizExceptionNotLabel:: PolizExceptionNotLabel (PolizElem * op)
 {
 }
 
+PolizExceptionNotNum:: PolizExceptionNotNum (PolizElem * op)
+{
+}
+
+PolizExceptionNotAddress:: PolizExceptionNotAddress (PolizElem * op)
+{
+}
 //----------------------------------------------------------
 

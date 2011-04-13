@@ -10,6 +10,8 @@
 class Parser {
 	Lex cur_lex;
 	LexList	* lexl;
+	TableLexem * table;
+	TableLabel label;
 
 	void O ();
 	void B ();
@@ -24,10 +26,11 @@ class Parser {
 
 	void ifthen ();
 	void create_if_labels ();
-	void fill_if_labels (int p1);
+	void fill_if_labels (int place1);
 	void whiledo ();
 	void create_while_labels ();
-	void fill_while_labels (int p1, int p2);
+	void fill_while_labels (int place1, int place2);
+	void add_address_id (int value);
 	void array ();
 	void assign ();
 	void lparen ();
@@ -35,6 +38,8 @@ class Parser {
 	void comma ();
 	void stringelem ();
 	void gotolabel ();
+	void fill_goto_label (int place1);
+	void add_label (const Lex & lex, int place);
 	void body ();
 	void arg0 ();
 	void arg1 ();

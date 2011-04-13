@@ -72,7 +72,7 @@ PolizElem * PolizElem:: pop (PolizItem ** stack)
 
 void PolizElem:: print () const
 {
-	printf ("! Unkown POLIZ print.");
+	printf ("! Unkown POLIZ print.\t");
 }
 
 //----------------------------------------------------------
@@ -85,7 +85,7 @@ evaluate (PolizItem ** stack, PolizItem ** cur_cmd) const
 
 void PolizNop:: print () const
 {
-	printf ("! POLIZ_NOP");
+	printf ("! POLIZ_NOP\t\t");
 }
 
 //----------------------------------------------------------
@@ -126,10 +126,67 @@ int PolizInt:: get () const
 	return value;
 }
 
+
 void PolizInt:: print () const
 {
-	printf ("! POLIZ_INT (v. = %d)", value);
+	printf ("! POLIZ_INT ( %d )\t", value);
 }
+
+//----------------------------------------------------------
+PolizString:: PolizString (char * p) 
+{
+	value = p;
+}
+
+PolizString:: ~PolizString ()
+{
+}
+
+PolizElem * PolizString:: clone () const
+{
+	return new PolizString (value);
+}
+
+char * PolizString:: get () const
+{
+	return value;
+}
+
+void PolizString:: print () const
+{
+	printf ("! POLIZ_STR\t");
+}
+
+//----------------------------------------------------------
+
+PolizVarAddress:: PolizVarAddress (int * v)
+{
+	value = v;
+}
+
+
+PolizVarAddress:: ~ PolizVarAddress ()
+{
+}
+
+
+PolizElem * PolizVarAddress:: clone () const
+{
+	return new PolizVarAddress (*this);
+}
+
+
+int * PolizVarAddress:: get () const
+{
+	return value;
+}
+
+
+void PolizVarAddress:: print () const
+{
+	printf ("! POLIZ_VAR_ADDRESS\t");
+}
+
 //----------------------------------------------------------
 
 PolizLabel:: PolizLabel (PolizItem * a)
@@ -152,6 +209,11 @@ PolizElem * PolizLabel:: clone () const
 PolizItem * PolizLabel:: get () const
 {
 	return value;
+}
+
+void PolizLabel:: print () const
+{
+	printf ("! P_LABEL p=%d.\t", reinterpret_cast<int> (value) );
 }
 
 //----------------------------------------------------------
@@ -182,6 +244,83 @@ evaluate ( PolizItem ** stack, PolizItem ** cur_cmd) const
 	* cur_cmd = addr;
 
 	delete operand1;
+}
+
+void PolizOpGo:: print () const
+{
+	printf ("! POLIZ_OP_GO\t\t");
+}
+
+//----------------------------------------------------------
+
+PolizOpGoFalse:: PolizOpGoFalse ()
+{
+}
+
+
+PolizOpGoFalse:: ~ PolizOpGoFalse ()
+{
+}
+
+
+void PolizOpGoFalse:: 
+evaluate ( PolizItem ** stack, PolizItem ** cur_cmd) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizLabel * lab = dynamic_cast<PolizLabel *>(operand1);
+	if ( !lab ) {
+		throw PolizExceptionNotLabel (operand1);
+	}
+
+	PolizElem * operand2 = pop (stack);
+	PolizInt * i = dynamic_cast<PolizInt *>(operand2);
+	if ( !i ) {
+		throw PolizExceptionNotInt (operand2);
+	}
+
+	PolizItem * addr = lab->get ();
+
+	if ( i->get () == 0 ) {
+		* cur_cmd = addr;
+	}
+
+	delete operand1;
+	delete operand2;
+}
+
+
+void PolizOpGoFalse:: print () const
+{
+	printf ("! P_OP_GO_FALSE\t\t");
+}
+
+//----------------------------------------------------------
+
+PolizElem * PolizAssign:: evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
+	if ( !i ) {
+		throw PolizExceptionNotInt (operand1);
+	}
+
+	PolizElem * operand2 = pop (stack);
+	PolizVarAddress * addr = dynamic_cast <PolizVarAddress *> (operand2);
+	if ( !addr) {
+		throw PolizExceptionNotAddress (operand2);
+	}
+
+	*( addr->get () ) = i->get ();
+
+	delete operand1;
+	delete operand2;
+
+	return 0;
+}
+
+void PolizAssign:: print () const
+{
+	printf ("! POLIZ_ASSIGN\t\t");
 }
 
 //----------------------------------------------------------
@@ -238,7 +377,7 @@ PolizElem * PolizFunEq:: evaluate_fun (PolizItem ** stack) const
 
 void PolizFunEq:: print () const
 {
-	printf ("! POLIZ_EQ");
+	printf ("! POLIZ_EQ\t\t");
 }
 
 
@@ -276,7 +415,7 @@ PolizElem * PolizFunGreater:: evaluate_fun (PolizItem ** stack) const
 
 void PolizFunGreater:: print () const
 {
-	printf ("! POLIZ_GREATER");
+	printf ("! POLIZ_GREATER\t\t");
 }
 
 /*
@@ -314,7 +453,7 @@ PolizElem * PolizFunLess:: evaluate_fun (PolizItem ** stack) const
 
 void PolizFunLess:: print () const
 {
-	printf ("! POLIZ_LESS");
+	printf ("! POLIZ_LESS\t\t");
 }
 
 /*
@@ -352,7 +491,7 @@ PolizElem * PolizFunPlus:: evaluate_fun (PolizItem ** stack) const
 
 void PolizFunPlus:: print () const
 {
-	printf ("! POLIZ_PLUS");
+	printf ("! POLIZ_PLUS\t\t");
 }
 
 /*
@@ -389,7 +528,7 @@ PolizElem * PolizFunMinus:: evaluate_fun (PolizItem ** stack) const
 
 void PolizFunMinus:: print () const
 {
-	printf ("! POLIZ_MINUS");
+	printf ("! POLIZ_MINUS\t\t");
 }
 
 /*
@@ -427,7 +566,7 @@ PolizElem * PolizFunOr:: evaluate_fun (PolizItem ** stack) const
 
 void PolizFunOr:: print () const
 {
-	printf ("! POLIZ_OR");
+	printf ("! POLIZ_OR\t\t");
 }
 
 /*
@@ -464,7 +603,7 @@ PolizElem * PolizFunMul:: evaluate_fun (PolizItem ** stack) const
 
 void PolizFunMul:: print () const
 {
-	printf ("! POLIZ_MUL");
+	printf ("! POLIZ_MUL\t\t");
 }
 
 /*
@@ -502,7 +641,7 @@ PolizElem * PolizFunDiv:: evaluate_fun (PolizItem ** stack) const
 
 void PolizFunDiv:: print () const
 {
-	printf ("! POLIZ_DIV");
+	printf ("! POLIZ_DIV\t\t");
 }
 
 /*
@@ -540,7 +679,7 @@ PolizElem * PolizFunAnd:: evaluate_fun (PolizItem ** stack) const
 
 void PolizFunAnd:: print () const
 {
-	printf ("! POLIZ_AND");
+	printf ("! POLIZ_AND\t\t");
 }
 
 
@@ -564,7 +703,7 @@ PolizElem * PolizFunNeg:: evaluate_fun (PolizItem ** stack) const
 
 void PolizFunNeg:: print () const
 {
-	printf ("! POLIZ_NEG");
+	printf ("! POLIZ_NEG\t\t");
 }
 
 //----------------------------------------------------------
@@ -594,7 +733,7 @@ void PolizTest:: print () const
 
 PolizItem * PolizList:: create_item (PolizElem * cur_cmd)
 {
-	return new PolizItem (size ++, cur_cmd, 0);
+	return new PolizItem (size ++, cur_cmd, nop);
 }
 
 
@@ -608,7 +747,7 @@ void PolizList:: add_to_list (PolizElem * p)
 	}
 	else {
 		PolizItem * prev;
-		while ( cur != 0 ) {
+		while ( cur != nop ) {
 			prev = cur;
 			cur = cur->next;
 		}
@@ -618,9 +757,25 @@ void PolizList:: add_to_list (PolizElem * p)
 }
 
 
-int PolizList:: get_size ()
+int PolizList:: get_size () const
 {
 	return size;
+}
+
+PolizItem * PolizList:: get_pointer (int place) const
+{
+	PolizItem * cur = first;
+
+	int cnt = 1;
+	while ( cnt != place ) {
+		cur = cur->next;
+		++ cnt;
+		if ( cur == 0 ) {
+			throw ("Wrong place. Next pointer of PolizList is 0.");
+		}
+	}
+	
+	return cur;
 }
 
 
@@ -628,8 +783,13 @@ void PolizList:: add_to_list (PolizElem * p, int place)
 {
 	PolizItem * cur = first;
 
-	while ( cur->number != place ) {
+	int cnt = 1;
+	while ( cnt != place ) {
 		cur = cur->next;
+		++ cnt;
+		if ( cur == 0 ) {
+			throw ("Error add to place. Next pointer of PolizList is 0.");
+		}
 	}
 
 	cur->p = p;
@@ -639,7 +799,9 @@ void PolizList:: add_to_list (PolizElem * p, int place)
 PolizList:: PolizList ()
 {
 	first = 0;
-	size = 1;
+	size = 0;
+	nop = 0;
+	nop = create_item (new PolizNop ());
 }
 
 
@@ -655,15 +817,16 @@ PolizList:: ~PolizList ()
 }
 
 
-void PolizList:: print ()
+void PolizList:: print () const
 {
 	PolizItem * cur = first;
 	
 	printf ("Print PolizList:\n");
 
 	while ( cur != 0 ) {
-		printf ("%d: ", cur->number);
+		printf ("%d:\t", cur->number);
 		cur->p->print ();	
+		printf ("obj_ptr: %d", reinterpret_cast<int> (cur));
 		cur = cur->next;
 		printf ("\n");
 	}

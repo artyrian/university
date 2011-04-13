@@ -49,6 +49,15 @@ public:
 
 class PolizExceptionNotNum : public PolizException {
 
+public:
+	PolizExceptionNotNum (PolizElem * op);
+};
+
+
+class PolizExceptionNotAddress: public PolizException {
+
+public:
+	PolizExceptionNotAddress (PolizElem * op);
 };
 
 //----------------------------------------------------------

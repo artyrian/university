@@ -223,6 +223,11 @@ char * StorageTypeLex:: get_name ()
 	return name;
 }
 
+int * StorageTypeLex:: get_address_id ()
+{
+	return & value;
+}
+
 
 void StorageTypeLex:: put_name (const char *str)
 {
@@ -231,9 +236,14 @@ void StorageTypeLex:: put_name (const char *str)
 }
 
 
-type_of_lex StorageTypeLex:: get_type ()
+type_of_lex StorageTypeLex:: get_type () const
 {
 	return type;
+}
+
+int StorageTypeLex:: get_value () const
+{
+	return value;
 }
 
 
@@ -307,6 +317,12 @@ int TableStorageTypeLex:: put (const char * buf)
 	top++;
 
 	return (top - 1);
+}
+
+
+int TableStorageTypeLex:: get_size () const
+{
+	return top;
 }
 
 
@@ -389,4 +405,81 @@ TableStorageTypeLex &
 TableArrayStorageTypeLex:: operator [] (int k)
 {
 	return t[k];
+}
+
+
+
+
+TableLabel:: TableLabel ()
+	: size (PART_SIZE_TABLE)
+{
+	arr = new Item [size];
+	top = 1;
+
+}
+
+
+void TableLabel:: extend_table ()
+{
+	int new_size = 2 * size;	
+	Item * new_arr = new Item [ new_size ];
+
+	for ( int i = 1; i < top; ++i ) {
+		new_arr [i] = arr [i];
+	}
+	
+	delete [] arr;
+	
+	arr = new_arr;
+	size = new_size;
+}
+
+TableLabel:: ~ TableLabel ()
+{
+	delete [] arr;
+}
+
+
+int TableLabel:: put (int label, int place)
+{
+	if ( top == size - 1 ) {
+		extend_table ();
+	}
+	
+	for ( int i = 1; i < top; i++ ) {
+		if ( arr[i].label == label) {
+			return 0;	
+		}
+	}
+	
+	arr [top].label = label;
+	arr [top].place = place;
+	top ++;
+
+	return (top - 1);
+}
+
+
+int TableLabel:: look (int label)
+{
+	printf ("Find label: %d\n", label );
+
+	for ( int i = 1; i < top; i++ ) {
+		if ( arr [i].label == label ) {
+			return arr [i].place;
+		}
+	}
+
+	return 0;
+}
+
+int TableLabel:: get_size ()
+{
+	return top;
+}
+
+TableLabel:: Item 
+TableLabel:: operator [] (int k)
+{
+	return arr [k];
 }
