@@ -621,6 +621,7 @@ void Parser:: body () {
 
 void Parser:: arg0 ()
 {
+	get_lex ();
 	lparen ();
 	rparen ();
 }

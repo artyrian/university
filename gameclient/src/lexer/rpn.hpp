@@ -6,28 +6,13 @@
 class PolizElem;
 struct PolizItem;
 
-//----------------------------------------------------------
-
-class Stack {
-	PolizItem * first;
-	int size;
-
-	PolizItem * create_item (PolizElem * cur_cmd);
-public:
-	Stack ();
-	~ Stack ();
-	void push (PolizElem * cur_cmd);
-	PolizElem * pop ();
-};
-
-//----------------------------------------------------------
 
 struct PolizItem {
 	int number;
 	PolizElem * p;
 	PolizItem * next;
 
-	PolizItem (int, PolizElem *, PolizItem *);
+	PolizItem (int = 0, PolizElem * = 0, PolizItem * = 0);
 };
 
 //----------------------------------------------------------
@@ -424,7 +409,6 @@ public:
 class PolizList {
 	PolizItem * first;
 	int size;
-	Stack st;
 
 	PolizItem * create_item (PolizElem * p);
 public:

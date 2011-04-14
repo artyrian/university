@@ -1,51 +1,6 @@
 #include "rpn.hpp"
 #include "tables.hpp"
 #include "../exception/exception.hpp"
-
-
-Stack:: Stack ()
-{
-	first = 0;
-	size = 1;
-}
-
-
-Stack:: ~Stack ()
-{
-	PolizItem * cur = first;
-
-	while (first != 0) {
-		cur = first;
-		first = first->next;
-		delete cur; 
-	}
-}
-
-
-PolizItem * Stack:: create_item (PolizElem * cur_cmd)
-{
-	return new PolizItem (size ++, cur_cmd, first);
-}
-
-
-void Stack:: push (PolizElem * cur_cmd)
-{
-	first = create_item (cur_cmd);
-}
-
-
-PolizElem * Stack:: pop ()
-{
-	PolizItem * cur = first;
-	PolizElem * elem = first->p;
-
-	first = first->next;
-	delete cur;
-
-	return elem;
-}
-
-
 //----------------------------------------------------------
 
 
@@ -62,12 +17,24 @@ PolizElem:: ~PolizElem ()
 
 void PolizElem:: push (PolizItem ** stack, PolizElem * cur_cmd)
 {
+	printf ("push\n");
+ 	PolizItem * cur = new PolizItem ( );
+	cur->next = (*stack);
+	cur->p = cur_cmd;
+	(*stack) = cur;
 }
 
 
 PolizElem * PolizElem:: pop (PolizItem ** stack)
 {
-	return 0;
+	printf ("pop\n");
+	PolizItem * cur = (*stack);
+	PolizElem * elem = (*stack)->p;
+	(*stack) = (*stack)->next;
+
+	delete cur;
+
+	return elem;
 }
 
 
@@ -82,6 +49,8 @@ print () const
 void PolizNop:: 
 evaluate (PolizItem ** stack, PolizItem ** cur_cmd) const
 {
+	printf ("call nop.\n");
+	*cur_cmd = (* cur_cmd)->next;
 }
 
 
@@ -930,13 +899,13 @@ PolizElem * PolizFunPrint::
 evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
-	if ( type == LEX_STR ) {
+	if ( type == LEX_NUM ) {
 		PolizInt * i1 = dynamic_cast 
 			<PolizInt *> (operand1);
 		printf ("call print (%d).\n", i1->get ());
 		delete operand1;
 	}
-	else if ( type == LEX_NUM ) {
+	else if ( type == LEX_STR ) {
 		PolizString * i1 = dynamic_cast
 			<PolizString *> (operand1);
 		printf ("call print (%s).\n", i1->get ());

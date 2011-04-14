@@ -7,10 +7,18 @@ Executer:: Executer (PolizItem * list)
 }
 
 
+Executer:: ~Executer ()
+{
+}
+
+
 void Executer:: executing ()
 {
 	while ( poliz_list != 0 ) {
-//		poliz_list->p->evaluate ();
-		poliz_list = poliz_list->next;
+		current = poliz_list;
+		poliz_list->p->print ();
+		printf ("\n");
+		poliz_list->p->evaluate (&stack, &current);
+		poliz_list = current;
 	}
 }
