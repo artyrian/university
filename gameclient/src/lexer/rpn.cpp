@@ -70,6 +70,7 @@ PolizElem * PolizElem:: pop (PolizItem ** stack)
 	return 0;	
 }
 
+
 void PolizElem:: 
 print () const
 {
@@ -104,16 +105,13 @@ void PolizConst:: evaluate ( PolizItem ** stack, PolizItem ** cur_cmd) const
 	*cur_cmd = (* cur_cmd)->next;
 }
 
+
 //----------------------------------------------------------
+
 
 PolizInt:: PolizInt (int a)
 {
 	value = a;
-}
-
-
-PolizInt:: ~PolizInt ()
-{
 }
 
 
@@ -135,7 +133,9 @@ print () const
 	printf ("! POLIZ_INT ( %d )\t", value);
 }
 
+
 //----------------------------------------------------------
+
 PolizString:: PolizString (char * p) 
 {
 	value = p;
@@ -169,14 +169,9 @@ PolizVarAddress:: PolizVarAddress (int * v)
 }
 
 
-PolizVarAddress:: ~ PolizVarAddress ()
-{
-}
-
-
 PolizElem * PolizVarAddress:: clone () const
 {
-	return new PolizVarAddress (*this);
+	return new PolizVarAddress (value);
 }
 
 
@@ -301,6 +296,94 @@ print () const
 {
 	printf ("! P_OP_GO_FALSE\t\t");
 }
+//----------------------------------------------------------
+
+void PolizFunction:: 
+evaluate (PolizItem ** stack, PolizItem ** cur_cmd) const
+{
+	PolizElem * res = evaluate_fun (stack);
+
+	if ( res != 0 ) {
+		push (stack, res);
+	}
+
+	(* cur_cmd) = (* cur_cmd)->next;
+}
+
+PolizFunction:: ~PolizFunction ()
+{
+}
+
+//----------------------------------------------------------
+
+PolizArray:: PolizArray (int op, TableLexem * p_table)
+{
+	array = op;
+	table = p_table;
+}
+
+
+PolizElem * PolizArray:: 
+evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
+	if ( !i ) {
+		throw PolizExceptionNotInt (operand1);
+	}
+	// have index;
+	
+	int res = table->array [ array ] [ i->get () ].get_value ();
+	// get value elem (i) of array (=value).
+
+	delete operand1;
+
+	return new PolizInt (res);
+}
+
+
+void PolizArray:: 
+print () const
+{
+	printf ("! POLIZ_ARRAY\t\t");
+}
+
+//----------------------------------------------------------
+
+PolizVarAddressArray:: PolizVarAddressArray (int arr, TableLexem * p_table)
+{
+	array = arr;
+	table = p_table;
+}
+
+
+PolizElem * PolizVarAddressArray:: 
+evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
+	if ( !i ) {
+		throw PolizExceptionNotInt (operand1);
+	}
+	// have index;
+	
+	int * res = table->array [ array ] [ i->get () ].get_address_value ();
+	// get value elem (i) of array (=value).
+
+	delete operand1;
+
+	return new PolizVarAddress (res);
+}
+
+
+void PolizVarAddressArray:: 
+print () const
+{
+	printf ("! P_VAR_ADDRESS_ARRAY\t");
+}
+
+
+
 
 //----------------------------------------------------------
 
@@ -334,30 +417,6 @@ print () const
 }
 
 //----------------------------------------------------------
-
-void PolizFunction:: 
-evaluate (PolizItem ** stack, PolizItem ** cur_cmd) const
-{
-	PolizElem * res = evaluate_fun (stack);
-
-	if ( res != 0 ) {
-		push (stack, res);
-	}
-
-	(* cur_cmd) = (* cur_cmd)->next;
-}
-
-PolizFunction:: ~PolizFunction ()
-{
-}
-
-//----------------------------------------------------------
-
-/*
-PolizFunEq:: PolizFunEq ()
-{
-}
-*/
 
 PolizElem * PolizFunEq:: 
 evaluate_fun (PolizItem ** stack) const
@@ -1287,7 +1346,7 @@ print () const
 
 PolizItem * PolizList:: create_item (PolizElem * cur_cmd)
 {
-	return new PolizItem (size ++, cur_cmd, nop);
+	return new PolizItem (size ++, cur_cmd, 0);
 }
 
 
@@ -1301,7 +1360,7 @@ void PolizList:: add_to_list (PolizElem * p)
 	}
 	else {
 		PolizItem * prev;
-		while ( cur != nop ) {
+		while ( cur != 0 ) {
 			prev = cur;
 			cur = cur->next;
 		}
@@ -1315,6 +1374,7 @@ int PolizList:: get_size () const
 {
 	return size;
 }
+
 
 PolizItem * PolizList:: get_pointer (int place) const
 {
@@ -1346,6 +1406,7 @@ void PolizList:: add_to_list (PolizElem * p, int place)
 		}
 	}
 
+	delete cur->p;
 	cur->p = p;
 }
 
@@ -1353,9 +1414,7 @@ void PolizList:: add_to_list (PolizElem * p, int place)
 PolizList:: PolizList ()
 {
 	first = 0;
-	size = 0;
-	nop = 0;
-	nop = create_item (new PolizNop ());
+	size = 1;
 }
 
 

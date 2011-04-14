@@ -223,7 +223,7 @@ char * StorageTypeLex:: get_name ()
 	return name;
 }
 
-int * StorageTypeLex:: get_address_id ()
+int * StorageTypeLex:: get_address_value ()
 {
 	return & value;
 }
@@ -462,8 +462,6 @@ int TableLabel:: put (int label, int place)
 
 int TableLabel:: look (int label)
 {
-	printf ("Find label: %d\n", label );
-
 	for ( int i = 1; i < top; i++ ) {
 		if ( arr [i].label == label ) {
 			return arr [i].place;
@@ -478,8 +476,30 @@ int TableLabel:: get_size ()
 	return top;
 }
 
+
+int TableLabel:: get_label (int i)
+{
+	return arr[i].label;
+}
+
+
+int TableLabel:: get_place (int i)
+{
+	return arr[i].place;
+}
+
+
 TableLabel:: Item 
 TableLabel:: operator [] (int k)
 {
 	return arr [k];
+}
+
+void TableLabel:: print () const
+{
+	for (int i = 1; i < top; ++i) {
+		printf ("label: %d place: %d",
+			arr [i].label, arr [i].place
+		);
+	}
 }

@@ -12,6 +12,7 @@ class Parser {
 	LexList	* lexl;
 	TableLexem * table;
 	TableLabel label;
+	TableLabel labelgoto;
 
 	void O ();
 	void B ();
@@ -31,15 +32,15 @@ class Parser {
 	void create_while_labels ();
 	void fill_while_labels (int place1, int place2);
 	void add_address_id (int value);
-	void array ();
+	void array (bool var);
 	void assign ();
 	void lparen ();
 	void rparen ();
 	void comma ();
 	void stringelem ();
 	void gotolabel ();
-	void fill_goto_label (int place1);
-	void add_label (const Lex & lex, int place);
+	void create_goto_label ();
+	void add_label (const Lex & lex);
 	void body ();
 	void arg0 ();
 	void arg1 ();
@@ -47,6 +48,7 @@ class Parser {
 	void add_switch_D (type_of_lex type);
 	void add_switch_E (type_of_lex type);
 	void add_switch_F (type_of_lex type);
+	void check_labels ();
 
 	
 	void get_lex ();

@@ -47,7 +47,8 @@ void Parser:: analyze (LexList * ll)
 
 	get_lex ();
 	O ();
-
+	
+	check_labels ();
 	printf ("\nSyntax analyze:\tOK.\n"); 
 }
 
@@ -61,6 +62,8 @@ void Parser:: O ()
 	get_lex ();
 
 	B ();
+	
+	rpn.add_to_list ( new PolizNop () );
 
 }
 
@@ -102,14 +105,14 @@ void Parser:: C ()
 		assign ();
 	}
 	else if ( cur_lex.type == LEX_ARRAY ) {
-		array ();
+		array (true);
 		assign ();
 	}
 	else if ( cur_lex.type == LEX_BEGIN ) {
 		body ();
 	}
 	else if ( cur_lex.type == LEX_LABEL ) {
-		add_label (cur_lex, rpn.get_size ());
+		add_label (cur_lex);
 		get_lex ();
 	}
 	else if ( cur_lex.type == LEX_GOTO ) {
@@ -120,14 +123,15 @@ void Parser:: C ()
 		W ();
 	}
 	else {
-		throw LexException ("Invdalid left-handed expression.", cur_lex);
+		throw LexException ("Invdalid left-handed expression.", 
+			cur_lex
+		);
 	}
 } // C();
 
 
 void Parser:: D ()
 {
-
 	E ();
 
 	if (	cur_lex.type == LEX_EQ || 
@@ -187,7 +191,6 @@ void Parser:: G ()
 
 		get_lex ();	
 
-		printf ("P_ID\t");
 		int res = table->ident [value].get_value ();
 		rpn.add_to_list ( new PolizInt ( res ) ); 
 	}
@@ -196,14 +199,12 @@ void Parser:: G ()
 
 		get_lex ();	
 
-		printf ("P_NUM\t");
 		rpn.add_to_list ( new PolizInt (value) );
 	}
 	else if ( cur_lex.type == LEX_NEG ) {
 		get_lex ();
 
 		G ();
-		printf ("P_NEG");
 		rpn.add_to_list ( new PolizFunNeg () );
 	}
 	else if ( cur_lex.type == LEX_LPAREN ) {
@@ -214,7 +215,7 @@ void Parser:: G ()
 		rparen ();
 	}
 	else if ( cur_lex.type == LEX_ARRAY ) {
-		array ();
+		array (false);
 	}
 	else if ( look (cur_lex.type, TableLexem:: lex_function) ) {
 		Z ();	
@@ -228,36 +229,32 @@ void Parser:: G ()
 
 } // G();
 
+
 void Parser:: W ()
 {
 	if ( cur_lex.type == LEX_BUY ) {
 		arg2 ();
 
-		printf ("P_BUY(2)\t");
 		rpn.add_to_list ( new PolizFunBuy () );
 	}
 	else if ( cur_lex.type == LEX_SELL ) {
 		arg2 ();
 
-		printf ("P_SELL(2)\t");
 		rpn.add_to_list ( new PolizFunSell () );
 	}
 	else if ( cur_lex.type == LEX_PROD ) {
 		arg1 ();
 
-		printf ("P_PROD(1)\t");
 		rpn.add_to_list ( new PolizFunProd () );
 	}
 	else if ( cur_lex.type == LEX_BUILD ) {
 		arg0 ();
 
-		printf ("P_BUILD(0)\t");
 		rpn.add_to_list ( new PolizFunBuild () );
 	}
 	else if (cur_lex.type == LEX_TURN ) {
 		arg0 ();
 
-		printf ("P_TURN(0)\t");
 		rpn.add_to_list ( new PolizFunTurn () );
 	}
 	else if (cur_lex.type == LEX_PRINT ) {
@@ -280,105 +277,70 @@ void Parser:: Z ()
 {
 	if ( cur_lex.type == LEX_CUR_MONTH ) {
 		arg0 ();
-
-		printf ("P_CUR_MONTH\t");
 		rpn.add_to_list ( new PolizFunCurMonth () );
 	}
 	else if ( cur_lex.type == LEX_PLAYERS ) {
 		arg0 ();
-
-		printf ("P_PLAYERS\t");
 		rpn.add_to_list ( new PolizFunPlayers () );
 	}
 	else if ( cur_lex.type == LEX_ACTIVE_PLAYERS ) {
 		arg0 ();
-
-		printf ("P_ACTIVE_PLAYERS\t");
 		rpn.add_to_list ( new PolizFunActivePlayers () );
 	}
 	else if ( cur_lex.type == LEX_SUPPLY ) {
 		arg0 ();
-
-		printf ("P_SUPPLY\t");
 		rpn.add_to_list ( new PolizFunSupply () );
 	}
 	else if ( cur_lex.type == LEX_RAW_PRICE ) {
 		arg0 ();
-
-		printf ("P_RAW_PRICE\t");
 		rpn.add_to_list ( new PolizFunRawPrice () );
 	}
 	else if ( cur_lex.type == LEX_DEMAND ) {
 		arg0 ();
-
-		printf ("P_DEMAND\t");
 		rpn.add_to_list ( new PolizFunDemand () );
 	}
 	else if ( cur_lex.type == LEX_PRODUCTION_PRICE ) {
 		arg0 ();
-
-		printf ("P_PRODUCTION_PRICE\t");
 		rpn.add_to_list ( new PolizFunProductionPrice () );
 	}
 	else if ( cur_lex.type == LEX_MONEY ) {
 		arg1 ();
-
-		printf ("P_MONEY(1)\t");
 		rpn.add_to_list ( new PolizFunMoney () );
 	}
 	else if ( cur_lex.type == LEX_RAW ) {
 		arg1 ();
-
-		printf ("P_RAW(1)\t");
 		rpn.add_to_list ( new PolizFunRaw () );
 	}
 	else if ( cur_lex.type == LEX_PRODUCTION ) {
 		arg1 ();
-
-		printf ("P_PRODUCTION(1)\t");
 		rpn.add_to_list ( new PolizFunProduction () );
 	}
 	else if ( cur_lex.type == LEX_FACTORIES ) {
 		arg1 ();
-
-		printf ("P_FACTORIES(1)\t");
 		rpn.add_to_list ( new PolizFunFactories () );
 	}
 	else if ( cur_lex.type == LEX_AUTO_FACTORIES ) {
 		arg1 ();
-
-		printf ("P_AUTOFACTORIES(1)\t");
 		rpn.add_to_list ( new PolizFunAutoFactories () );
 	}
 	else if ( cur_lex.type == LEX_MANUFACTURED ) {
 		arg1 ();
-		
-		printf ("P_MANUFACTURED(1)\t");
 		rpn.add_to_list ( new PolizFunManufactured () );
 	}
 	else if ( cur_lex.type == LEX_RESULT_RAW_SOLD ) {
 		arg1 ();
-
-		printf ("P_RESULT_RAW_SOLD(1)\t");
 		rpn.add_to_list ( new PolizFunResultRawSold () );
 	}
 	else if ( cur_lex.type == LEX_RESULT_RAW_PRICE ) {
 		arg1 ();
-
-		printf ("P_RESULT_RAW_PRICE(1)\t");
 		rpn.add_to_list ( new PolizFunResultRawPrice () );
 	}
 	else if ( cur_lex.type == LEX_RESULT_PROD_BOUGHT ) {
 		arg1 ();
-
-		printf ("P_RESULT_PROD_BOUGHT(1)\t");
 		rpn.add_to_list ( new PolizFunResultProdBought () );
 	}
 	else if ( cur_lex.type == LEX_RESULT_PROD_PRICE ) {
 		arg1 ();
-
-		printf ("P_RESULT_PROD_PRICE(1)\t");
-	
 		rpn.add_to_list ( new PolizFunResultProdPrice () );
 	}
 	else 
@@ -406,15 +368,12 @@ void Parser:: S ()
 void Parser:: stringelem ()
 {
 	if ( cur_lex.type == LEX_STR ) {
-		int value =cur_lex.value;
+		int value = cur_lex.value;
 
 		get_lex ();
 
-		printf ("LEX_STR\t");
 		char * str = table->string [value].get_name ();
 		rpn.add_to_list ( new PolizString (str) );
-
-		printf ("POLIZ_PRINT\t");
 		rpn.add_to_list ( new PolizFunPrint (LEX_STR) );
 	}
 	else if ( 
@@ -422,10 +381,9 @@ void Parser:: stringelem ()
 		cur_lex.type == LEX_ID || 
 		cur_lex.type == LEX_ARRAY ||
 		look (cur_lex.type , TableLexem:: lex_function) != 0
-		)
+	)
 	{
 		D ();	
-		printf ("POLIZ_PRINT\t");
 		rpn.add_to_list ( new PolizFunPrint (LEX_NUM) );
 	}
 	else {
@@ -441,7 +399,6 @@ void Parser:: assign ()
 	if ( cur_lex.type == LEX_ASSIGN ) {
 		get_lex ();
 		D ();
-		printf ("P_ASSIGN\t");
 		rpn.add_to_list ( new PolizAssign () );
 	}
 	else {
@@ -464,6 +421,7 @@ void Parser:: rparen ()
 	if ( cur_lex.type != LEX_RPAREN ) {
 		throw LexException ("Expected ')'", cur_lex);
 	}
+
 	get_lex ();
 }
 
@@ -473,6 +431,7 @@ void Parser:: comma ()
 	if ( cur_lex.type != LEX_COMMA ) {
 		throw LexException ("Expected ','", cur_lex);
 	}
+
 	get_lex ();
 }
 
@@ -487,7 +446,7 @@ void Parser:: ifthen ()
 
 	D ();
 
-	int place1 = rpn.get_size ();
+	int place_false = rpn.get_size ();
 
 	create_if_labels ();
 
@@ -499,25 +458,24 @@ void Parser:: ifthen ()
 		throw LexException ("Expected 'then'", cur_lex);
 	}
 
-	fill_if_labels (place1);
+	fill_if_labels (place_false);
 }
 
 
 void Parser:: create_if_labels ()
 {
-	printf ("POLIZ_LABEL\t");
 	rpn.add_to_list ( new PolizLabel (0) );
-
-	printf ("POLIZ_FGO\t");
 	rpn.add_to_list ( new PolizOpGoFalse () );
 }
 
 
-void Parser:: fill_if_labels (int place1)
+void Parser:: fill_if_labels (int place_false)
 {
-	printf ("[<--]\t");
-	rpn.add_to_list ( new PolizLabel (rpn.get_pointer (rpn.get_size ())),
-		place1
+	int place_nop = rpn.get_size ();
+
+	rpn.add_to_list ( new PolizNop () );
+	rpn.add_to_list ( new PolizLabel (rpn.get_pointer (place_nop)),
+		place_false
 	);
 }
 
@@ -528,13 +486,13 @@ void Parser:: whiledo ()
 		throw LexException ("Must be while. Source code", cur_lex);
 	}
 	
-	int place1 = rpn.get_size ();
+	int place_while = rpn.get_size ();
 
 	get_lex ();
 
 	D ();
 
-	int place2 = rpn.get_size ();
+	int place_false = rpn.get_size ();
 
 	create_while_labels ();
 
@@ -546,57 +504,51 @@ void Parser:: whiledo ()
 		throw LexException ("Expected 'do'.", cur_lex);
 	}
 
-	fill_while_labels (place1, place2);
+	fill_while_labels (place_while, place_false);
 }
 
 
 void Parser:: create_while_labels ()
 {
-	printf ("POLIZ_LABEL\t");
 	rpn.add_to_list ( new PolizLabel (0) );
-
-	printf ("POLIZ_FGO\t");
 	rpn.add_to_list ( new PolizOpGoFalse () );
 }
 
 
-void Parser:: fill_while_labels (int place1, int place2)
+void Parser:: fill_while_labels (int place_while, int place_false)
 {
-	printf ("POLIZ_LABEL\t");
-	rpn.add_to_list ( new PolizLabel (rpn.get_pointer (place1)) );
-
-	printf ("P_GO\t");
+	rpn.add_to_list ( new PolizLabel (rpn.get_pointer (place_while)) );
 	rpn.add_to_list ( new PolizOpGo () );
 
-	printf ("[<--]\t");
-	rpn.add_to_list ( new PolizLabel ( rpn.get_pointer (rpn.get_size ()) ),
-		place2
+	int place_nop = rpn.get_size ();
+
+	rpn.add_to_list ( new PolizNop () );
+	rpn.add_to_list ( new PolizLabel ( rpn.get_pointer (place_nop) ),
+		place_false
 	);
 }
 
 
 void Parser:: add_address_id (int value)
 {
-	printf ("P_ADDRESS\t");
-	int * id = table->ident [value].get_address_id ();
+	int * id = table->ident [value].get_address_value ();
 	rpn.add_to_list ( new PolizVarAddress ( id ) );
 }
 
 
-void Parser:: array ()
+void Parser:: array (bool var)
 {
 	if ( cur_lex.type != LEX_ARRAY ) {
 		throw LexException ("Must be array. Source code", cur_lex);
 	}
-	
-	printf ("P_ID_ARR");
-	rpn.add_to_list ( new PolizTest (Lex (0, POLIZ_ID_ARRAY)) );
 
+	int value = cur_lex.value;
+	
 	get_lex ();
 
 	if ( cur_lex.type == LEX_LBRACKET ) {
-		
 		get_lex ();
+
 		D ();
 
 		if ( cur_lex.type == LEX_RBRACKET ) {
@@ -605,14 +557,19 @@ void Parser:: array ()
 		else {
 			throw LexException ("Expected ']'", cur_lex);
 		}
-
 	}
 	else {
 		throw LexException ("Expected '['.", cur_lex);
 	}
-	
-	printf ("P_ARR\t");
-	rpn.add_to_list ( new PolizTest (Lex (0, LEX_ARRAY)) );
+
+	if ( var == 0 ) {
+		int array = table->array [ value ]. get_value ();	
+		rpn.add_to_list ( new PolizArray (array, table) );
+	}
+	else {
+		int array = table->array [ value ]. get_value ();	
+		rpn.add_to_list ( new PolizVarAddressArray (array, table) );
+	}
 }
 
 
@@ -624,37 +581,30 @@ void Parser:: gotolabel ()
 	
 	get_lex ();
 
-	Lex p_lex = cur_lex;
+	int value = cur_lex.value;
 	if ( cur_lex.type == LEX_LABEL ) {
 		get_lex ();
 	}
 	else {
 		throw LexException ("Error in label of goto", cur_lex);
 	}
-	
-	int place1 = label.look (p_lex.value);
-	if ( place1 == 0 ) {
-		throw LexException ("Not found label", p_lex);
-	}
 
-	fill_goto_label (place1);
+	labelgoto.put (value, rpn.get_size ());
+
+	create_goto_label ();
 }
 
 
-void Parser:: fill_goto_label (int place1)
+void Parser:: create_goto_label ()
 {
-	printf ("P_LABEL\t");
-	rpn.add_to_list ( new PolizLabel (rpn.get_pointer (place1)) );
-
-	printf ("P_GO\t");
+	rpn.add_to_list ( new PolizLabel (0) );
 	rpn.add_to_list ( new PolizOpGo () );
 }
 
 
-void Parser:: add_label (const Lex & cur_lex, int place)
+void Parser:: add_label (const Lex & cur_lex)
 {
-
-	int i = label.put (cur_lex.value, place);
+	int i = label.put (cur_lex.value, rpn.get_size ());
 
 	if ( i == 0 ) {
 		throw LexException ("You have double lable", cur_lex);
@@ -698,7 +648,6 @@ void Parser:: arg2 ()
 
 void Parser:: add_switch_D (type_of_lex type) 
 {
-	printf ("P___EQ/GREATER/LESS\t");
 
 	if ( type == LEX_EQ ) {
 		rpn.add_to_list ( new PolizFunEq () );
@@ -717,7 +666,6 @@ void Parser:: add_switch_D (type_of_lex type)
 
 void Parser:: add_switch_E (type_of_lex type)
 {
-	printf ("P___PLUS/MINUS/OR\t");
 
 	if ( type == LEX_PLUS ) {
 		rpn.add_to_list ( new PolizFunPlus () );
@@ -736,7 +684,6 @@ void Parser:: add_switch_E (type_of_lex type)
 
 void Parser:: add_switch_F (type_of_lex type)
 {
-	printf ("P___MUL/DIV/AND\t");
 
 	if ( type == LEX_MULTIPLY ) {
 		rpn.add_to_list ( new PolizFunMul () );
@@ -752,3 +699,33 @@ void Parser:: add_switch_F (type_of_lex type)
 	}
 }
 
+
+void Parser:: check_labels ()
+{
+	int size_labelgoto = labelgoto.get_size ();	
+	int size_label = label.get_size ();	
+	int place_label;
+	int place_goto;
+
+	for ( int i = 1; i < size_labelgoto; ++ i ) {
+		bool f_label = false;
+
+		int lblgoto = labelgoto.get_label (i);
+		
+		for ( int j = 1; j < size_label; ++j ) {
+			if ( lblgoto == label.get_label (j) ) {
+				f_label = true;
+				place_label = label.get_place (j);
+				place_goto = labelgoto.get_place (i);
+				break;
+			}
+		}
+
+		if ( f_label == false ) {
+			throw ("Semantic error. Not found label where goto");
+		}
+
+		PolizItem * ptr = rpn.get_pointer (place_label);
+		rpn.add_to_list ( new PolizLabel (ptr), place_goto);
+	}
+}

@@ -67,13 +67,11 @@ class PolizInt : public PolizConst {
 	int value;
 public:
 	PolizInt (int a);
-	virtual ~PolizInt ();
 	virtual PolizElem * clone () const;
 	int get () const;
 	void print () const;
 };
 
-//----------------------------------------------------------
 
 class PolizString : public PolizConst {
 	char * value;
@@ -84,18 +82,17 @@ public:
 	char * get () const;
 	void print () const;
 };
-//----------------------------------------------------------
+
 
 class PolizVarAddress : public PolizConst {
 	int * value;
 public:
 	PolizVarAddress (int * value);
-	virtual ~PolizVarAddress ();
 	virtual PolizElem * clone () const;
 	int * get () const;
 	void print () const;
 };
-//----------------------------------------------------------
+
 
 class PolizLabel : public PolizConst {
 	PolizItem * value;
@@ -141,6 +138,26 @@ public:
 
 //----------------------------------------------------------
 
+class PolizArray : public PolizFunction {
+	int array;
+	TableLexem * table;
+public:
+	PolizArray (int arr, TableLexem * p_table);
+	PolizElem * evaluate_fun ( PolizItem ** stack ) const;
+	void print () const;
+};
+
+
+class PolizVarAddressArray : public PolizFunction {
+	int array;
+	TableLexem * table;
+public:
+	PolizVarAddressArray (int arr, TableLexem * p_table);
+	PolizElem * evaluate_fun ( PolizItem ** stack ) const;
+	void print () const;
+};
+
+
 class PolizAssign : public PolizFunction {
 public:
 	PolizElem * evaluate_fun ( PolizItem ** stack ) const;
@@ -150,7 +167,6 @@ public:
 
 class PolizFunEq : public PolizFunction {
 public:
-//	PolizFunEq ();
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
@@ -407,7 +423,6 @@ public:
 
 class PolizList {
 	PolizItem * first;
-	PolizItem * nop;
 	int size;
 	Stack st;
 

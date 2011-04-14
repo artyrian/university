@@ -74,7 +74,7 @@ class StorageTypeLex {
 	int 		value;
 public:
 	char * get_name ();
-	int * get_address_id ();
+	int * get_address_value ();
 	int get_value () const;
 	void put_name (const char * str);
 	type_of_lex get_type () const;
@@ -137,9 +137,12 @@ public:
 	TableLabel ();
 	~TableLabel ();
 	int get_size ();
+	int get_label (int i);
+	int get_place (int i);
 	int put (int value, int place);
 	int look (int val);
 	Item operator [] (int k);
+	void print () const;
 };
 
 
