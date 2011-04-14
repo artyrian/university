@@ -56,12 +56,12 @@ class Parser {
 		const type_of_lex * table
 	);
 public:
-	Parser ();
+	Parser (LexList * ll);
 	~Parser ();
 
 	PolizList rpn;
 
-	void analyze (LexList * ll);
+	void analyze ();
 };
 
 

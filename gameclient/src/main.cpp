@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "lexer/parser.hpp"
 #include "lexer/lexer.hpp"
+#include "exec/executer.hpp"
 #include "exception/exception.hpp"
 
 int main (int argc, char ** argv)
@@ -8,14 +9,15 @@ int main (int argc, char ** argv)
 	if ( argc > 1 ) {
 		try {
 			LexList	ll;
-
 			ll.fill (argv [1]);
 			ll.print ();
 
-			Parser pars;
-
-			pars.analyze (& ll); 
+			Parser pars (& ll);
+			pars.analyze (); 
 			pars.rpn.print ();
+
+			Executer exec ( pars.rpn.get_pointer () );
+			exec.executing ();
 		}
 		catch (const SymbolException & se) {
 			printf ("catch exception.\n");

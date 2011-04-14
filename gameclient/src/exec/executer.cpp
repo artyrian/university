@@ -1,23 +1,16 @@
 #include "executer.hpp"
-/*
-void Executer:: execute (Poliz & prg)
-{
 
+
+Executer:: Executer (PolizItem * list)
+{
+	poliz_list = list;
 }
 
 
-
-
-Interpretator:: Interpretator (char * path)
-	: pars (path)
+void Executer:: executing ()
 {
+	while ( poliz_list != 0 ) {
+//		poliz_list->p->evaluate ();
+		poliz_list = poliz_list->next;
+	}
 }
-
-
-void Interpretator:: interpretation()
-{
-	pars.analyze ();
-
-//	exec.execute (pars.prg);
-}
-*/

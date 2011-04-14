@@ -3,8 +3,9 @@
 #include <stdlib.h>
 
 
-Parser:: Parser ()
+Parser:: Parser (LexList * ll)
 {
+	lexl = ll;
 }
 
 
@@ -39,10 +40,9 @@ void Parser:: get_lex ()
 }
 
 
-void Parser:: analyze (LexList * ll)
+void Parser:: analyze ()
 {
-	lexl = ll;
-	table = ll->get_pointer_to_table ();
+	table = lexl->get_pointer_to_table ();
 	printf ("Begin parse.\n");
 
 	get_lex ();

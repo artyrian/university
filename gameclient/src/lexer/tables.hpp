@@ -6,34 +6,34 @@ enum type_of_lex {
 	LEX_NULL,			// 0
 	LEX_DO,				// 1
 	LEX_GOTO,			// 2
-	LEX_IF,				// 4
-	LEX_THEN,			// 5
-	LEX_WHILE,			// 6
-	LEX_BEGIN,			// 7
-	LEX_END,
-	LEX_FIN,			// 
-	LEX_COMMA,			// 10 
-	LEX_LPAREN,			// 11 
-	LEX_RPAREN,			// 12
-	LEX_EQ,				// 13
-	LEX_LESS,			// 14
-	LEX_GREATER,			// 15
-	LEX_PLUS,			// 16
-	LEX_MINUS,			// 17
-	LEX_MULTIPLY,			// 18
-	LEX_DIVISION, 			// 19
+	LEX_IF,				// 3
+	LEX_THEN,			// 4
+	LEX_WHILE,			// 5
+	LEX_BEGIN,			// 6
+	LEX_END,			// 7
+	LEX_FIN,			// 8
+	LEX_COMMA,			// 9 
+	LEX_LPAREN,			// 10 
+	LEX_RPAREN,			// 11
+	LEX_EQ,				// 12
+	LEX_LESS,			// 13
+	LEX_GREATER,			// 14
+	LEX_PLUS,			// 15
+	LEX_MINUS,			// 16
+	LEX_MULTIPLY,			// 17
+	LEX_DIVISION, 			// 18
 	LEX_LBRACKET,			// 
 	LEX_RBRACKET,			// 
-	LEX_OR,				// 2
-	LEX_AND,			// 2
-	LEX_NEG,			// 27
-	LEX_ASSIGN,			// 28
-	LEX_NUM,			// 29
+	LEX_OR,				// 21
+	LEX_AND,			// 22
+	LEX_NEG,			// 23
+	LEX_ASSIGN,			// 24
+	LEX_NUM,			// 25
 	LEX_ID,				// 
 	LEX_ARRAY,			// 
-	LEX_LABEL,			// 30
-	LEX_STR,			// 31
-	LEX_BUY,			// 32
+	LEX_LABEL,			// 28
+	LEX_STR,			// 29
+	LEX_BUY,			// 30
 	LEX_SELL,			// 
 	LEX_PROD,			// 
 	LEX_BUILD,	
@@ -45,13 +45,13 @@ enum type_of_lex {
 	LEX_SUPPLY,
 	LEX_RAW_PRICE,
 	LEX_DEMAND,
-	LEX_PRODUCTION_PRICE,		// 43
+	LEX_PRODUCTION_PRICE,		// 44
 	LEX_MONEY,
 	LEX_RAW,
 	LEX_PRODUCTION,
 	LEX_FACTORIES,
 	LEX_AUTO_FACTORIES,
-	LEX_MANUFACTURED,
+	LEX_MANUFACTURED,		// 50
 	LEX_RESULT_RAW_SOLD,
 	LEX_RESULT_RAW_PRICE,
 	LEX_RESULT_PROD_BOUGHT,

@@ -433,7 +433,7 @@ public:
 	void add_to_list (PolizElem * p);
 	void add_to_list (PolizElem * p, int place);
 	int get_size () const;
-	PolizItem * get_pointer (int place) const;
+	PolizItem * get_pointer (int place = 1) const;
 	void print () const;
 };
 
