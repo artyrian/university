@@ -67,7 +67,7 @@ void PolizElem:: push (PolizItem ** stack, PolizElem * cur_cmd)
 
 PolizElem * PolizElem:: pop (PolizItem ** stack)
 {
-	return 0;	
+	return 0;
 }
 
 
