@@ -493,8 +493,6 @@ void Parser:: whiledo ()
 
 	D ();
 	
-	rpn.add_to_list ( new PolizFunNeg () );
-
 	int place_false = rpn.get_size ();
 
 	create_while_labels ();

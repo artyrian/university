@@ -17,7 +17,7 @@ PolizElem:: ~PolizElem ()
 
 void PolizElem:: push (PolizItem ** stack, PolizElem * cur_cmd)
 {
-	printf ("push\n");
+//	printf ("push\n");
  	PolizItem * cur = new PolizItem ( );
 	cur->next = (*stack);
 	cur->p = cur_cmd;
@@ -27,7 +27,7 @@ void PolizElem:: push (PolizItem ** stack, PolizElem * cur_cmd)
 
 PolizElem * PolizElem:: pop (PolizItem ** stack)
 {
-	printf ("pop\n");
+//	printf ("pop\n");
 	PolizItem * cur = (*stack);
 	PolizElem * elem = (*stack)->p;
 	(*stack) = (*stack)->next;
@@ -179,7 +179,7 @@ int * PolizVarAddress:: get () const
 void PolizVarAddress:: 
 print () const
 {
-	printf ("! POLIZ_VAR_ADDRESS ( %d )\t", (*value) );
+	printf ("! POLIZ_VAR_ADDR ( %d )\t", (*value) );
 }
 
 //----------------------------------------------------------
@@ -432,7 +432,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i1->get() ==  i2->get();
+	int res = i2->get() ==  i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -446,13 +446,6 @@ print () const
 {
 	printf ("! POLIZ_EQ\t\t");
 }
-
-
-/*
-PolizFunGreater:: PolizFunGreater ()
-{
-}
-*/
 
 
 PolizElem * PolizFunGreater:: 
@@ -473,7 +466,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i1->get() > i2->get();
+	int res = i2->get() > i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -486,12 +479,6 @@ print () const
 {
 	printf ("! POLIZ_GREATER\t\t");
 }
-
-/*
-PolizFunLess:: PolizFunLess ()
-{
-}
-*/
 
 
 PolizElem * PolizFunLess:: 
@@ -512,7 +499,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i1->get() < i2->get();
+	int res = i2->get() < i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -526,12 +513,6 @@ print () const
 {
 	printf ("! POLIZ_LESS\t\t");
 }
-
-/*
-PolizFunPlus:: PolizFunPlus ()
-{
-}
-*/
 
 
 PolizElem * PolizFunPlus:: 
@@ -552,7 +533,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i1->get() + i2->get();
+	int res = i2->get() + i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -567,11 +548,6 @@ print () const
 	printf ("! POLIZ_PLUS\t\t");
 }
 
-/*
-PolizFunMinus:: PolizFunMinus ()
-{
-}
-*/
 
 PolizElem * PolizFunMinus:: 
 evaluate_fun (PolizItem ** stack) const
@@ -591,7 +567,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i1->get() - i2->get();
+	int res = i2->get() - i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -605,12 +581,6 @@ print () const
 {
 	printf ("! POLIZ_MINUS\t\t");
 }
-
-/*
-PolizFunOr:: PolizFunOr ()
-{
-}
-*/
 
 
 PolizElem * PolizFunOr:: 
@@ -631,7 +601,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i1->get() || i2->get();
+	int res = i2->get() || i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -646,11 +616,6 @@ print () const
 	printf ("! POLIZ_OR\t\t");
 }
 
-/*
-PolizFunMul:: PolizFunMul ()
-{
-}
-*/
 
 PolizElem * PolizFunMul:: 
 evaluate_fun (PolizItem ** stack) const
@@ -670,7 +635,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i1->get() * i2->get();
+	int res = i2->get() * i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -685,11 +650,6 @@ print () const
 	printf ("! POLIZ_MUL\t\t");
 }
 
-/*
-PolizFunDiv:: PolizFunDiv()
-{
-}
-*/
 
 
 PolizElem * PolizFunDiv:: 
@@ -710,7 +670,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i1->get() / i2->get();
+	int res = i2->get() / i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -725,11 +685,6 @@ print () const
 	printf ("! POLIZ_DIV\t\t");
 }
 
-/*
-PolizFunAnd:: PolizFunAnd ()
-{
-}
-*/
 
 
 PolizElem * PolizFunAnd:: 
@@ -750,7 +705,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i1->get () && i2->get ();
+	int res = i2->get () && i1->get ();
 
 	delete operand1;
 	delete operand2;

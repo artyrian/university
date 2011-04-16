@@ -168,7 +168,6 @@ public:
 
 class PolizFunGreater: public PolizFunction {
 public:
-//	PolizFunGreater ();
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
@@ -176,7 +175,6 @@ public:
 
 class PolizFunLess: public PolizFunction {
 public:
-//	PolizFunLess ();
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
@@ -185,7 +183,6 @@ public:
 
 class PolizFunPlus : public PolizFunction {
 public:
-//	PolizFunPlus ();
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
@@ -193,7 +190,6 @@ public:
 
 class PolizFunMinus: public PolizFunction {
 public:
-//	PolizFunMinus ();
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
@@ -201,7 +197,6 @@ public:
 
 class PolizFunOr: public PolizFunction {
 public:
-//	PolizFunOr ();
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
@@ -209,7 +204,6 @@ public:
 
 class PolizFunMul: public PolizFunction {
 public:
-//	PolizFunMul ();
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
@@ -218,7 +212,6 @@ public:
 
 class PolizFunDiv: public PolizFunction {
 public:
-//	PolizFunDiv ();
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
@@ -226,7 +219,6 @@ public:
 
 class PolizFunAnd: public PolizFunction {
 public:
-//	PolizFunAnd ();
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
