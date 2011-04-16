@@ -1387,7 +1387,7 @@ print () const
 {
 	PolizItem * cur = first;
 	
-	printf ("Print PolizList:\n");
+	printf ("\nPrint PolizList:\n");
 
 	while ( cur != 0 ) {
 		printf ("%d:\t", cur->number);
@@ -1397,7 +1397,7 @@ print () const
 		printf ("\n");
 	}
 
-	printf ("\nEnd of PolizList.\n");
+	printf ("End of PolizList.\n");
 }
 
 

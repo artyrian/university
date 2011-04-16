@@ -43,13 +43,13 @@ void Parser:: get_lex ()
 void Parser:: analyze ()
 {
 	table = lexl->get_pointer_to_table ();
-	printf ("Begin parse.\n");
+	printf ("\nBegin parse.\n");
 
 	get_lex ();
 	O ();
 	
 	check_labels ();
-	printf ("\nSyntax analyze:\tOK.\n"); 
+	printf ("Syntax analyze:\tOK.\n"); 
 }
 
 
