@@ -344,6 +344,14 @@ void TableStorageTypeLex:: operator= (const TableStorageTypeLex & t)
 	size = t.size;
 	top = t.top;
 }
+
+
+void TableStorageTypeLex:: print () const
+{
+	for ( int i = 1; i < top; ++ i ) {
+		printf ("%d) %d.\n", i, s [i].get_value ());
+	}
+}
 	
 
 void TableArrayStorageTypeLex:: extend_table ()

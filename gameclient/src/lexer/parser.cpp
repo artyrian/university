@@ -188,18 +188,19 @@ void Parser:: G ()
 {
 	if ( cur_lex.type == LEX_ID ) {
 		int value = cur_lex.value;
-
 		get_lex ();	
 
-		int res = table->ident [value].get_value ();
-		rpn.add_to_list ( new PolizInt ( res ) ); 
+		//int res = table->ident [value].get_value ();
+		int *id = table->ident [value].get_address_value ();
+
+		rpn.add_to_list ( new PolizVarInt ( id ) ); 
 	}
 	else if ( cur_lex.type == LEX_NUM ) {
 		int value = cur_lex.value;
 
 		get_lex ();	
 
-		rpn.add_to_list ( new PolizInt (value) );
+		rpn.add_to_list ( new PolizInt ( value ) );
 	}
 	else if ( cur_lex.type == LEX_NEG ) {
 		get_lex ();
@@ -491,6 +492,8 @@ void Parser:: whiledo ()
 	get_lex ();
 
 	D ();
+	
+	rpn.add_to_list ( new PolizFunNeg () );
 
 	int place_false = rpn.get_size ();
 
@@ -562,12 +565,11 @@ void Parser:: array (bool var)
 		throw LexException ("Expected '['.", cur_lex);
 	}
 
-	if ( var == 0 ) {
-		int array = table->array [ value ]. get_value ();	
+	int array = table->array [ value ]. get_value ();	
+	if ( var == false ) {
 		rpn.add_to_list ( new PolizArray (array, table) );
 	}
 	else {
-		int array = table->array [ value ]. get_value ();	
 		rpn.add_to_list ( new PolizVarAddressArray (array, table) );
 	}
 }

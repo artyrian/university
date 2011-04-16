@@ -57,12 +57,21 @@ public:
 	void print () const;
 };
 
+class PolizVarInt : public PolizConst {
+	int * value;
+public:
+	PolizVarInt (int * a);
+	virtual PolizElem * clone () const;
+	int get () const;
+	void print () const;
+};
+
+
 
 class PolizString : public PolizConst {
 	char * value;
 public:
 	PolizString (char * value);
-	virtual ~PolizString ();
 	virtual PolizElem * clone () const;
 	char * get () const;
 	void print () const;

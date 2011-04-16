@@ -68,17 +68,16 @@ enum type_of_lex {
 
 
 class StorageTypeLex {
-	friend class TableStorageTypeLex;
 	char * 		name;
 	type_of_lex	type;
 	int 		value;
 public:
-	char * get_name ();
-	int * get_address_value ();
-	int get_value () const;
-	void put_name (const char * str);
-	type_of_lex get_type () const;
-	void put_type (type_of_lex t);
+	virtual char * get_name ();
+	virtual int * get_address_value ();
+	virtual int get_value () const;
+	virtual void put_name (const char * str);
+	virtual type_of_lex get_type () const;
+	virtual void put_type (type_of_lex t);
 
 	virtual ~StorageTypeLex ();
 	virtual void operator= (const StorageTypeLex & str);
@@ -87,10 +86,14 @@ public:
 
 
 
-class TableStorageTypeLex: public StorageTypeLex {
+class TableStorageTypeLex : public StorageTypeLex {
 	StorageTypeLex * s;
 	int		size;
 	int		top;
+
+	char * 		name;
+	type_of_lex	type;
+	int 		value;
 
 	void extend_table ();
 public:
@@ -100,9 +103,8 @@ public:
 	int get_size () const;
 
 	virtual ~TableStorageTypeLex ();
-
 	virtual void operator= (const TableStorageTypeLex & t);
-
+	void print () const;
 };
 
 

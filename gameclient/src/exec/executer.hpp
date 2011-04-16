@@ -17,6 +17,7 @@ public:
 	Executer (PolizItem * list);
 	~Executer ();
 	void executing ();
+	void print_stack () const;
 };
 
 

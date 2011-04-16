@@ -102,6 +102,35 @@ print () const
 	printf ("! POLIZ_INT ( %d )\t", value);
 }
 
+//----------------------------------------------------------
+
+
+PolizVarInt:: PolizVarInt (int * a)
+{
+	value = a;
+}
+
+
+PolizElem * PolizVarInt:: clone () const
+{
+	return new PolizInt (*value);
+}
+
+
+int PolizVarInt:: get () const
+{
+	return (*value);
+}
+
+
+void PolizVarInt:: 
+print () const
+{
+	printf ("! POLIZ_VAR_INT ( %d )\t", *value);
+}
+
+
+
 
 //----------------------------------------------------------
 
@@ -110,9 +139,6 @@ PolizString:: PolizString (char * p)
 	value = p;
 }
 
-PolizString:: ~PolizString ()
-{
-}
 
 PolizElem * PolizString:: clone () const
 {
@@ -153,7 +179,7 @@ int * PolizVarAddress:: get () const
 void PolizVarAddress:: 
 print () const
 {
-	printf ("! POLIZ_VAR_ADDRESS\t");
+	printf ("! POLIZ_VAR_ADDRESS ( %d )\t", (*value) );
 }
 
 //----------------------------------------------------------
@@ -252,8 +278,12 @@ evaluate ( PolizItem ** stack, PolizItem ** cur_cmd) const
 	PolizItem * addr = lab->get ();
 
 	if ( i->get () == 0 ) {
-		* cur_cmd = addr;
+		(*cur_cmd) = addr;
 	}
+	else {
+		(*cur_cmd) = (*cur_cmd)->next;
+	}
+	
 
 	delete operand1;
 	delete operand2;
@@ -367,7 +397,7 @@ evaluate_fun (PolizItem ** stack) const
 
 	PolizElem * operand2 = pop (stack);
 	PolizVarAddress * addr = dynamic_cast <PolizVarAddress *> (operand2);
-	if ( !addr) {
+	if ( !addr ) {
 		throw PolizExceptionNotAddress (operand2);
 	}
 
@@ -392,15 +422,12 @@ evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
 	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
-
 	if ( ! i1 ) { 
 		throw PolizExceptionNotInt (operand1);
 	}
 
 	PolizElem * operand2 = pop (stack);
-
 	PolizInt * i2 = dynamic_cast <PolizInt*> (operand2);
-
 	if ( !i2 ) {
 		throw PolizExceptionNotInt (operand2);
 	}
@@ -903,6 +930,7 @@ evaluate_fun (PolizItem ** stack) const
 		PolizInt * i1 = dynamic_cast 
 			<PolizInt *> (operand1);
 		printf ("call print (%d).\n", i1->get ());
+
 		delete operand1;
 	}
 	else if ( type == LEX_STR ) {
