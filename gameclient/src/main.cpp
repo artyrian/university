@@ -10,11 +10,11 @@ int main (int argc, char ** argv)
 		try {
 			LexList	ll;
 			ll.fill (argv [1]);
-			ll.print ();
+//			ll.print ();
 
 			Parser pars (& ll);
 			pars.analyze (); 
-			pars.rpn.print ();
+//			pars.rpn.print ();
 
 			Executer exec ( pars.rpn.get_pointer () );
 			exec.executing ();

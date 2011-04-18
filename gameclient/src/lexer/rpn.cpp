@@ -331,8 +331,12 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand1);
 	}
 	// have index;
+
+	char str [20];
+	sprintf (str, "%d", i->get ());
+	int k = table->array. index (array)-> put ( str );
 	
-	int res = table->array [ array ] [ i->get () ].get_value ();
+	int res = table-> array.index ( array )->index ( k ) -> value;
 	// get value elem (i) of array (=value).
 
 	delete operand1;
@@ -366,7 +370,11 @@ evaluate_fun (PolizItem ** stack) const
 	}
 	// have index;
 	
-	int * res = table->array [ array ] [ i->get () ].get_address_value ();
+	char str [20];
+	sprintf (str, "%d", i->get ());
+	int k = table->array. index ( array ) ->put (str);
+
+	int * res = table->array.index (array) ->index (k)->get_address_value ();
 	// get value elem (i) of array (=value).
 
 	delete operand1;

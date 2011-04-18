@@ -67,43 +67,41 @@ enum type_of_lex {
 
 
 
-class StorageTypeLex {
-	char * 		name;
-	type_of_lex	type;
-	int 		value;
-public:
-	virtual char * get_name ();
-	virtual int * get_address_value ();
-	virtual int get_value () const;
-	virtual void put_name (const char * str);
-	virtual type_of_lex get_type () const;
-	virtual void put_type (type_of_lex t);
+struct StorageTypeLex {
+	char * 	name;
+	type_of_lex type;
+	int value;
 
+	virtual void put_name (const char *str);
+	virtual int * get_address_value ();
 	virtual ~StorageTypeLex ();
-	virtual void operator= (const StorageTypeLex & str);
 };
 
 
 
 
 class TableStorageTypeLex : public StorageTypeLex {
-	StorageTypeLex * s;
+	struct Storage {
+		StorageTypeLex * s;
+		int num;
+		Storage * next;
+
+		Storage (
+			StorageTypeLex * p_s, 
+			int p_num, 
+			Storage * p_next
+		);
+	};
+
+	Storage *	storage_list;
 	int		size;
-	int		top;
-
-	char * 		name;
-	type_of_lex	type;
-	int 		value;
-
-	void extend_table ();
-public:
 	TableStorageTypeLex ();
-	StorageTypeLex & operator [] (int k);
 	int put (const char * buf);
-	int get_size () const;
+public:
+//	StorageTypeLex * operator [] (int v);
+	StorageTypeLex * index (int idx);
 
-	virtual ~TableStorageTypeLex ();
-	virtual void operator= (const TableStorageTypeLex & t);
+	~TableStorageTypeLex ();
 	void print () const;
 };
 
@@ -111,14 +109,27 @@ public:
 
 
 class TableArrayStorageTypeLex {
-	TableStorageTypeLex * 	t;
-	int 			size;
-	int 			top;
+	struct TableStorage {
+		TableStorageTypeLex * 	t;
+		int num;
+		TableStorage * next;
 
-	void extend_table ();
+		TableStorage (
+			TableStorageTypeLex * p_t, 
+			int p_num, 
+			TableStorage * next
+		);
+	};
+	TableStorage * table_storage_list;
+
+	int size;
+
 public:
 	TableArrayStorageTypeLex ();
-	TableStorageTypeLex & operator [] (int k);
+
+//	TableStorageTypeLex * operator [] (int k);
+	TableStorageTypeLex * index (int idx);
+
 	int put (const char * buf);
 	~TableArrayStorageTypeLex ();
 };
@@ -128,23 +139,29 @@ class TableLabel {
 	struct Item {
 		int label;
 		int place;
+
+		Item (int p_label, int p_place);
+	};
+
+	struct ListElem {
+		Item * item;
+		int num;
+		ListElem * next;
+
+		ListElem (Item * p_item, int p_num, ListElem * p_next);
 	};
 	
-	Item * arr;
+	ListElem * list;
 	int size;
 	int top;
 
-	void extend_table ();
 public:
 	TableLabel ();
 	~TableLabel ();
 	int get_size ();
-	int get_label (int i);
-	int get_place (int i);
 	int put (int value, int place);
 	int look (int val);
-	Item operator [] (int k);
-	void print () const;
+	Item * operator [] (int k);
 };
 
 

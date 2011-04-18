@@ -43,7 +43,6 @@ void Parser:: get_lex ()
 void Parser:: analyze ()
 {
 	table = lexl->get_pointer_to_table ();
-	printf ("\nBegin parse.\n");
 
 	get_lex ();
 	O ();
@@ -190,8 +189,7 @@ void Parser:: G ()
 		int value = cur_lex.value;
 		get_lex ();	
 
-		//int res = table->ident [value].get_value ();
-		int *id = table->ident [value].get_address_value ();
+		int * id = table->ident.index ( value )->get_address_value ();
 
 		rpn.add_to_list ( new PolizVarInt ( id ) ); 
 	}
@@ -373,7 +371,7 @@ void Parser:: stringelem ()
 
 		get_lex ();
 
-		char * str = table->string [value].get_name ();
+		char * str = table->string.index (value)->name;
 		rpn.add_to_list ( new PolizString (str) );
 		rpn.add_to_list ( new PolizFunPrint (LEX_STR) );
 	}
@@ -532,7 +530,7 @@ void Parser:: fill_while_labels (int place_while, int place_false)
 
 void Parser:: add_address_id (int value)
 {
-	int * id = table->ident [value].get_address_value ();
+	int * id = table->ident.index (value)->get_address_value ();
 	rpn.add_to_list ( new PolizVarAddress ( id ) );
 }
 
@@ -563,12 +561,11 @@ void Parser:: array (bool var)
 		throw LexException ("Expected '['.", cur_lex);
 	}
 
-	int array = table->array [ value ]. get_value ();	
 	if ( var == false ) {
-		rpn.add_to_list ( new PolizArray (array, table) );
+		rpn.add_to_list ( new PolizArray (value, table) );
 	}
 	else {
-		rpn.add_to_list ( new PolizVarAddressArray (array, table) );
+		rpn.add_to_list ( new PolizVarAddressArray (value, table) );
 	}
 }
 
@@ -711,13 +708,13 @@ void Parser:: check_labels ()
 	for ( int i = 1; i < size_labelgoto; ++ i ) {
 		bool f_label = false;
 
-		int lblgoto = labelgoto.get_label (i);
+		int lblgoto = labelgoto [i]->label;
 		
-		for ( int j = 1; j < size_label; ++j ) {
-			if ( lblgoto == label.get_label (j) ) {
+		for ( int j = 1; j < size_label; ++ j ) {
+			if ( lblgoto == label [i]->label ) {
 				f_label = true;
-				place_label = label.get_place (j);
-				place_goto = labelgoto.get_place (i);
+				place_label = label [j]->place;
+				place_goto = labelgoto [i]->place;
 				break;
 			}
 		}

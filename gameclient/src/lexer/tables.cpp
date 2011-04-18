@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#define PART_SIZE_TABLE 4
 
 const char * PrintTable:: lexem [] =
 {
@@ -218,11 +217,6 @@ type_of_lex TableLexem:: lex_function [] =
 
 
 
-char * StorageTypeLex:: get_name ()
-{
-	return name;
-}
-
 int * StorageTypeLex:: get_address_value ()
 {
 	return & value;
@@ -236,244 +230,286 @@ void StorageTypeLex:: put_name (const char *str)
 }
 
 
-type_of_lex StorageTypeLex:: get_type () const
-{
-	return type;
-}
-
-int StorageTypeLex:: get_value () const
-{
-	return value;
-}
-
-
-void StorageTypeLex::put_type (type_of_lex t)
-{
-	type = t;
-}
-
-
 StorageTypeLex:: ~StorageTypeLex ()
 {
 	delete [] name;
 }
 
 
-void StorageTypeLex:: operator= (const StorageTypeLex & str)
-{
-	name = new char [ strlen (str.name) ];
-	strcpy (name, str.name);
-
-	type = str.type;
-	value = str.value;
-}
-
-
-
-void TableStorageTypeLex:: extend_table ()
-{
-	int new_size = 2 * size;	
-	StorageTypeLex * news = new StorageTypeLex [ new_size ];
-
-	for ( int i = 1; i < top; ++i ) {
-		news[i] = s[i];
-	}
-	
-	delete [] s;
-	
-	s = news;
-	size = new_size;
-
-}
+//----------------------------------------------------------------
 
 
 TableStorageTypeLex:: TableStorageTypeLex ()
-	: size (PART_SIZE_TABLE)
 {
-	s = new StorageTypeLex [ size ];
-	top = 1;
+	storage_list = 0;
+	size = 0;
 }
 
 
-StorageTypeLex & TableStorageTypeLex:: operator[] (int k)
+TableStorageTypeLex:: Storage::
+Storage ( StorageTypeLex * p_s, int p_num, Storage * p_next )
 {
-	return s[k];
+	s = p_s;
+	num = p_num;
+	next = p_next;
 }
+
 
 
 int TableStorageTypeLex:: put (const char * buf)
 {
-	if ( top == size - 1 ) {
-		extend_table ();
-	}
+	Storage * cur = storage_list;
+	int i = 1;
 
-	for ( int i = 1; i < top; i++ ) {
-		if ( strcmp (buf, s[i].get_name ()) == 0 ) {
-			return i;	
+	while ( i <= size ) {
+		if ( strcmp ( buf, cur->s->name ) == 0 ) {
+			return cur->num;	
 		}
+		cur = cur->next;
+		++ i;
 	}
 
-	s[top].put_name (buf);
-	top++;
+	printf ("put storage\n");
 
-	return (top - 1);
+	Storage * old_storage_list = storage_list;
+	storage_list = new Storage ( new StorageTypeLex, ++ size, old_storage_list );
+	storage_list->s->put_name (buf);
+
+	return size;
 }
 
-
-int TableStorageTypeLex:: get_size () const
+/*
+StorageTypeLex * TableStorageTypeLex:: operator [] (int k) 
 {
-	return (top - 1);
-}
+	Storage * cur = storage_list;
+	int i = 1;
 
-
-void TableStorageTypeLex:: operator= (const TableStorageTypeLex & t)
-{
-	name = new char [ strlen (t.name) ];
-	strcpy (name, t.name);
-
-	type = t.type;
-	value = t.value;
-
-
-	s = new StorageTypeLex [ top ];
-
-	for ( int i = 1; i < top; ++i ) {
-		s[i] = t.s[i];
-	}
-
-	size = t.size;
-	top = t.top;
-}
-
-
-void TableStorageTypeLex:: print () const
-{
-	for ( int i = 1; i < top; ++ i ) {
-		printf ("%d) %d.\n", i, s [i].get_value ());
-	}
-}
-	
-
-void TableArrayStorageTypeLex:: extend_table ()
-{
-	int new_size = 2 * size;	
-	TableStorageTypeLex * new_t = new TableStorageTypeLex [ new_size ];
-
-	for ( int i = 1; i < top; ++i ) {
-		new_t[i] = t[i];
+	while ( i <= size ) {
+		if ( cur->num == k ) {
+			return cur->s;
+		}
+		cur = cur->next;
+		++ i;
 	}
 	
-	delete [] t;
+	perror ("Wrong parameter of index in TableStorageTypeLex.\n");
+	return 0;
+}
+*/
+
+StorageTypeLex * TableStorageTypeLex:: index (int idx)
+{
+	Storage * cur = storage_list;
+	int i = 1;
+
+	while ( i <= size ) {
+		if ( cur->num == idx ) {
+			return cur->s;
+		}
+		cur = cur->next;
+		++ i;
+	}
 	
-	t = new_t;
-	size = new_size;
+	throw ("Wrong parameter of index in TableStorageTypeLex.\n");
+	return 0;
 }
 
 
 TableStorageTypeLex:: ~TableStorageTypeLex ()
 {
-	delete [] s;
+	Storage * cur = storage_list;
+
+	while ( cur != 0 ) {
+		storage_list = storage_list->next;	
+		delete cur->s;
+		delete cur;
+		cur = storage_list;
+	}
 }
 
+
+
+void TableStorageTypeLex:: print () const
+{
+	Storage * cur = storage_list;
+	int i = 1;
+
+	printf ("Start print storage type lex.\n");
+
+	while ( i <= size ) {
+		printf ("%d) %d.\n", i, cur->s->value);
+		cur = cur->next;
+		++i;
+	}
+	
+	printf (" end of print storage type lex.\n");
+}
+
+//----------------------------------------------------------------
+TableArrayStorageTypeLex:: TableStorage:: 
+TableStorage (TableStorageTypeLex * p_t, int p_num, TableStorage * p_next )
+{
+	t = p_t;
+	num = p_num;
+	next = p_next;
+}
+	
 
 int TableArrayStorageTypeLex:: put (const char  * buf)
 {
-	if ( top == size - 1 ) {
-		extend_table ();
-	}
-	
-	for ( int i = 1; i < top; i++ ) {
-		if ( strcmp (buf, t[i].get_name ()) == 0 ) {
+	TableStorage * cur = table_storage_list;
+	int i = 1;
+
+	while ( i <= size ) {
+		if ( strcmp ( buf, cur->t->name ) == 0 ) {
 			return i;	
 		}
+		++ i;
+		cur = cur->next;
 	}
-	
-	t[top].put_name (buf);
-	top++;
 
-	return (top - 1);
+	printf ("array put work\n");
+	TableStorage * old_table_storage_list = table_storage_list;
+	
+	TableStorageTypeLex * p_table = new TableStorageTypeLex ();
+
+	table_storage_list = new TableStorage ( p_table, ++ size, old_table_storage_list);
+	table_storage_list->t->put_name (buf);
+
+	return size;
 }
 
 
+
 TableArrayStorageTypeLex:: TableArrayStorageTypeLex ()
-	: size (PART_SIZE_TABLE)
 {
-	t = new TableStorageTypeLex [size];
-	top = 1;	
+	table_storage_list = 0;
+	size = 0;
 }
 
 
 TableArrayStorageTypeLex:: ~TableArrayStorageTypeLex ()
 {
-	delete [] t;
+	TableStorage * cur = table_storage_list;
+
+	while ( cur != 0 ) {
+		table_storage_list = table_storage_list->next;
+		delete cur->t;
+		delete cur;
+		cur = table_storage_list;	
+	}
 }
 
-
-TableStorageTypeLex & 
+/*
+TableStorageTypeLex * 
 TableArrayStorageTypeLex:: operator [] (int k)
 {
-	return t[k];
+	TableStorage * cur = table_storage_list;
+	int i = 1;
+	
+	while ( i <= size ) {
+		if ( cur->num  == k ) {
+			return cur->t;
+		}
+		cur = cur->next;
+		++ i;
+	}
+
+	perror ("Error index in TableArrayStorageTypeLex.\n");
+	return 0;
+}
+*/
+
+TableStorageTypeLex * TableArrayStorageTypeLex:: index (int idx)
+{
+	TableStorage * cur = table_storage_list;
+	int i = 1;
+	
+	while ( i <= size ) {
+		if ( cur->num  == idx ) {
+			return cur->t;
+		}
+		cur = cur->next;
+		++ i;
+	}
+
+	throw ("Error index in TableArrayStorageTypeLex.");
 }
 
 
+//---------------------------------------------------------
 
 
 TableLabel:: TableLabel ()
-	: size (PART_SIZE_TABLE)
 {
-	arr = new Item [size];
-	top = 1;
-
+	list = 0;
+	size = 0;
 }
 
 
-void TableLabel:: extend_table ()
-{
-	int new_size = 2 * size;	
-	Item * new_arr = new Item [ new_size ];
-
-	for ( int i = 1; i < top; ++i ) {
-		new_arr [i] = arr [i];
-	}
-	
-	delete [] arr;
-	
-	arr = new_arr;
-	size = new_size;
-}
 
 TableLabel:: ~ TableLabel ()
 {
-	delete [] arr;
+	ListElem * cur = list;
+
+	while ( cur != 0 ) {
+		list = list->next;
+		delete cur->item;
+		delete cur;
+		cur = list;
+	}
+}
+
+
+TableLabel:: Item:: 
+Item (int p_label, int p_place)
+{
+	label = p_label;
+	place = p_place;
+}
+
+
+TableLabel:: ListElem::
+ListElem ( Item * p_item, int p_num, ListElem * p_next )
+{
+	item = p_item;
+	num = p_num;
+	next = p_next;
 }
 
 
 int TableLabel:: put (int label, int place)
 {
-	if ( top == size - 1 ) {
-		extend_table ();
-	}
-	
-	for ( int i = 1; i < top; i++ ) {
-		if ( arr[i].label == label) {
+	ListElem * cur = list;
+	int i = 1;
+
+	while ( i <= size ) {
+		if ( label == cur->item->label ) {
 			return 0;	
 		}
+		++ i;
+		cur = cur->next;
 	}
-	
-	arr [top].label = label;
-	arr [top].place = place;
-	top ++;
 
-	return (top - 1);
+	ListElem * old_list = list;
+	list = new ListElem (new Item (label, place), ++ size, old_list);
+	list->next = old_list;
+
+	return size;
 }
 
 
 int TableLabel:: look (int label)
 {
-	for ( int i = 1; i < top; i++ ) {
-		if ( arr [i].label == label ) {
-			return arr [i].place;
+	ListElem * cur = list;
+	int i = 1;
+
+	while ( i <= size ) {
+		if ( label == cur->item->label ) {
+			return cur->item->place;
 		}
+		cur = cur->next;
+		++ i;
 	}
 
 	return 0;
@@ -481,33 +517,25 @@ int TableLabel:: look (int label)
 
 int TableLabel:: get_size ()
 {
-	return top;
+	return size;
 }
 
 
-int TableLabel:: get_label (int i)
-{
-	return arr[i].label;
-}
-
-
-int TableLabel:: get_place (int i)
-{
-	return arr[i].place;
-}
-
-
-TableLabel:: Item 
+TableLabel:: Item *
 TableLabel:: operator [] (int k)
 {
-	return arr [k];
+	ListElem * cur = list;
+	int i = 1;
+
+	while ( i <= size ) {
+		if ( cur->num == k ) {
+			return cur->item;
+		}
+		++ i;
+		cur = cur->next;
+	}
+
+	perror ("Error with TableLabel.\n");
+	return 0;
 }
 
-void TableLabel:: print () const
-{
-	for (int i = 1; i < top; ++i) {
-		printf ("label: %d place: %d",
-			arr [i].label, arr [i].place
-		);
-	}
-}
