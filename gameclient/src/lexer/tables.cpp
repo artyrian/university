@@ -519,6 +519,7 @@ int TableLabel:: get_size ()
 }
 
 
+/*
 TableLabel:: Item *
 TableLabel:: operator [] (int k)
 {
@@ -536,4 +537,33 @@ TableLabel:: operator [] (int k)
 	perror ("Error with TableLabel.\n");
 	return 0;
 }
+*/
 
+TableLabel:: Item *
+TableLabel:: index (int k)
+{
+	ListElem * cur = list;
+	int i = 1;
+
+	while ( i <= size ) {
+		if ( cur->num == k ) {
+			return cur->item;
+		}
+		++ i;
+		cur = cur->next;
+	}
+
+	throw ("Dont know where go.");
+}
+
+void TableLabel:: print () const
+{
+	ListElem * cur = list;
+	int i = 1;
+	while ( cur != 0 ) {
+		printf ("%d) label= %d, place=%d.\n",
+			cur->item->label, cur->item->place, ++i
+		);	
+		cur = cur->next;
+	}
+}

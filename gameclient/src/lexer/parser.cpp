@@ -716,16 +716,16 @@ void Parser:: check_labels ()
 	int place_label;
 	int place_goto;
 
-	for ( int i = 1; i < size_labelgoto; ++ i ) {
+	for ( int i = 1; i <= size_labelgoto; ++ i ) {
 		bool f_label = false;
 
-		int lblgoto = labelgoto [i]->label;
+		int lblgoto = labelgoto.index (i)->label;
 		
-		for ( int j = 1; j < size_label; ++ j ) {
-			if ( lblgoto == label [i]->label ) {
+		for ( int j = 1; j <= size_label; ++ j ) {
+			if ( lblgoto == label.index (i)->label ) {
 				f_label = true;
-				place_label = label [j]->place;
-				place_goto = labelgoto [i]->place;
+				place_label = label.index (j)->place;
+				place_goto = labelgoto.index (i)->place;
 				break;
 			}
 		}

@@ -14,7 +14,7 @@ int main (int argc, char ** argv)
 
 			Parser pars (& ll);
 			pars.analyze (); 
-//			pars.rpn.print ();
+			pars.rpn.print ();
 
 			Executer exec ( pars.rpn.get_pointer () );
 			exec.executing ();
