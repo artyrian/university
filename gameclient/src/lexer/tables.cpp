@@ -269,7 +269,6 @@ int TableStorageTypeLex:: put (const char * buf)
 		++ i;
 	}
 
-	printf ("put storage\n");
 
 	Storage * old_storage_list = storage_list;
 	storage_list = new Storage ( new StorageTypeLex, ++ size, old_storage_list );
@@ -368,7 +367,6 @@ int TableArrayStorageTypeLex:: put (const char  * buf)
 		cur = cur->next;
 	}
 
-	printf ("array put work\n");
 	TableStorage * old_table_storage_list = table_storage_list;
 	
 	TableStorageTypeLex * p_table = new TableStorageTypeLex ();

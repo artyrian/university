@@ -95,9 +95,9 @@ class TableStorageTypeLex : public StorageTypeLex {
 
 	Storage *	storage_list;
 	int		size;
+public:
 	TableStorageTypeLex ();
 	int put (const char * buf);
-public:
 //	StorageTypeLex * operator [] (int v);
 	StorageTypeLex * index (int idx);
 
