@@ -159,7 +159,6 @@ public:
 	int get_size ();
 	int put (int value, int place);
 	int look (int val);
-//	Item * operator [] (int k);
 	Item * index (int idx);
 	void print () const;
 };

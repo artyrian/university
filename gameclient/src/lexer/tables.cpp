@@ -519,26 +519,6 @@ int TableLabel:: get_size ()
 }
 
 
-/*
-TableLabel:: Item *
-TableLabel:: operator [] (int k)
-{
-	ListElem * cur = list;
-	int i = 1;
-
-	while ( i <= size ) {
-		if ( cur->num == k ) {
-			return cur->item;
-		}
-		++ i;
-		cur = cur->next;
-	}
-
-	perror ("Error with TableLabel.\n");
-	return 0;
-}
-*/
-
 TableLabel:: Item *
 TableLabel:: index (int k)
 {
