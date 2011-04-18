@@ -49,7 +49,9 @@ class Parser {
 	void add_switch_E (type_of_lex type);
 	void add_switch_F (type_of_lex type);
 	void check_labels ();
-
+	
+	char * newline;
+	void paste_newline ();
 	
 	void get_lex ();
 	int look (type_of_lex type_lex, 

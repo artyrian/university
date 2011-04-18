@@ -1,16 +1,20 @@
 #include "parser.hpp"
 #include "../exception/exception.hpp"
 #include <stdlib.h>
+#include <string.h>
 
 
 Parser:: Parser (LexList * ll)
 {
 	lexl = ll;
+	newline = new char [2];
+	strcpy (newline, "\n");
 }
 
 
 Parser:: ~Parser ()
 {
+	delete [] newline;
 }
 
 
@@ -261,6 +265,7 @@ void Parser:: W ()
 
 		lparen ();
 		S ();
+		paste_newline ();
 		rparen ();
 	}
 	else {
@@ -361,6 +366,12 @@ void Parser:: S ()
 		S ();
 	}
 	
+}
+
+void Parser:: paste_newline ()
+{
+	rpn.add_to_list ( new PolizString (newline) );
+	rpn.add_to_list ( new PolizFunPrint (LEX_STR) );
 }
 
 

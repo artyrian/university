@@ -49,7 +49,7 @@ print () const
 void PolizNop:: 
 evaluate (PolizItem ** stack, PolizItem ** cur_cmd) const
 {
-	printf ("call nop.\n");
+//	printf ("call nop.\n");
 	*cur_cmd = (* cur_cmd)->next;
 }
 
@@ -892,14 +892,14 @@ evaluate_fun (PolizItem ** stack) const
 	if ( type == LEX_NUM ) {
 		PolizInt * i1 = dynamic_cast 
 			<PolizInt *> (operand1);
-		printf ("call print (%d).\n", i1->get ());
+		printf ("%d", i1->get ());
 
 		delete operand1;
 	}
 	else if ( type == LEX_STR ) {
 		PolizString * i1 = dynamic_cast
 			<PolizString *> (operand1);
-		printf ("call print (%s).\n", i1->get ());
+		printf ("%s", i1->get ());
 		delete operand1;
 	}
 	else {
