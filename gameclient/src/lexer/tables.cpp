@@ -20,6 +20,8 @@ const char * PrintTable:: lexem [] =
 	"LEX_EQ",
 	"LEX_LESS",
 	"LEX_GREATER",
+	"LEX_LEQ",
+	"LEX_GEQ",
 	"LEX_PLUS",
 	"LEX_MINUS",
 	"LEX_MULTIPLY",
@@ -29,7 +31,6 @@ const char * PrintTable:: lexem [] =
 	"LEX_OR",
 	"LEX_AND",
 	"LEX_NEG",
-	"LEX_ASSIGN",
 	"LEX_NUM",
 	"LEX_ID",
 	"LEX_ARRAY",
@@ -71,10 +72,8 @@ const char * PrintTable:: lexem [] =
 const char * TableLexem:: word [] =
 {
 	""		// 0 dont use.
-	"do", 		// 1
 	"goto",		// 2
 	"if",		// 4
-	"then",		// 5
 	"while",	// 6
 	0
 };
@@ -83,10 +82,8 @@ const char * TableLexem:: word [] =
 type_of_lex TableLexem:: lex_word [] =
 {
 	LEX_NULL,			// 0
-	LEX_DO,				// 1
 	LEX_GOTO,			// 2
 	LEX_IF,				// 4
-	LEX_THEN,			// 5
 	LEX_WHILE,			// 6
 	LEX_NULL
 };
@@ -125,9 +122,6 @@ const char * TableLexem:: delim [] =
 	",",		// 2
 	"(", 		// 3
 	")",		// 4
-	"=",		// 5
-	"<",		// 6
-	">",		// 7
 	"+",		// 8
 	"-",		// 9
 	"*",		// 10
@@ -143,6 +137,7 @@ const char * TableLexem:: delim [] =
 };
 
 
+
 type_of_lex TableLexem:: lex_delim [] =
 {
 	LEX_NULL,		// 0 
@@ -150,9 +145,6 @@ type_of_lex TableLexem:: lex_delim [] =
 	LEX_COMMA,
 	LEX_LPAREN,
 	LEX_RPAREN,
-	LEX_EQ,
-	LEX_LESS,
-	LEX_GREATER,
 	LEX_PLUS,
 	LEX_MINUS,		// 9
 	LEX_MULTIPLY,
@@ -166,6 +158,30 @@ type_of_lex TableLexem:: lex_delim [] =
 	LEX_END,
 	LEX_NULL
 };
+
+
+const char * TableLexem:: compare [] =
+{
+	""		// 0 dont use.
+	"=",		// 
+	"<",		// 
+	">",		// 
+	"<=",
+	">=",
+	0
+};
+
+type_of_lex TableLexem:: lex_compare [] =
+{
+	LEX_NULL,		// 0 
+	LEX_EQ,
+	LEX_LESS,
+	LEX_GREATER,
+	LEX_LEQ,
+	LEX_GEQ,
+	LEX_NULL
+};
+
 
 
 const char * TableLexem:: function [] =
