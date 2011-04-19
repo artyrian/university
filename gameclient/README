@@ -3,9 +3,8 @@ CREATE IN VIM HOTKEY WITH AUTOCOMMIT
 NEED TO DO:
 --------------
 1) In src/robot/ create method which convert nick to uid to each player.
-3) create for;
-4) create read;
-5)
+2) create for;
+3) create read;
 ---------------
 
 
