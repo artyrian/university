@@ -612,7 +612,7 @@ void Parser:: create_goto_label ()
 
 void Parser:: add_label (const Lex & cur_lex)
 {
-	int i = label.put ( rpn.get_size (), cur_lex.value );
+	int i = label.put ( cur_lex.value, rpn.get_size () );
 
 	if ( i == 0 ) {
 		throw LexException ("You have double lable", cur_lex);
@@ -716,7 +716,11 @@ void Parser:: check_labels ()
 	int place_label;
 	int place_goto;
 
+	printf ("label print\n");
 	label.print ();
+	printf ("labelgoto print\n");
+	labelgoto.print ();
+	printf ("end print\n");
 
 	for ( int i = 1; i <= size_labelgoto; ++ i ) {
 		bool f_label = false;
@@ -724,7 +728,7 @@ void Parser:: check_labels ()
 		int lblgoto = labelgoto.index (i)->label;
 		
 		for ( int j = 1; j <= size_label; ++ j ) {
-			if ( lblgoto == label.index (i)->label ) {
+			if ( lblgoto == label.index (j)->label ) {
 				f_label = true;
 				place_label = label.index (j)->place;
 				place_goto = labelgoto.index (i)->place;

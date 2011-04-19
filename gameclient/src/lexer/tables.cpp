@@ -539,10 +539,10 @@ TableLabel:: index (int k)
 void TableLabel:: print () const
 {
 	ListElem * cur = list;
-	int i = 1;
+	int i = 0;
 	while ( cur != 0 ) {
 		printf ("%d) label= %d, place=%d.\n",
-			cur->item->label, cur->item->place, ++i
+			++i, cur->item->label, cur->item->place
 		);	
 		cur = cur->next;
 	}

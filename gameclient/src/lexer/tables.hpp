@@ -157,7 +157,7 @@ public:
 	TableLabel ();
 	~TableLabel ();
 	int get_size ();
-	int put (int value, int place);
+	int put (int place, int value);
 	int look (int val);
 	Item * index (int idx);
 	void print () const;
