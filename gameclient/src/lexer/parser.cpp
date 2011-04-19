@@ -610,6 +610,7 @@ void Parser:: array (bool var)
 	}
 
 	int value = cur_lex.value;
+	printf ("value of array:%d.\n", value);
 	
 	get_lex ();
 
@@ -730,6 +731,10 @@ void Parser:: add_switch_D (type_of_lex type)
 
 		rpn.add_to_list ( new PolizFunGreaterEq () );
 	}
+	else if ( type == LEX_LG ) {
+		rpn.add_to_list ( new PolizFunLessGreater () );
+	}
+
 	else {
 		throw ("Must be EQ/GREATER/LESS. Source code");
 	}

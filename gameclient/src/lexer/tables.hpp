@@ -19,7 +19,7 @@ enum type_of_lex {
 	LEX_GREATER,			// 14
 	LEX_LEQ,
 	LEX_GEQ,
-	LEX_GL,
+	LEX_LG,
 	LEX_PLUS,			// 15
 	LEX_MINUS,			// 16
 	LEX_MULTIPLY,			// 17
@@ -93,7 +93,6 @@ class TableStorageTypeLex : public StorageTypeLex {
 public:
 	TableStorageTypeLex ();
 	int put (const char * buf);
-//	StorageTypeLex * operator [] (int v);
 	StorageTypeLex * index (int idx);
 
 	~TableStorageTypeLex ();
@@ -122,7 +121,6 @@ class TableArrayStorageTypeLex {
 public:
 	TableArrayStorageTypeLex ();
 
-//	TableStorageTypeLex * operator [] (int k);
 	TableStorageTypeLex * index (int idx);
 
 	int put (const char * buf);

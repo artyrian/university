@@ -21,7 +21,7 @@ const char * PrintTable:: lexem [] =
 	"LEX_GREATER",
 	"LEX_LEQ",
 	"LEX_GEQ",
-	"LEX_GL",
+	"LEX_LG",
 	"LEX_PLUS",
 	"LEX_MINUS",
 	"LEX_MULTIPLY",
@@ -176,7 +176,7 @@ type_of_lex TableLexem:: lex_compare [] =
 	LEX_GREATER,
 	LEX_LEQ,
 	LEX_GEQ,
-	LEX_GL,
+	LEX_LG,
 	LEX_NULL
 };
 
@@ -359,6 +359,7 @@ void TableStorageTypeLex:: print () const
 }
 
 //----------------------------------------------------------------
+
 TableArrayStorageTypeLex:: TableStorage:: 
 TableStorage (TableStorageTypeLex * p_t, int p_num, TableStorage * p_next )
 {
@@ -375,7 +376,7 @@ int TableArrayStorageTypeLex:: put (const char  * buf)
 
 	while ( i <= size ) {
 		if ( strcmp ( buf, cur->t->name ) == 0 ) {
-			return i;	
+			return cur->num;	
 		}
 		++ i;
 		cur = cur->next;
