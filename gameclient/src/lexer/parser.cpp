@@ -121,7 +121,7 @@ void Parser:: C ()
 	else if ( cur_lex.type == LEX_GOTO ) {
 		gotolabel ();
 	}
-	else if ( look (cur_lex.type, TableLexem:: lex_action) ) 
+	else if ( look (cur_lex.type, TableLexem:: lex_action) != 0 ) 
 	{
 		W ();
 	}
@@ -137,10 +137,7 @@ void Parser:: D ()
 {
 	E ();
 
-	if (	cur_lex.type == LEX_EQ || 
-		cur_lex.type == LEX_GREATER || 
-		cur_lex.type == LEX_LESS) 
-	{
+	if (  look (cur_lex.type, TableLexem :: lex_compare) != 0 ) {
 		type_of_lex type = cur_lex.type;
 
 		get_lex ();
@@ -390,7 +387,7 @@ void Parser:: stringelem ()
 		cur_lex.type == LEX_NUM || 
 		cur_lex.type == LEX_ID || 
 		cur_lex.type == LEX_ARRAY ||
-		look (cur_lex.type , TableLexem:: lex_function) != 0
+		look (cur_lex.type , TableLexem:: lex_function)
 	)
 	{
 		D ();	
@@ -406,7 +403,7 @@ void Parser:: stringelem ()
 
 void Parser:: assign ()
 {
-	if ( cur_lex.type == LEX_ASSIGN ) {
+	if ( cur_lex.type == LEX_EQ) {
 		get_lex ();
 		D ();
 		rpn.add_to_list ( new PolizAssign () );
@@ -460,13 +457,7 @@ void Parser:: ifthen ()
 
 	create_if_labels ();
 
-	if ( cur_lex.type == LEX_THEN ) {
-		get_lex ();
-		C ();	
-	}
-	else {
-		throw LexException ("Expected 'then'", cur_lex);
-	}
+	C ();	
 
 	fill_if_labels (place_false);
 }
@@ -506,13 +497,7 @@ void Parser:: whiledo ()
 
 	create_while_labels ();
 
-	if ( cur_lex.type == LEX_DO ) {
-		get_lex ();
-		C ();
-	}
-	else {
-		throw LexException ("Expected 'do'.", cur_lex);
-	}
+	C ();
 
 	fill_while_labels (place_while, place_false);
 }
@@ -657,7 +642,6 @@ void Parser:: arg2 ()
 
 void Parser:: add_switch_D (type_of_lex type) 
 {
-
 	if ( type == LEX_EQ ) {
 		rpn.add_to_list ( new PolizFunEq () );
 	}
@@ -666,6 +650,13 @@ void Parser:: add_switch_D (type_of_lex type)
 	}
 	else if ( type == LEX_LESS ) {
 		rpn.add_to_list ( new PolizFunLess () );
+	}
+	else if ( type == LEX_LEQ ) {
+		rpn.add_to_list ( new PolizFunLessEq () );
+	}
+	else if ( type == LEX_GEQ) {
+
+		rpn.add_to_list ( new PolizFunGreaterEq () );
 	}
 	else {
 		throw ("Must be EQ/GREATER/LESS. Source code");

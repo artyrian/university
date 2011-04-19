@@ -172,10 +172,10 @@ void LexList:: print ()
 
 
 
-
+/*
 int Scanner:: isdelim (int c)
 {
-	const char smb [] = "+-*/%<>=&|!{}[]();,";
+	const char smb [] = "+/-*%&|!{}[]();,";
 	int i = 0;
 
 	while ( smb[i] != '\0' ) {
@@ -186,6 +186,10 @@ int Scanner:: isdelim (int c)
 	
 	return false;	
 }
+*/
+
+
+
 
 
 Lex Scanner:: get_save_lex ()
@@ -193,12 +197,29 @@ Lex Scanner:: get_save_lex ()
 	return save_lex;
 }
 
-int Scanner::look (const char * buf, const char ** list)
+int Scanner:: look (const char * buf, const char ** list)
 {
 	int i = 0;
 
 	while ( list [i] != 0 ) {
 		if ( strcmp (buf, list [i]) == 0 ) {
+			return (i + 1);
+		}
+		++i;
+	}
+
+	return false;	
+}
+
+int Scanner:: look (const char c, const char ** list)
+{
+	int i = 0;
+
+	char str [3];
+	sprintf (str, "%c", c); 
+
+	while ( list [i] != 0 ) {
+		if ( strcmp (str, list [i]) == 0 ) {
 			return (i + 1);
 		}
 		++i;
@@ -256,12 +277,12 @@ bool Scanner:: step (int c)
 		return state_IDENT (c);
 	case KW:
 		return state_KW (c);
-	case ASSIGN:
-		return state_ASSIGN (c);
 	case STR:
 		return state_STR (c);
 	case DELIM:
 		return state_DELIM (c);
+	case LEG:
+		return state_LEG (c);
 	case NEG:
 		return state_NEG (c);
 	case FN:
@@ -281,61 +302,52 @@ bool Scanner:: step (int c)
 bool Scanner:: state_H (int c)
 {
 	if ( c == '\n' || isspace (c) ) {
-		//
 		return false;	
 	}
 	else if ( isdigit (c) ) {
 		digit = c - '0';
 		CS = NUM;
-		//
 		return false;	
 	}
 	else if ( isalpha (c) ) {
 		buffer->clear ();
 		buffer->add (c);
 		CS = KW;
-		//
 		return false;
 	}
 	else if ( c == '!' ) {
 		buffer->clear ();
 		buffer->add (c);
 		CS = NEG;
-		//
 		return false;
 	}
 	else if ( c == '?' ) {
 		buffer->clear ();
 		buffer->add (c);
 		CS = FN;
-		//
 		return false; 
 	} 
 	else if ( c == '$' ) {
 		buffer->clear ();
 		buffer->add (c);
 		CS = IDENT;
-		//
-		return false;
-	}
-	else if ( c == ':' ) {
-		buffer->clear ();
-		buffer->add (c);
-		CS = ASSIGN;
-		//
 		return false;
 	}
 	else if ( c == '"') {
 		buffer->clear ();
 		CS = STR;
-		//
 		return false;
 	} 
-	else if ( isdelim (c) != 0 ) {
+	else if ( look (c, table->delim) != 0 ) {
 		buffer->clear ();
 		buffer->add (c);
 		CS = DELIM;
-		//
+		return false;
+	}
+	else if ( look (c, table->compare) != 0 ) {
+		buffer->clear ();
+		buffer->add (c);
+		CS = LEG;
 		return false;
 	}
 	else if ( c == '\'' ) {
@@ -347,7 +359,6 @@ bool Scanner:: state_H (int c)
 		buffer->clear ();
 		buffer->add (c);
 		CS = LABEL;
-		//
 		return false; 
 	}
 	else {
@@ -392,7 +403,6 @@ bool Scanner:: state_IDENT (int c)
 	else {
 		int i = table->ident.put (buffer->get ());
 		CS = H;
-	//	buffer->add (c);
 		save_c = c;
 		save_lex = Lex (count_str, LEX_ID, i);
 		return true;
@@ -404,7 +414,6 @@ bool Scanner:: state_KW (int c)
 {
 	if ( isalpha (c) || isdigit (c) || (c == '_') ) {
 		buffer->add (c);
-		//
 		return false;
 	}
 	else {
@@ -429,30 +438,15 @@ bool Scanner:: state_KW (int c)
 }
 
 
-bool Scanner:: state_ASSIGN (int c)
-{
-	if ( c == '=' ) { 
-		CS = H;
-		save_lex = Lex (count_str, LEX_ASSIGN, 1);
-		return true;
-	}		
-	else {
-		throw SymbolException ("Error in assign.", c, count_str);
-	}
-}
-
-
 bool Scanner:: state_STR (int c)
 {
 	if ( c != '"' ) {
 		buffer->add (c);
-		//
 		return false; 
 	}
 	else {
 		int i = table->string.put (buffer->get ());
 		CS = H;
-		//
 		save_lex = Lex (count_str, LEX_STR, i);
 		return true;
 	}
@@ -472,6 +466,26 @@ bool Scanner:: state_DELIM (int c)
 	else {
 		printf ("%dbuf[%s]\n", i, buffer->get ());
 		throw SymbolException ( "Not found delim (state DELIM).", c, count_str);
+	}
+}
+
+
+bool Scanner:: state_LEG (int c)
+{
+	int i;
+	if ( look (c, table->compare) != 0 ) {
+		buffer->add (c);
+		return false;
+	}
+	else if ( (i = look (buffer->get (), table->compare)) != 0 ) {
+		CS = H;
+		save_c = c;
+		save_lex = Lex (count_str, table->lex_compare [i], i);
+		return true;
+	}
+	else {
+		printf ("%dbuf[%s]\n", i, buffer->get ());
+		throw SymbolException ( "Not found delim (state LEG).", c, count_str);
 	}
 }
 
@@ -514,7 +528,6 @@ bool Scanner:: state_COMMENT (int c)
 	if ( c == '\'' ) {
 		CS = H;
 	}
-	//
 	return false;
 }
 
@@ -523,7 +536,6 @@ bool Scanner:: state_LABEL (int c)
 {
 	if ( isalpha (c) || isdigit (c) || ( c == '_') ) {
 		buffer->add (c);
-		//
 		return false;
 	}
 	else {

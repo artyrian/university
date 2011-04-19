@@ -1,7 +1,7 @@
 #ifndef _RPN_HPP_
 #define _RPN_HPP_
 
-#include "lexer.hpp"
+#include "tables.hpp"
 
 class PolizElem;
 struct PolizItem;
@@ -102,8 +102,6 @@ public:
 
 class PolizOpGo : public PolizElem {
 public:
-	PolizOpGo ();
-	virtual ~PolizOpGo ();
 	void evaluate ( PolizItem ** stack, PolizItem ** cur_cmd) const;
 	void print () const;
 };
@@ -112,8 +110,6 @@ public:
 
 class PolizOpGoFalse : public PolizElem {
 public:
-	PolizOpGoFalse ();
-	virtual ~PolizOpGoFalse ();
 	void evaluate ( PolizItem ** stack, PolizItem ** cur_cmd) const;
 	void print () const;
 };
@@ -174,6 +170,20 @@ public:
 
 
 class PolizFunLess: public PolizFunction {
+public:
+	PolizElem * evaluate_fun ( PolizItem ** stack) const;
+	void print () const;
+};
+
+
+class PolizFunGreaterEq: public PolizFunction {
+public:
+	PolizElem * evaluate_fun ( PolizItem ** stack) const;
+	void print () const;
+};
+
+
+class PolizFunLessEq: public PolizFunction {
 public:
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
@@ -391,17 +401,6 @@ public:
 class PolizFunResultProdPrice : public PolizFunction {
 public:
 	PolizElem * evaluate_fun (PolizItem ** stack) const;
-	void print () const;
-};
-
-//----------------------------------------------------------
-
-class PolizTest: public PolizElem {
-	Lex	l;
-public:
-	virtual void evaluate (	PolizItem ** stack, 
-				PolizItem ** cur_cmd) const;
-	PolizTest (const Lex & lex);
 	void print () const;
 };
 

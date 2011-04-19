@@ -1,7 +1,5 @@
 #include "rpn.hpp"
-#include "tables.hpp"
 #include "../exception/exception.hpp"
-//----------------------------------------------------------
 
 
 PolizItem:: PolizItem (int n, PolizElem * ptr, PolizItem * p_next)
@@ -17,7 +15,6 @@ PolizElem:: ~PolizElem ()
 
 void PolizElem:: push (PolizItem ** stack, PolizElem * cur_cmd)
 {
-//	printf ("push\n");
  	PolizItem * cur = new PolizItem ( );
 	cur->next = (*stack);
 	cur->p = cur_cmd;
@@ -27,7 +24,6 @@ void PolizElem:: push (PolizItem ** stack, PolizElem * cur_cmd)
 
 PolizElem * PolizElem:: pop (PolizItem ** stack)
 {
-//	printf ("pop\n");
 	PolizItem * cur = (*stack);
 	PolizElem * elem = (*stack)->p;
 	(*stack) = (*stack)->next;
@@ -214,16 +210,6 @@ print () const
 
 //----------------------------------------------------------
 
-PolizOpGo:: PolizOpGo ()
-{
-}
-
-
-PolizOpGo:: ~ PolizOpGo ()
-{
-}
-
-
 void PolizOpGo :: 
 evaluate ( PolizItem ** stack, PolizItem ** cur_cmd) const
 {
@@ -249,16 +235,6 @@ print () const
 }
 
 //----------------------------------------------------------
-
-PolizOpGoFalse:: PolizOpGoFalse ()
-{
-}
-
-
-PolizOpGoFalse:: ~ PolizOpGoFalse ()
-{
-}
-
 
 void PolizOpGoFalse:: 
 evaluate ( PolizItem ** stack, PolizItem ** cur_cmd) const
@@ -521,6 +497,76 @@ print () const
 {
 	printf ("! POLIZ_LESS\t\t");
 }
+
+
+
+PolizElem * PolizFunGreaterEq:: 
+evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
+
+	if ( ! i1 ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+
+	PolizElem * operand2 = pop (stack);
+
+	PolizInt * i2 = dynamic_cast <PolizInt*> (operand2);
+
+	if ( !i2 ) {
+		throw PolizExceptionNotInt (operand2);
+	}
+
+	int res = i2->get() >= i1->get();
+
+	delete operand1;
+	delete operand2;
+
+	return new PolizInt (res);
+}
+
+void PolizFunGreaterEq:: 
+print () const
+{
+	printf ("! POLIZ_GEQ\t\t");
+}
+
+
+PolizElem * PolizFunLessEq:: 
+evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
+
+	if ( ! i1 ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+
+	PolizElem * operand2 = pop (stack);
+
+	PolizInt * i2 = dynamic_cast <PolizInt*> (operand2);
+
+	if ( !i2 ) {
+		throw PolizExceptionNotInt (operand2);
+	}
+
+	int res = i2->get() <= i1->get();
+
+	delete operand1;
+	delete operand2;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunLessEq:: 
+print () const
+{
+	printf ("! POLIZ_LEQ\t\t");
+}
+
+
 
 
 PolizElem * PolizFunPlus:: 
@@ -1281,27 +1327,6 @@ print () const
 
 }
 
-
-//----------------------------------------------------------
-
-PolizTest:: PolizTest (const Lex & lex)
-{
-	l = lex;
-}
-
-
-void PolizTest:: 
-evaluate (PolizItem ** stack, PolizItem ** cur_cmd) const 
-{
-}
-
-
-void PolizTest:: 
-print () const
-{
-	l.print ();
-}
-
 //----------------------------------------------------------
 
 PolizItem * PolizList:: create_item (PolizElem * cur_cmd)
@@ -1407,6 +1432,5 @@ print () const
 
 	printf ("End of PolizList.\n");
 }
-
 
 //----------------------------------------------------------

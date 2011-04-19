@@ -65,9 +65,9 @@ class Scanner {
 		NUM, 
 		IDENT, 
 		KW, 
-		ASSIGN, 
 		STR, 
 		DELIM, 
+		LEG,
 		NEG, 
 		FN, 
 		COMMENT,
@@ -82,8 +82,8 @@ class Scanner {
 
 	Lex		save_lex;
 
-	int isdelim (int c);
 	int look (const char * buf, const char ** list);
+	int look (const char c, const char ** list);
 public:
 	Scanner (TableLexem * table);
 	bool feed_symbol (int);
@@ -96,9 +96,9 @@ private:
 	bool state_NUM (int c);
 	bool state_IDENT (int c);
 	bool state_KW (int c);
-	bool state_ASSIGN (int c);
 	bool state_STR (int c);
 	bool state_DELIM (int c);
+	bool state_LEG (int c);
 	bool state_NEG (int c);
 	bool state_FN (int c);
 	bool state_COMMENT (int c);

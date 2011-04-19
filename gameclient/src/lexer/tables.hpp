@@ -4,10 +4,8 @@
 
 enum type_of_lex {
 	LEX_NULL,			// 0
-	LEX_DO,				// 1
 	LEX_GOTO,			// 2
 	LEX_IF,				// 3
-	LEX_THEN,			// 4
 	LEX_WHILE,			// 5
 	LEX_BEGIN,			// 6
 	LEX_END,			// 7
@@ -18,6 +16,8 @@ enum type_of_lex {
 	LEX_EQ,				// 12
 	LEX_LESS,			// 13
 	LEX_GREATER,			// 14
+	LEX_LEQ,
+	LEX_GEQ,
 	LEX_PLUS,			// 15
 	LEX_MINUS,			// 16
 	LEX_MULTIPLY,			// 17
@@ -27,7 +27,6 @@ enum type_of_lex {
 	LEX_OR,				// 21
 	LEX_AND,			// 22
 	LEX_NEG,			// 23
-	LEX_ASSIGN,			// 24
 	LEX_NUM,			// 25
 	LEX_ID,				// 
 	LEX_ARRAY,			// 
@@ -173,6 +172,9 @@ struct TableLexem {
 
 	static const char *		delim [];
 	static type_of_lex 		lex_delim [];
+
+	static const char *		compare [];
+	static type_of_lex 		lex_compare [];
 
 	static const char *		function [];
 	static type_of_lex		lex_function [];
