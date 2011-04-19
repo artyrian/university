@@ -1,0 +1,11 @@
+{
+	$n := 4;
+	$i := 0;
+	$fact := 1;
+	while ( ($i < $n) | ($i > $n) ) do {
+		$i := $i + 1;
+		$fact := $fact * $i;
+	};
+	
+	print ("$fact = ", $fact);
+}
