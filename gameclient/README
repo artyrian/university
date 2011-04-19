@@ -2,7 +2,6 @@ CREATE IN VIM HOTKEY WITH AUTOCOMMIT
 
 NEED TO DO:
 --------------
-0) LABELS!!!
 1) In src/robot/ create method which convert nick to uid to each player.
 2) create operations <= >=
 3) create for;
