@@ -567,6 +567,41 @@ print () const
 }
 
 
+PolizElem * PolizFunLessGreater:: 
+evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i1 = dynamic_cast<PolizInt *>(operand1);
+
+	if ( ! i1 ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+
+	PolizElem * operand2 = pop (stack);
+
+	PolizInt * i2 = dynamic_cast <PolizInt*> (operand2);
+
+	if ( !i2 ) {
+		throw PolizExceptionNotInt (operand2);
+	}
+
+	int res = i2->get() != i1->get();
+
+	delete operand1;
+	delete operand2;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunLessGreater:: 
+print () const
+{
+	printf ("! POLIZ_LG\t\t");
+}
+
+
+
 
 
 PolizElem * PolizFunPlus:: 

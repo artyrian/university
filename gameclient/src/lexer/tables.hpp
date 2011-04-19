@@ -6,6 +6,7 @@ enum type_of_lex {
 	LEX_NULL,			// 0
 	LEX_GOTO,			// 2
 	LEX_IF,				// 3
+	LEX_FOR,
 	LEX_WHILE,			// 5
 	LEX_BEGIN,			// 6
 	LEX_END,			// 7
@@ -18,6 +19,7 @@ enum type_of_lex {
 	LEX_GREATER,			// 14
 	LEX_LEQ,
 	LEX_GEQ,
+	LEX_GL,
 	LEX_PLUS,			// 15
 	LEX_MINUS,			// 16
 	LEX_MULTIPLY,			// 17
@@ -54,13 +56,7 @@ enum type_of_lex {
 	LEX_RESULT_RAW_SOLD,
 	LEX_RESULT_RAW_PRICE,
 	LEX_RESULT_PROD_BOUGHT,
-	LEX_RESULT_PROD_PRICE,
-	POLIZ_ADDRESS,
-	POLIZ_ID_ARRAY,
-	POLIZ_GO,
-	POLIZ_LABEL,
-	POLIZ_FGO,
-	POLIZ_NOP
+	LEX_RESULT_PROD_PRICE
 };
 
 

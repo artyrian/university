@@ -102,6 +102,9 @@ void Parser:: C ()
 	else if ( cur_lex.type == LEX_WHILE ) {
 		whiledo ();
 	}
+	else if ( cur_lex.type == LEX_FOR ) {
+		for_loop ();
+	}
 	else if ( cur_lex.type == LEX_ID ) {
 		add_address_id (cur_lex.value);
 		get_lex ();
@@ -487,39 +490,33 @@ void Parser:: whiledo ()
 		throw LexException ("Must be while. Source code", cur_lex);
 	}
 	
-	int place_while = rpn.get_size ();
+	int place_compare = rpn.get_size ();
 
 	get_lex ();
 
 	D ();
 	
-	int place_false = rpn.get_size ();
+	int place_if_nop = rpn.get_size ();
 
-	create_while_labels ();
+	rpn.add_to_list ( new PolizLabel (0) );
+	rpn.add_to_list ( new PolizOpGoFalse () );
 
 	C ();
 
-	fill_while_labels (place_while, place_false);
+	fill_while_labels (place_compare, place_if_nop);
 }
 
 
-void Parser:: create_while_labels ()
+void Parser:: fill_while_labels (int place_compare, int place_if_nop)
 {
-	rpn.add_to_list ( new PolizLabel (0) );
-	rpn.add_to_list ( new PolizOpGoFalse () );
-}
-
-
-void Parser:: fill_while_labels (int place_while, int place_false)
-{
-	rpn.add_to_list ( new PolizLabel (rpn.get_pointer (place_while)) );
+	rpn.add_to_list ( new PolizLabel (rpn.get_pointer (place_compare)) );
 	rpn.add_to_list ( new PolizOpGo () );
 
 	int place_nop = rpn.get_size ();
 
 	rpn.add_to_list ( new PolizNop () );
 	rpn.add_to_list ( new PolizLabel ( rpn.get_pointer (place_nop) ),
-		place_false
+		place_if_nop
 	);
 }
 
@@ -528,6 +525,81 @@ void Parser:: add_address_id (int value)
 {
 	int * id = table->ident.index (value)->get_address_value ();
 	rpn.add_to_list ( new PolizVarAddress ( id ) );
+}
+
+
+void Parser:: for_loop ()
+{
+	if ( cur_lex.type != LEX_FOR ) {
+		throw LexException ("Must be for. Source code", cur_lex);
+	}
+
+	get_lex ();
+	lparen ();
+	add_address_id (cur_lex.value);
+	get_lex ();
+	assign ();
+
+	comma ();
+
+	int place_compare = rpn.get_size ();
+	D ();
+	int place_goto_nop = rpn.get_size ();
+	rpn.add_to_list ( new PolizLabel (0) );
+	rpn.add_to_list ( new PolizOpGoFalse () );
+	int place_goto_body = rpn.get_size ();
+	rpn.add_to_list ( new PolizLabel (0) );
+	rpn.add_to_list ( new PolizOpGo () );
+
+	comma ();
+
+	// neg ?
+
+	int place_inc = rpn.get_size ();
+	add_address_id (cur_lex.value);
+	get_lex ();
+	assign ();
+	int place_goto_compare = rpn.get_size ();
+	rpn.add_to_list ( new PolizLabel (0) );
+	rpn.add_to_list ( new PolizOpGo () );
+	int place_body = rpn.get_size ();
+	rparen ();
+	C ();
+	int place_goto_inc = rpn.get_size ();
+	rpn.add_to_list ( new PolizLabel (0) );
+	rpn.add_to_list ( new PolizOpGo () );
+
+	int place_nop = rpn.get_size ();
+	rpn.add_to_list ( new PolizNop () );
+
+	fill_for_labels (place_compare, place_goto_nop, 
+		place_goto_body, place_inc, 
+		place_goto_compare, place_body, 
+		place_goto_inc, place_nop
+	);
+}
+
+
+void Parser:: 
+fill_for_labels ( 
+	int place_compare, int place_goto_nop, 
+	int place_goto_body, int place_inc, 
+	int place_goto_compare, int place_body, 
+	int place_goto_inc, int place_nop
+)
+{
+	rpn.add_to_list ( new PolizLabel (rpn.get_pointer (place_inc)),
+		place_goto_inc	
+	);
+	rpn.add_to_list ( new PolizLabel (rpn.get_pointer (place_compare)),
+		place_goto_compare
+	);
+	rpn.add_to_list ( new PolizLabel (rpn.get_pointer (place_nop)),
+		place_goto_nop
+	);
+	rpn.add_to_list ( new PolizLabel (rpn.get_pointer (place_body)),
+		place_goto_body
+	);
 }
 
 

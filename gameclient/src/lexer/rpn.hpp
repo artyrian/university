@@ -190,6 +190,13 @@ public:
 };
 
 
+class PolizFunLessGreater: public PolizFunction {
+public:
+	PolizElem * evaluate_fun ( PolizItem ** stack) const;
+	void print () const;
+};
+
+
 
 class PolizFunPlus : public PolizFunction {
 public:

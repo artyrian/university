@@ -29,9 +29,11 @@ class Parser {
 	void create_if_labels ();
 	void fill_if_labels (int place1);
 	void whiledo ();
-	void create_while_labels ();
-	void fill_while_labels (int place1, int place2);
+	void fill_while_labels (int, int);
 	void add_address_id (int value);
+	void for_loop ();
+	void create_for_labels ();
+	void fill_for_labels (int, int, int, int, int, int, int, int);
 	void array (bool var);
 	void assign ();
 	void lparen ();

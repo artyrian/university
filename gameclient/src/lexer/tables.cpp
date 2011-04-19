@@ -6,10 +6,9 @@
 const char * PrintTable:: lexem [] =
 {
 	"",
-	"LEX_DO",
 	"LEX_GOTO",
 	"LEX_IF",
-	"LEX_THEN",
+	"LEX_FOR",
 	"LEX_WHILE",
 	"LEX_BEGIN",
 	"LEX_END",
@@ -22,6 +21,7 @@ const char * PrintTable:: lexem [] =
 	"LEX_GREATER",
 	"LEX_LEQ",
 	"LEX_GEQ",
+	"LEX_GL",
 	"LEX_PLUS",
 	"LEX_MINUS",
 	"LEX_MULTIPLY",
@@ -59,12 +59,6 @@ const char * PrintTable:: lexem [] =
 	"LEX_RESULT_RAW_PRICE",
 	"LEX_RESULT_PROD_BOUGHT",
 	"LEX_RESULT_PROD_PRICE",
-	"POLIZ_ADDRESS",
-	"POLIZ_ID_ARRAY",
-	"POLIZ_GO",
-	"POLIZ_LABEL",
-	"POLIZ_FGO",
-	"POLIZ_NOP",
 	0
 };
 
@@ -74,6 +68,7 @@ const char * TableLexem:: word [] =
 	""		// 0 dont use.
 	"goto",		// 2
 	"if",		// 4
+	"for",
 	"while",	// 6
 	0
 };
@@ -84,6 +79,7 @@ type_of_lex TableLexem:: lex_word [] =
 	LEX_NULL,			// 0
 	LEX_GOTO,			// 2
 	LEX_IF,				// 4
+	LEX_FOR,
 	LEX_WHILE,			// 6
 	LEX_NULL
 };
@@ -168,6 +164,7 @@ const char * TableLexem:: compare [] =
 	">",		// 
 	"<=",
 	">=",
+	"<>",
 	0
 };
 
@@ -179,6 +176,7 @@ type_of_lex TableLexem:: lex_compare [] =
 	LEX_GREATER,
 	LEX_LEQ,
 	LEX_GEQ,
+	LEX_GL,
 	LEX_NULL
 };
 
