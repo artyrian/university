@@ -190,15 +190,15 @@ void Parser:: F ()
 void Parser:: G ()
 {
 	if ( cur_lex.type == LEX_ID ) {
-		int value = cur_lex.value;
+		long long int value = cur_lex.value;
 		get_lex ();	
 
-		int * id = table->ident.index ( value )->get_address_value ();
+		long long int * id = table->ident.index ( value )->get_address_value ();
 
 		rpn.add_to_list ( new PolizVarInt ( id ) ); 
 	}
 	else if ( cur_lex.type == LEX_NUM ) {
-		int value = cur_lex.value;
+		long long int value = cur_lex.value;
 
 		get_lex ();	
 
@@ -378,7 +378,7 @@ void Parser:: paste_newline ()
 void Parser:: stringelem ()
 {
 	if ( cur_lex.type == LEX_STR ) {
-		int value = cur_lex.value;
+		long long int value = cur_lex.value;
 
 		get_lex ();
 
@@ -523,7 +523,7 @@ void Parser:: fill_while_labels (int place_compare, int place_if_nop)
 
 void Parser:: add_address_id (int value)
 {
-	int * id = table->ident.index (value)->get_address_value ();
+	long long int * id = table->ident.index (value)->get_address_value ();
 	rpn.add_to_list ( new PolizVarAddress ( id ) );
 }
 
@@ -609,8 +609,7 @@ void Parser:: array (bool var)
 		throw LexException ("Must be array. Source code", cur_lex);
 	}
 
-	int value = cur_lex.value;
-	printf ("value of array:%d.\n", value);
+	long long int value = cur_lex.value;
 	
 	get_lex ();
 
@@ -647,7 +646,7 @@ void Parser:: gotolabel ()
 	
 	get_lex ();
 
-	int value = cur_lex.value;
+	long long int value = cur_lex.value;
 	if ( cur_lex.type == LEX_LABEL ) {
 		get_lex ();
 	}

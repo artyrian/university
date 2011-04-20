@@ -124,7 +124,7 @@ int main (int argc, char ** argv)
 		try {
 			LexList	ll;
 			ll.fill (argv [1]);
-//			ll.print ();
+			ll.print ();
 
 			Parser pars (& ll);
 			pars.analyze (); 

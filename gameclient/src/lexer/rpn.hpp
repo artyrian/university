@@ -49,20 +49,20 @@ public:
 //----------------------------------------------------------
 
 class PolizInt : public PolizConst {
-	int value;
+	long long int value;
 public:
-	PolizInt (int a);
+	PolizInt (long long int a);
 	virtual PolizElem * clone () const;
-	int get () const;
+	long long int get () const;
 	void print () const;
 };
 
 class PolizVarInt : public PolizConst {
-	int * value;
+	long long int * value;
 public:
-	PolizVarInt (int * a);
+	PolizVarInt (long long int * a);
 	virtual PolizElem * clone () const;
-	int get () const;
+	long long int get () const;
 	void print () const;
 };
 
@@ -79,11 +79,11 @@ public:
 
 
 class PolizVarAddress : public PolizConst {
-	int * value;
+	long long int * value;
 public:
-	PolizVarAddress (int * value);
+	PolizVarAddress (long long int * value);
 	virtual PolizElem * clone () const;
-	int * get () const;
+	long long int * get () const;
 	void print () const;
 };
 
