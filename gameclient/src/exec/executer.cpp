@@ -17,9 +17,7 @@ void Executer:: executing ()
 {
 	printf ("\nStart execute program:\n");
 	while ( poliz_list != 0 ) {
-		current = poliz_list;
-		poliz_list->p->evaluate (&stack, &current);
-		poliz_list = current;
+		poliz_list->p->evaluate (&stack, &poliz_list);
 	}
 	printf ("End of program.\n");
 }

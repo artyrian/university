@@ -783,12 +783,6 @@ void Parser:: check_labels ()
 	int place_label;
 	int place_goto;
 
-	printf ("label print\n");
-	label.print ();
-	printf ("labelgoto print\n");
-	labelgoto.print ();
-	printf ("end print\n");
-
 	for ( int i = 1; i <= size_labelgoto; ++ i ) {
 		bool f_label = false;
 
