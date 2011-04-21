@@ -1,0 +1,7 @@
+{
+	$i = 1;
+	print ("Simple int:", $i);
+
+	$lli = 9223372036854775; 
+	print ("Long long int:", $lli);
+}
