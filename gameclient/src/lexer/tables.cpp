@@ -231,7 +231,7 @@ type_of_lex TableLexem:: lex_function [] =
 
 
 
-int * StorageTypeLex:: get_address_value ()
+long long int * StorageTypeLex:: get_address_value ()
 {
 	return & value;
 }
@@ -350,7 +350,7 @@ void TableStorageTypeLex:: print () const
 	printf ("Start print storage type lex.\n");
 
 	while ( i <= size ) {
-		printf ("%d) %d.\n", i, cur->s->value);
+		printf ("%d) %lli.\n", i, cur->s->value);
 		cur = cur->next;
 		++i;
 	}

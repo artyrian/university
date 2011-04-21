@@ -34,7 +34,7 @@ ReadFrom:: ~ReadFrom ()
 }
 
 
-Lex:: Lex (int k, type_of_lex t, int v)
+Lex:: Lex (int k, type_of_lex t, long long int v)
 	: strnum (k), type (t), value (v)
 {
 }
@@ -43,7 +43,7 @@ Lex:: Lex (int k, type_of_lex t, int v)
 void Lex:: print () const
 {
 	PrintTable pt;
-	printf ("%s=(%d,%d);", pt.lexem [type], type, value);
+	printf ("%s=(%d,%lli);", pt.lexem [type], type, value);
 }
 
 
@@ -371,7 +371,6 @@ bool Scanner:: state_NUM (int c)
 {
 	if ( isdigit (c) ) {
 		digit = digit * 10 + ( c - '0');
-		//
 		return false;
 	}
 	else {

@@ -21,9 +21,9 @@ public:
 struct Lex {
 	int		strnum;
 	type_of_lex	type;
-	int 		value;
+	long long int 	value;
 
-	Lex (int = 0, type_of_lex = LEX_NULL, int = 0);
+	Lex (int = 0, type_of_lex = LEX_NULL, long long int = 0);
 
 	void print () const; 
 };
@@ -77,9 +77,8 @@ class Scanner {
 	state		CS;
 	int		count_str;
 	Buffer * 	buffer;
-	int 		digit;
+	long long int 	digit;
 	int		save_c;
-
 	Lex		save_lex;
 
 	int look (const char * buf, const char ** list);

@@ -65,10 +65,10 @@ enum type_of_lex {
 struct StorageTypeLex {
 	char * 	name;
 	type_of_lex type;
-	int value;
+	long long int value;
 
 	virtual void put_name (const char *str);
-	virtual int * get_address_value ();
+	virtual long long int * get_address_value ();
 	virtual ~StorageTypeLex ();
 };
 

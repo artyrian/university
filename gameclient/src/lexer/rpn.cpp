@@ -74,7 +74,7 @@ void PolizConst:: evaluate ( PolizItem ** stack, PolizItem ** cur_cmd) const
 //----------------------------------------------------------
 
 
-PolizInt:: PolizInt (int a)
+PolizInt:: PolizInt (long long int a)
 {
 	value = a;
 }
@@ -86,7 +86,7 @@ PolizElem * PolizInt:: clone () const
 }
 
 
-int PolizInt:: get () const
+long long int PolizInt:: get () const
 {
 	return value;
 }
@@ -95,13 +95,13 @@ int PolizInt:: get () const
 void PolizInt:: 
 print () const
 {
-	printf ("! POLIZ_INT ( %d )\t", value);
+	printf ("! POLIZ_INT ( %lli )\t", value);
 }
 
 //----------------------------------------------------------
 
 
-PolizVarInt:: PolizVarInt (int * a)
+PolizVarInt:: PolizVarInt (long long int * a)
 {
 	value = a;
 }
@@ -113,7 +113,7 @@ PolizElem * PolizVarInt:: clone () const
 }
 
 
-int PolizVarInt:: get () const
+long long int PolizVarInt:: get () const
 {
 	return (*value);
 }
@@ -122,7 +122,7 @@ int PolizVarInt:: get () const
 void PolizVarInt:: 
 print () const
 {
-	printf ("! POLIZ_VAR_INT ( %d )\t", *value);
+	printf ("! POLIZ_VAR_INT ( %lli )\t", *value);
 }
 
 
@@ -154,7 +154,7 @@ print () const
 
 //----------------------------------------------------------
 
-PolizVarAddress:: PolizVarAddress (int * v)
+PolizVarAddress:: PolizVarAddress (long long int * v)
 {
 	value = v;
 }
@@ -166,7 +166,7 @@ PolizElem * PolizVarAddress:: clone () const
 }
 
 
-int * PolizVarAddress:: get () const
+long long int * PolizVarAddress:: get () const
 {
 	return value;
 }
@@ -175,7 +175,7 @@ int * PolizVarAddress:: get () const
 void PolizVarAddress:: 
 print () const
 {
-	printf ("! POLIZ_VAR_ADDR ( %d )\t", (*value) );
+	printf ("! POLIZ_VAR_ADDR ( %lli )\t", (*value) );
 }
 
 //----------------------------------------------------------
@@ -309,10 +309,11 @@ evaluate_fun (PolizItem ** stack) const
 	// have index;
 
 	char str [20];
-	sprintf (str, "%d", i->get ());
+	sprintf (str, "%lli", i->get ());
 	int k = table->array. index (array)-> put ( str );
+	// write index.
 	
-	int res = table-> array.index ( array )->index ( k ) -> value;
+	long long int res = table-> array.index ( array )->index ( k ) -> value;
 	// get value elem (i) of array (=value).
 
 	delete operand1;
@@ -347,10 +348,10 @@ evaluate_fun (PolizItem ** stack) const
 	// have index;
 	
 	char str [20];
-	sprintf (str, "%d", i->get ());
+	sprintf (str, "%lli", i->get ());
 	int k = table->array. index ( array ) ->put (str);
 
-	int * res = table->array.index (array) ->index (k)->get_address_value ();
+	long long int * res = table->array.index (array) ->index (k)->get_address_value ();
 	// get value elem (i) of array (=value).
 
 	delete operand1;
@@ -416,7 +417,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i2->get() ==  i1->get();
+	long long int res = i2->get() ==  i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -450,7 +451,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i2->get() > i1->get();
+	long long int res = i2->get() > i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -483,7 +484,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i2->get() < i1->get();
+	long long int res = i2->get() < i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -518,7 +519,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i2->get() >= i1->get();
+	long long int res = i2->get() >= i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -551,7 +552,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i2->get() <= i1->get();
+	long long int res = i2->get() <= i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -585,7 +586,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i2->get() != i1->get();
+	long long int res = i2->get() != i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -622,7 +623,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i2->get() + i1->get();
+	long long int res = i2->get() + i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -656,7 +657,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i2->get() - i1->get();
+	long long int res = i2->get() - i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -690,7 +691,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i2->get() || i1->get();
+	long long int res = i2->get() || i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -724,7 +725,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i2->get() * i1->get();
+	long long int res = i2->get() * i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -759,7 +760,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i2->get() / i1->get();
+	long long int res = i2->get() / i1->get();
 
 	delete operand1;
 	delete operand2;
@@ -794,7 +795,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	int res = i2->get () && i1->get ();
+	long long int res = i2->get () && i1->get ();
 
 	delete operand1;
 	delete operand2;
@@ -821,7 +822,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand);
 	}
 
-	int res = ! i->get ();
+	long long int res = ! i->get ();
 	
 	delete operand;
 
@@ -852,7 +853,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	printf ("Here call buy (%d, %d).\n", i2->get (), i1->get ());
+	printf ("Here call buy (%lli, %lli).\n", i2->get (), i1->get ());
 	
 	delete operand1;
 	delete operand2;
@@ -884,7 +885,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	printf ("Here call sell (%d, %d).\n", i2->get (), i1->get ());
+	printf ("Here call sell (%lli, %lli).\n", i2->get (), i1->get ());
 	
 	delete operand1;
 	delete operand2;
@@ -910,7 +911,7 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand1);
 	}
 
-	printf ("Here call prod (%d).\n", i1->get ());
+	printf ("Here call prod (%lli).\n", i1->get ());
 	
 	delete operand1;
 
@@ -973,7 +974,7 @@ evaluate_fun (PolizItem ** stack) const
 	if ( type == LEX_NUM ) {
 		PolizInt * i1 = dynamic_cast 
 			<PolizInt *> (operand1);
-		printf ("%d", i1->get ());
+		printf ("%lli", i1->get ());
 
 		delete operand1;
 	}
@@ -1118,8 +1119,8 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	int res = 0;
-	printf (" Here call money (%d)", i1->get ());
+	long long int res = 0;
+	printf (" Here call money (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1143,8 +1144,8 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	int res = 0;
-	printf (" Here call raw (%d)", i->get ());
+	long long int res = 0;
+	printf (" Here call raw (%lli)", i->get ());
 
 	delete operand1;
 
@@ -1168,8 +1169,8 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	int res = 0;
-	printf (" Here call production (%d)", i->get ());
+	long long int res = 0;
+	printf (" Here call production (%lli)", i->get ());
 
 	delete operand1;
 
@@ -1193,8 +1194,8 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	int res = 0;
-	printf (" Here call factories (%d)", i->get ());
+	long long int res = 0;
+	printf (" Here call factories (%lli)", i->get ());
 
 	delete operand1;
 
@@ -1218,8 +1219,8 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	int res = 0;
-	printf (" Here call auto_factories (%d)", i->get ());
+	long long int res = 0;
+	printf (" Here call auto_factories (%lli)", i->get ());
 
 	delete operand1;
 
@@ -1243,8 +1244,8 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	int res = 0;
-	printf (" Here call manufactured (%d)", i->get ());
+	long long int res = 0;
+	printf (" Here call manufactured (%lli)", i->get ());
 
 	delete operand1;
 
@@ -1268,8 +1269,8 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	int res = 0;
-	printf (" Here call result_raw_sold (%d)", i->get ());
+	long long int res = 0;
+	printf (" Here call result_raw_sold (%lli)", i->get ());
 
 	delete operand1;
 
@@ -1294,8 +1295,8 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	int res = 0;
-	printf (" Here call result_raw_PRICE (%d)", i->get ());
+	long long int res = 0;
+	printf (" Here call result_raw_PRICE (%lli)", i->get ());
 
 	delete operand1;
 
@@ -1320,8 +1321,8 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	int res = 0;
-	printf (" Here call result_prod_bought (%d)", i->get ());
+	long long int res = 0;
+	printf (" Here call result_prod_bought (%lli)", i->get ());
 
 	delete operand1;
 
@@ -1346,8 +1347,8 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	int res = 0;
-	printf (" Here call result_prod_price (%d)", i->get ());
+	long long int res = 0;
+	printf (" Here call result_prod_price (%lli)", i->get ());
 
 	delete operand1;
 
