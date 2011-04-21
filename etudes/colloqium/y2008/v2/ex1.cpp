@@ -15,16 +15,47 @@ struct B {
 	void f () {
 		a = 2;
 	}
+
+	B () {
+		cout << "c. B" << endl;
+	}
+
+	B (const B & b) {
+		cout << "c.c B" << endl;
+	}
+	
+	B operator-- (int) {
+		B tmp = *this;
+		-- a;
+		return tmp;
+	}
+	~B () {
+		cout << "d. B" << endl;
+	}
 };
 
 class D: B {
 public:
+	D () {
+		cout << "c. D" << endl;
+	}
+	D (const D & d) {
+		cout << "c. c. D" << endl;
+	}
 	void f (int a) {
 		cout << "f (int)" << endl;
 		::a = a;
 	}
+
 	void h ();
+	~D () {
+		cout << "d. D" << endl;
+	}
 };
+
+void empty (D & a, D b) {
+
+}
 
 void D::h() {
 	f(1.2); 	// IT'S WORK !!!
@@ -33,8 +64,12 @@ void D::h() {
 }
 
 int main () {
-	D d;
-//	f(); 		// error. No f();
-	:: f(6);
+	cout << "start" << endl;
+	D d;	// c B	c D
+	empty (d, d);	// c.c B!!! (right c.B) 	c.c D	d. D	d.B
+	cout << "end" << endl;	
+					//	d. D	d. B
 	return 0;
 }
+
+

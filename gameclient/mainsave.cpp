@@ -4,7 +4,6 @@
 #include <unistd.h>
 
 #include "robot/game.hpp"
-#include "lexer/lexer.hpp"
 
 
 void login (Game &g, int argc, char *nick, int room, int maxpl);
@@ -105,7 +104,7 @@ int main(int argc, char **argv)
 
 	ParseArguments (argc, argv, ip, port, nick, room, maxpl);
 
-	Game g(ip, port);
+	Game g (ip, port);
 
 	login (g, argc, nick, room, maxpl);
 
