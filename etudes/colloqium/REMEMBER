@@ -19,3 +19,13 @@ pc -> f(1);	// C::f – несмотря на  то, что pa указывае�
 4) p->h & p->h () неоднозначность если сущ. и функция и интовая переменная h.переменная
 
 5) virtual наследование. тоже изврат. ЗАПОмниТЬ.
+
+6) PIZDA. templates; v2009.1
+5. template<class T> complex<T> complex<T>::operator*
+(const complex<T>& x)
+{ complex<T> w; w.r = r * x.r – i * x.i;
+w.i = r * x.i + i * x.r; return w; }
+template<class T> complex<T> operator*
+(const complex<T>& x, const complex<T>& y)
+{ complex<T> w; w.r = x.r * y.r – x.i * y.i;
+w.i = x.r * y.i + x.i * y.r; return w; };
