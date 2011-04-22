@@ -39,6 +39,28 @@ int Game::checkactive (char *nick)
 }
 
 
+void Game:: login (char * nick, char * mode, int num)
+{
+	setnick (nick);
+
+	if ( strcmp (mode, "create") == 0) {
+		create ();
+		waitplayers (num);
+	} 
+	else if ( strcmp (mode, "join") == 0) {
+		joinroom (num);
+		waitstart ();
+	}
+	else {
+		printf ("Error in check mode. [ %s ].\n",
+			mode
+		);	
+		exit (EXIT_FAILURE);
+	}
+
+	startinfo ();
+}
+
 void Game::setnick (char *n)
 {
 	nick = n;
@@ -133,7 +155,6 @@ void Game::startinfo ()
 			struct Player *pl = lp->parse (msg);
 			lp->add (pl);
 		}
-
 	} while ( strncmp (msg, "& PLAYERS", 9) != 0 );
 	
 	char trash[10];
@@ -330,11 +351,23 @@ void Game::build () const
 	q.sendstr (str);
 }
 
-void Game::turn () const
+void Game::turn ()
 {
 	char str [10] = "turn";
 
 	q.sendstr (str);
+
+	waitendturn ();
+
+	getinfo ();		// ATT
+
+	// here ready to say who am i
+
+	// new month
+	readqueue ();
+	getinfo ();
+
+	market ();
 }
 
 
@@ -385,6 +418,7 @@ int Game::production_price () const
 {
 	return mrk.prod_cost;
 }
+
 int Game::money (const char *nick) const
 {
 	Player *pl = lp->find (nick);
@@ -438,6 +472,11 @@ int Game::result_prod_price (const char *nick) const
 }
 
 
+char * Game:: convert_to_char (int player_num) const
+{
+	Player * pl = lp->find (player_num);
+	return pl->nick;
+}
 	
 Game::~Game ()
 {

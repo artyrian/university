@@ -4,9 +4,10 @@
 #include <string.h>
 
 
-Parser:: Parser (LexList * ll)
+Parser:: Parser (LexList * ll, Game * robot_ptr)
 {
 	lexl = ll;
+	robot = robot_ptr;
 	newline = new char [2];
 	strcpy (newline, "\n");
 }
@@ -238,27 +239,27 @@ void Parser:: W ()
 	if ( cur_lex.type == LEX_BUY ) {
 		arg2 ();
 
-		rpn.add_to_list ( new PolizFunBuy () );
+		rpn.add_to_list ( new PolizFunBuy (robot) );
 	}
 	else if ( cur_lex.type == LEX_SELL ) {
 		arg2 ();
 
-		rpn.add_to_list ( new PolizFunSell () );
+		rpn.add_to_list ( new PolizFunSell (robot) );
 	}
 	else if ( cur_lex.type == LEX_PROD ) {
 		arg1 ();
 
-		rpn.add_to_list ( new PolizFunProd () );
+		rpn.add_to_list ( new PolizFunProd (robot) );
 	}
 	else if ( cur_lex.type == LEX_BUILD ) {
 		arg0 ();
 
-		rpn.add_to_list ( new PolizFunBuild () );
+		rpn.add_to_list ( new PolizFunBuild (robot) );
 	}
 	else if (cur_lex.type == LEX_TURN ) {
 		arg0 ();
 
-		rpn.add_to_list ( new PolizFunTurn () );
+		rpn.add_to_list ( new PolizFunTurn (robot) );
 	}
 	else if (cur_lex.type == LEX_PRINT ) {
 		get_lex ();
@@ -281,71 +282,71 @@ void Parser:: Z ()
 {
 	if ( cur_lex.type == LEX_CUR_MONTH ) {
 		arg0 ();
-		rpn.add_to_list ( new PolizFunCurMonth () );
+		rpn.add_to_list ( new PolizFunCurMonth (robot) );
 	}
 	else if ( cur_lex.type == LEX_PLAYERS ) {
 		arg0 ();
-		rpn.add_to_list ( new PolizFunPlayers () );
+		rpn.add_to_list ( new PolizFunPlayers (robot) );
 	}
 	else if ( cur_lex.type == LEX_ACTIVE_PLAYERS ) {
 		arg0 ();
-		rpn.add_to_list ( new PolizFunActivePlayers () );
+		rpn.add_to_list ( new PolizFunActivePlayers (robot) );
 	}
 	else if ( cur_lex.type == LEX_SUPPLY ) {
 		arg0 ();
-		rpn.add_to_list ( new PolizFunSupply () );
+		rpn.add_to_list ( new PolizFunSupply (robot) );
 	}
 	else if ( cur_lex.type == LEX_RAW_PRICE ) {
 		arg0 ();
-		rpn.add_to_list ( new PolizFunRawPrice () );
+		rpn.add_to_list ( new PolizFunRawPrice (robot) );
 	}
 	else if ( cur_lex.type == LEX_DEMAND ) {
 		arg0 ();
-		rpn.add_to_list ( new PolizFunDemand () );
+		rpn.add_to_list ( new PolizFunDemand (robot) );
 	}
 	else if ( cur_lex.type == LEX_PRODUCTION_PRICE ) {
 		arg0 ();
-		rpn.add_to_list ( new PolizFunProductionPrice () );
+		rpn.add_to_list ( new PolizFunProductionPrice (robot) );
 	}
 	else if ( cur_lex.type == LEX_MONEY ) {
 		arg1 ();
-		rpn.add_to_list ( new PolizFunMoney () );
+		rpn.add_to_list ( new PolizFunMoney (robot) );
 	}
 	else if ( cur_lex.type == LEX_RAW ) {
 		arg1 ();
-		rpn.add_to_list ( new PolizFunRaw () );
+		rpn.add_to_list ( new PolizFunRaw (robot) );
 	}
 	else if ( cur_lex.type == LEX_PRODUCTION ) {
 		arg1 ();
-		rpn.add_to_list ( new PolizFunProduction () );
+		rpn.add_to_list ( new PolizFunProduction (robot) );
 	}
 	else if ( cur_lex.type == LEX_FACTORIES ) {
 		arg1 ();
-		rpn.add_to_list ( new PolizFunFactories () );
+		rpn.add_to_list ( new PolizFunFactories (robot) );
 	}
 	else if ( cur_lex.type == LEX_AUTO_FACTORIES ) {
 		arg1 ();
-		rpn.add_to_list ( new PolizFunAutoFactories () );
+		rpn.add_to_list ( new PolizFunAutoFactories (robot) );
 	}
 	else if ( cur_lex.type == LEX_MANUFACTURED ) {
 		arg1 ();
-		rpn.add_to_list ( new PolizFunManufactured () );
+		rpn.add_to_list ( new PolizFunManufactured (robot) );
 	}
 	else if ( cur_lex.type == LEX_RESULT_RAW_SOLD ) {
 		arg1 ();
-		rpn.add_to_list ( new PolizFunResultRawSold () );
+		rpn.add_to_list ( new PolizFunResultRawSold (robot) );
 	}
 	else if ( cur_lex.type == LEX_RESULT_RAW_PRICE ) {
 		arg1 ();
-		rpn.add_to_list ( new PolizFunResultRawPrice () );
+		rpn.add_to_list ( new PolizFunResultRawPrice (robot) );
 	}
 	else if ( cur_lex.type == LEX_RESULT_PROD_BOUGHT ) {
 		arg1 ();
-		rpn.add_to_list ( new PolizFunResultProdBought () );
+		rpn.add_to_list ( new PolizFunResultProdBought (robot) );
 	}
 	else if ( cur_lex.type == LEX_RESULT_PROD_PRICE ) {
 		arg1 ();
-		rpn.add_to_list ( new PolizFunResultProdPrice () );
+		rpn.add_to_list ( new PolizFunResultProdPrice (robot) );
 	}
 	else 
 	{

@@ -11,8 +11,10 @@
 #include <string.h>
 
 
-Socket:: Socket(char* i, int p) : ip(i), port(p)
+Socket:: Socket(char* i, int p) 
 {
+	ip = i;
+	port = p;
 	addr.sin_family = AF_INET;
 	init_port (port);
 	init_ip (ip);
@@ -29,11 +31,13 @@ Socket:: Socket(char* i, int p) : ip(i), port(p)
 
 void Socket:: connecting ()
 {
-	createsocket();
+	if ( (sd = socket (AF_INET, SOCK_STREAM, 0)) == -1 ) {
+		perror("Error create socket.\n");
+	}
 
-	if ( 0 != connect(sd, (struct sockaddr *)&addr, sizeof(addr)) ) {
+	if ( connect (sd, (struct sockaddr *)&addr, sizeof(addr)) != 0 ) {
 		perror ("Connect error.");
-		exit(1);
+		exit (EXIT_FAILURE);
 	}
 }
 
@@ -60,17 +64,6 @@ void Socket:: init_port(int arg)
 	port = arg;
 	addr.sin_port = htons(port);
 }
-
-
-void Socket:: createsocket()
-{
-	int sd;
-	if ( -1 == (sd = socket(AF_INET, SOCK_STREAM, 0)) ) {
-		perror("Error create socket.\n");
-	}
-}
-
-
 
 
 void Socket:: callread ()

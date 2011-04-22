@@ -1,0 +1,7 @@
+{
+	print ("I'll play :) ");
+	buy (2, 500);
+	sell (2, 5500);
+	prod (2);
+	turn ();
+}

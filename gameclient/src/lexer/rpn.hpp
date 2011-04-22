@@ -2,6 +2,7 @@
 #define _RPN_HPP_
 
 #include "tables.hpp"
+#include "../robot/game.hpp"
 
 class PolizElem;
 struct PolizItem;
@@ -249,35 +250,45 @@ public:
 //----------------------------------------------------------
 
 class PolizFunBuy: public PolizFunction {
+	Game * robot;
 public:
+	PolizFunBuy (Game * robot);
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunSell: public PolizFunction {
+	Game * robot;
 public:
+	PolizFunSell (Game * robot);
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunProd: public PolizFunction {
+	Game * robot;
 public:
+	PolizFunProd (Game * robot);
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunBuild: public PolizFunction {
+	Game * robot;
 public:
+	PolizFunBuild (Game * robot);
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunTurn: public PolizFunction {
+	Game * robot;
 public:
+	PolizFunTurn (Game * robot);
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
@@ -294,119 +305,153 @@ public:
 //----------------------------------------------------------
 
 class PolizFunCurMonth : public PolizFunction {
+	Game * robot;
 public:
+	PolizFunCurMonth (Game * robot);
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunPlayers : public PolizFunction {
+	Game * robot;
 public:
+	PolizFunPlayers (Game * robot);
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunActivePlayers : public PolizFunction {
+	Game * robot;
 public:
+	PolizFunActivePlayers (Game * robot);
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunSupply : public PolizFunction {
+	Game * robot;
 public:
+	PolizFunSupply (Game * robot);
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunRawPrice: public PolizFunction {
+	Game * robot;
 public:
+	PolizFunRawPrice (Game * robot);
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunDemand: public PolizFunction {
+	Game * robot;
 public:
+	PolizFunDemand (Game * robot);
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunProductionPrice: public PolizFunction {
+	Game * robot;
 public:
+	PolizFunProductionPrice (Game * robot);
 	PolizElem * evaluate_fun ( PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunMoney : public PolizFunction {
+	Game * robot;
 public:
+	PolizFunMoney (Game * robot);
 	PolizElem * evaluate_fun (PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunRaw : public PolizFunction {
+	Game * robot;
 public:
+	PolizFunRaw (Game * robot);
 	PolizElem * evaluate_fun (PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunProduction : public PolizFunction {
+	Game * robot;
 public:
+	PolizFunProduction (Game * robot);
 	PolizElem * evaluate_fun (PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunFactories : public PolizFunction {
+	Game * robot;
 public:
+	PolizFunFactories (Game * robot);
 	PolizElem * evaluate_fun (PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunAutoFactories : public PolizFunction {
+	Game * robot;
 public:
+	PolizFunAutoFactories (Game * robot);
 	PolizElem * evaluate_fun (PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunManufactured : public PolizFunction {
+	Game * robot;
 public:
+	PolizFunManufactured (Game * robot);
 	PolizElem * evaluate_fun (PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunResultRawSold : public PolizFunction {
+	Game * robot;
 public:
+	PolizFunResultRawSold (Game * robot);
 	PolizElem * evaluate_fun (PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunResultRawPrice : public PolizFunction {
+	Game * robot;
 public:
+	PolizFunResultRawPrice (Game * robot);
 	PolizElem * evaluate_fun (PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunResultProdBought : public PolizFunction {
+	Game * robot;
 public:
+	PolizFunResultProdBought (Game * robot);
 	PolizElem * evaluate_fun (PolizItem ** stack) const;
 	void print () const;
 };
 
 
 class PolizFunResultProdPrice : public PolizFunction {
+	Game * robot;
 public:
+	PolizFunResultProdPrice (Game * robot);
 	PolizElem * evaluate_fun (PolizItem ** stack) const;
 	void print () const;
 };

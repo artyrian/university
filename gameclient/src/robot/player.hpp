@@ -27,6 +27,7 @@ struct Player {
 class ListPlayer {
 	struct ListElem {
 		Player *p;
+		int number;
 		ListElem *next;
 	};
 
@@ -39,8 +40,10 @@ public:
 	ListPlayer ();
 
 	void add (Player *pl);
-	Player * find (const char *nick);
+	Player * find (const char *nick) const;
+	Player * find (int player_num) const ;
 	Player * parse (char *str) const;
+
 
 	~ListPlayer ();
 };

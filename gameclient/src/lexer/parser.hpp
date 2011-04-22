@@ -5,6 +5,7 @@
 #include "lexer.hpp"
 #include "tables.hpp"
 #include "rpn.hpp"
+#include "../robot/game.hpp"
 
 
 class Parser {
@@ -13,6 +14,7 @@ class Parser {
 	TableLexem * table;
 	TableLabel label;
 	TableLabel labelgoto;
+	Game * robot;
 
 	void O ();
 	void B ();
@@ -60,7 +62,7 @@ class Parser {
 		const type_of_lex * table
 	);
 public:
-	Parser (LexList * ll);
+	Parser (LexList * ll, Game * robot_ptr);
 	~Parser ();
 
 	PolizList rpn;

@@ -37,7 +37,7 @@ Player::~Player ()
 
 
 ListPlayer::ListPlayer ()
-	: first (0), cnt (0)
+	: first (0), cnt (1)
 {
 }
 
@@ -72,17 +72,18 @@ void ListPlayer::add (Player *pl)
 {
 	ListElem *elem = newplayer (pl); 
 	ListElem *last = findlast (); 
+	elem->number = ++ cnt;
+
 	if ( first == 0 ) {
 		first = elem;
 	} else {
 		last->next = elem;
 	}
-	cnt++;
 }
 
 
 
-Player * ListPlayer::find (const char *nick)
+Player * ListPlayer::find (const char *nick) const
 {
 	ListElem *cur = first;
 	while ( cur != 0 ) {
@@ -96,6 +97,19 @@ Player * ListPlayer::find (const char *nick)
 	return 0;
 }
 
+Player * ListPlayer::find (int player_num) const
+{
+	ListElem *cur = first;
+	while ( cur != 0 ) {
+		if ( player_num ==  cur->number  ) {
+			return cur->p;
+		}
+		cur = cur->next;
+	}
+
+	printf ("Not found.\n");
+	return 0;
+}
 
 
 

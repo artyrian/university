@@ -11,7 +11,6 @@ class Socket {
 	
 	void init_ip(char *arg);
 	void init_port(int arg);
-	void createsocket();
 
 	char buf[1024];
 	char msg[1024];

@@ -34,6 +34,7 @@ class Game {
 public:
 	Game (char *ip, int port);
 
+	void login (char * nick, char * mode, int num);
 	void setnick (char *nick);
 	void joinroom (int room);
 	void create () const;
@@ -53,7 +54,7 @@ public:
 	void sell (int count, int cost);
 	void prod (int count);
 	void build () const;
-	void turn () const;
+	void turn ();
 
 	char* my_id () const;
 	int cur_month () const;
@@ -73,6 +74,8 @@ public:
 	int result_raw_price (const char *nick) const;
 	int result_prod_bought (const char *nick) const;
 	int result_prod_price (const char *nick) const;
+
+	char * convert_to_char (int player_num) const;
 
 	~Game ();
 };

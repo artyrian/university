@@ -838,6 +838,12 @@ print () const
 
 //----------------------------------------------------------
 
+PolizFunBuy:: PolizFunBuy (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
 PolizElem * PolizFunBuy:: 
 evaluate_fun (PolizItem ** stack) const
 {
@@ -853,7 +859,8 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	printf ("Here call buy (%lli, %lli).\n", i2->get (), i1->get ());
+	robot->buy (i2->get (), i1->get ()); 
+	printf ("Here called buy (%lli, %lli).\n", i2->get (), i1->get ());
 	
 	delete operand1;
 	delete operand2;
@@ -870,6 +877,12 @@ print () const
 
 //----------------------------------------------------------
 
+PolizFunSell:: PolizFunSell (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
 PolizElem * PolizFunSell:: 
 evaluate_fun (PolizItem ** stack) const
 {
@@ -885,7 +898,8 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	printf ("Here call sell (%lli, %lli).\n", i2->get (), i1->get ());
+	robot->sell (i2->get (), i1->get ()); 
+	printf ("Here called sell (%lli, %lli).\n", i2->get (), i1->get ());
 	
 	delete operand1;
 	delete operand2;
@@ -902,6 +916,12 @@ print () const
 
 //----------------------------------------------------------
 
+PolizFunProd:: PolizFunProd (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
 PolizElem * PolizFunProd:: 
 evaluate_fun (PolizItem ** stack) const
 {
@@ -911,7 +931,8 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand1);
 	}
 
-	printf ("Here call prod (%lli).\n", i1->get ());
+	robot->prod (i1->get ());
+	printf ("Here called prod (%lli).\n", i1->get ());
 	
 	delete operand1;
 
@@ -927,10 +948,17 @@ print () const
 
 //----------------------------------------------------------
 
+PolizFunBuild:: PolizFunBuild (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
 PolizElem * PolizFunBuild:: 
 evaluate_fun (PolizItem ** stack) const
 {
-	printf ("Here call build ().\n");
+	robot->build ();
+	printf ("Here called build ().\n");
 	
 	return 0;
 }
@@ -944,10 +972,18 @@ print () const
 
 //----------------------------------------------------------
 
+PolizFunTurn:: PolizFunTurn (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
+
 PolizElem * PolizFunTurn:: 
 evaluate_fun (PolizItem ** stack) const
 {
-	printf ("Here call turn ().\n");
+	robot->turn ();
+	printf ("Here called turn ().\n");
 	
 	return 0;
 }
@@ -1000,10 +1036,17 @@ print () const
 
 //----------------------------------------------------------
 
+PolizFunCurMonth:: PolizFunCurMonth (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
 PolizElem * PolizFunCurMonth:: 
 evaluate_fun (PolizItem ** stack) const
 {
-	printf ("Here call cur_month ()\n");
+	robot->cur_month ();
+	printf ("Here called cur_month ()\n");
 	
 	return 0;
 }
@@ -1017,10 +1060,17 @@ print () const
 
 //----------------------------------------------------------
 
+PolizFunPlayers:: PolizFunPlayers (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
 PolizElem * PolizFunPlayers:: 
 evaluate_fun (PolizItem ** stack) const
 {
-	printf ("Here call players ()\n");
+	robot->players ();
+	printf ("Here called players ()\n");
 	
 	return 0;
 }
@@ -1034,10 +1084,17 @@ print () const
 
 //----------------------------------------------------------
 
+PolizFunActivePlayers:: PolizFunActivePlayers (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
 PolizElem * PolizFunActivePlayers:: 
 evaluate_fun (PolizItem ** stack) const
 {
-	printf ("Here call acitve_players ()\n");
+	robot->active_players ();
+	printf ("Here called acitve_players ()\n");
 	
 	return 0;
 }
@@ -1049,10 +1106,17 @@ print () const
 	printf ("! POLIZ_ACTIVE_PLAYERS\t");
 }
 
+PolizFunSupply:: PolizFunSupply (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
 PolizElem * PolizFunSupply:: 
 evaluate_fun (PolizItem ** stack) const
 {
-	printf ("Here call supply ()\n");
+	robot->supply ();
+	printf ("Here called supply ()\n");
 	
 	return 0;
 }
@@ -1064,10 +1128,18 @@ print () const
 	printf ("! POLIZ_SUPLLY\t");
 }
 
+
+PolizFunRawPrice:: PolizFunRawPrice (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
 PolizElem * PolizFunRawPrice:: 
 evaluate_fun (PolizItem ** stack) const
 {
-	printf ("Here call raw_price ()\n");
+	robot->raw_price ();
+	printf ("Here called raw_price ()\n");
 	
 	return 0;
 }
@@ -1079,10 +1151,17 @@ print () const
 	printf ("! POLIZ_RAW_PRICE\t");
 }
 
+PolizFunDemand:: PolizFunDemand (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
 PolizElem * PolizFunDemand:: 
 evaluate_fun (PolizItem ** stack) const
 {
-	printf ("Here call demand ()\n");
+	robot->demand ();
+	printf ("Here called demand ()\n");
 	
 	return 0;
 }
@@ -1094,10 +1173,18 @@ print () const
 	printf ("! POLIZ_DEMAND\t");
 }
 
+
+PolizFunProductionPrice:: PolizFunProductionPrice (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
 PolizElem * PolizFunProductionPrice:: 
 evaluate_fun (PolizItem ** stack) const
 {
-	printf ("Here call production_price ()\n");
+	robot->production_price ();
+	printf ("Here called production_price ()\n");
 	
 	return 0;
 }
@@ -1110,6 +1197,12 @@ print () const
 }
 
 
+PolizFunMoney:: PolizFunMoney (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
 PolizElem * PolizFunMoney:: 
 evaluate_fun (PolizItem ** stack) const
 {
@@ -1119,8 +1212,9 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	long long int res = 0;
-	printf (" Here call money (%lli)", i1->get ());
+	long long int res = robot->money ( 
+		robot->convert_to_char ( i1->get() ) );
+	printf (" Here called money (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1135,17 +1229,24 @@ print () const
 }
 
 
+PolizFunRaw:: PolizFunRaw (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
 PolizElem * PolizFunRaw:: 
 evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
-	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
-	if ( !i ) { 
+	PolizInt * i1 = dynamic_cast <PolizInt *> (operand1);
+	if ( !i1 ) { 
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	long long int res = 0;
-	printf (" Here call raw (%lli)", i->get ());
+	long long int res = robot->raw ( 
+		robot->convert_to_char ( i1->get() ) );
+	printf (" Here called raw (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1160,17 +1261,24 @@ print () const
 }
 
 
+PolizFunProduction:: PolizFunProduction (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
 PolizElem * PolizFunProduction:: 
 evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
-	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
-	if ( !i ) { 
+	PolizInt * i1 = dynamic_cast <PolizInt *> (operand1);
+	if ( !i1 ) { 
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	long long int res = 0;
-	printf (" Here call production (%lli)", i->get ());
+	long long int res = robot->production ( 
+			robot->convert_to_char ( i1->get () ) );
+	printf (" Here called production (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1185,17 +1293,26 @@ print () const
 }
 
 
+PolizFunFactories:: PolizFunFactories (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
+
+
 PolizElem * PolizFunFactories:: 
 evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
-	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
-	if ( !i ) { 
+	PolizInt * i1 = dynamic_cast <PolizInt *> (operand1);
+	if ( !i1 ) { 
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	long long int res = 0;
-	printf (" Here call factories (%lli)", i->get ());
+	long long int res = robot->factories ( 
+		robot->convert_to_char ( i1->get () ) );
+	printf (" Here called factories (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1210,17 +1327,26 @@ print () const
 }
 
 
+PolizFunAutoFactories:: PolizFunAutoFactories (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
+
+
 PolizElem * PolizFunAutoFactories:: 
 evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
-	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
-	if ( !i ) { 
+	PolizInt * i1 = dynamic_cast <PolizInt *> (operand1);
+	if ( !i1 ) { 
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	long long int res = 0;
-	printf (" Here call auto_factories (%lli)", i->get ());
+	long long int res = robot->auto_factories ( 
+		robot->convert_to_char ( i1->get () ) );
+	printf (" Here called auto_factories (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1235,17 +1361,26 @@ print () const
 }
 
 
+PolizFunManufactured:: PolizFunManufactured (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
+
+
 PolizElem * PolizFunManufactured:: 
 evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
-	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
-	if ( !i ) { 
+	PolizInt * i1 = dynamic_cast <PolizInt *> (operand1);
+	if ( !i1 ) { 
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	long long int res = 0;
-	printf (" Here call manufactured (%lli)", i->get ());
+	long long int res = robot->manufactured ( 
+		robot->convert_to_char ( i1->get () ) );
+	printf (" Here called manufactured (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1260,17 +1395,24 @@ print () const
 }
 
 
+PolizFunResultRawSold:: PolizFunResultRawSold (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
 PolizElem * PolizFunResultRawSold:: 
 evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
-	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
-	if ( !i ) { 
+	PolizInt * i1 = dynamic_cast <PolizInt *> (operand1);
+	if ( !i1 ) { 
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	long long int res = 0;
-	printf (" Here call result_raw_sold (%lli)", i->get ());
+	long long int res = robot->result_raw_sold ( 
+		robot->convert_to_char ( i1->get () ) );
+	printf (" Here called result_raw_sold (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1285,18 +1427,27 @@ print () const
 }
 
 
+PolizFunResultRawPrice:: PolizFunResultRawPrice (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
+
+
 PolizElem * PolizFunResultRawPrice:: 
 
 evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
-	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
-	if ( !i ) { 
+	PolizInt * i1 = dynamic_cast <PolizInt *> (operand1);
+	if ( !i1 ) { 
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	long long int res = 0;
-	printf (" Here call result_raw_PRICE (%lli)", i->get ());
+	long long int res = robot->result_raw_price ( 
+		robot->convert_to_char ( i1->get () ) );
+	printf (" Here called result_raw_PRICE (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1311,18 +1462,24 @@ print () const
 }
 
 
-PolizElem * PolizFunResultProdBought:: 
+PolizFunResultProdBought:: PolizFunResultProdBought (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
 
+
+PolizElem * PolizFunResultProdBought:: 
 evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
-	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
-	if ( !i ) { 
+	PolizInt * i1 = dynamic_cast <PolizInt *> (operand1);
+	if ( !i1 ) { 
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	long long int res = 0;
-	printf (" Here call result_prod_bought (%lli)", i->get ());
+	long long int res = robot->result_prod_bought ( 
+		robot->convert_to_char ( i1->get () ) );
+	printf (" Here called result_prod_bought (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1338,17 +1495,24 @@ print () const
 }
 
 
+PolizFunResultProdPrice:: PolizFunResultProdPrice (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
 PolizElem * PolizFunResultProdPrice:: 
 evaluate_fun (PolizItem ** stack) const
 {
 	PolizElem * operand1 = pop (stack);
-	PolizInt * i = dynamic_cast <PolizInt *> (operand1);
-	if ( !i ) { 
+	PolizInt * i1 = dynamic_cast <PolizInt *> (operand1);
+	if ( !i1 ) { 
 		throw PolizExceptionNotInt (operand1);
 	}
 	
-	long long int res = 0;
-	printf (" Here call result_prod_price (%lli)", i->get ());
+	long long int res = robot->result_prod_price ( 
+		robot->convert_to_char ( i1->get () ) );
+	printf (" Here called result_prod_price (%lli)", i1->get ());
 
 	delete operand1;
 
