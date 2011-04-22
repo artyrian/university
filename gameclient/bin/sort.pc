@@ -1,0 +1,41 @@
+{
+							
+	$n = 5;					'Dimention'
+							'Create array'
+	$a [1] = 102;
+	$a [2] = 0 - 5;
+	$a [3] = 102;
+	$a [4] = 104;
+	$a [5] = 0;
+	
+	print ("Unsorted array:");
+	$i = 1;
+	while ( $i <= $n ) {			'print unsorted array'
+		print ("$a [", $i, "] = ", $a [$i], ";");	
+		$i = $i + 1;
+	};
+
+
+	print ("Sorting...");
+	$i = 1;					'Set iterator'
+	while ( $i < $n + 1 ) {			'while in while'
+		$j = $i;				'Set secont iterator'
+		while ( $j <=$n ) {
+			if ( $a[$i] > $a[$j] ) {
+				$tmp = $a [$j];
+				$a [$j] = $a [$i];
+				$a [$i] = $tmp;
+			};
+			$j = $j + 1;
+		};
+		$i = $i + 1;
+	};
+	print ("End sort.");
+	
+	print ("Sorted array");
+	$i = 1;
+	while ( $i < $n + 1 ) {			'print sorted array'
+		print ("$a [", $i, "] = ", $a [$i], ";");	
+		$i = $i + 1;
+	};
+}

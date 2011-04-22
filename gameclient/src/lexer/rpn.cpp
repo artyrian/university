@@ -95,7 +95,7 @@ long long int PolizInt:: get () const
 void PolizInt:: 
 print () const
 {
-	printf ("! POLIZ_INT ( %lli )\t", value);
+	printf ("! POLIZ_INT\t\t");
 }
 
 //----------------------------------------------------------
@@ -122,7 +122,7 @@ long long int PolizVarInt:: get () const
 void PolizVarInt:: 
 print () const
 {
-	printf ("! POLIZ_VAR_INT ( %lli )\t", *value);
+	printf ("! POLIZ_VAR_INT\t\t");
 }
 
 
@@ -175,7 +175,7 @@ long long int * PolizVarAddress:: get () const
 void PolizVarAddress:: 
 print () const
 {
-	printf ("! POLIZ_VAR_ADDR ( %lli )\t", (*value) );
+	printf ("! POLIZ_VAR_ADDR \t");
 }
 
 //----------------------------------------------------------
@@ -205,7 +205,7 @@ PolizItem * PolizLabel:: get () const
 void PolizLabel:: 
 print () const
 {
-	printf ("! P_LABEL p=%d.\t", reinterpret_cast<int> (value) );
+	printf ("! P_LABEL p=%x.\t", reinterpret_cast<int> (value) );
 }
 
 //----------------------------------------------------------
@@ -306,7 +306,7 @@ evaluate_fun (PolizItem ** stack) const
 	if ( !i ) {
 		throw PolizExceptionNotInt (operand1);
 	}
-	// have index;
+	// have address index;
 
 	char str [20];
 	sprintf (str, "%lli", i->get ());
@@ -1461,7 +1461,7 @@ print () const
 	while ( cur != 0 ) {
 		printf ("%d:\t", cur->number);
 		cur->p->print ();	
-		printf ("obj_ptr: %d", reinterpret_cast<int> (cur));
+		printf ("obj_ptr: %x", reinterpret_cast<int> (cur));
 		cur = cur->next;
 		printf ("\n");
 	}

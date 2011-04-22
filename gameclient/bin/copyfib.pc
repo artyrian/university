@@ -1,0 +1,19 @@
+{
+	print ("- = fibonachi prg. = -");
+
+	$f[0] := 1;
+	$f[1] := 1;
+
+	$i := 1;
+	$count_num := 15;
+	while ( $i < $count_num ) do {
+		$f[$i] := $f[$i-1] + $f[$i-2] ;
+		$i:= $i + 1;
+	};
+	
+	$i := 0;
+	while ( $i < $count_num ) do {
+		print ("$f[", $i, "] = ", $f[$i]);
+		$i := 1 + $i;
+	};
+}

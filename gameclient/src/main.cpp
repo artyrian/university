@@ -156,8 +156,7 @@ void play (Game &g)
 
 		g.market ();
 
-		g.buy (2, -1);
-
+		g.buy (2, -1); 
 		g.sell (2, -1);
 
 		g.prod (2);
@@ -187,6 +186,7 @@ int main(int argc, char **argv)
 
 int main (int argc, char ** argv)
 {
+<<<<<<< HEAD
 	char * ip = 0;
 	int port = 0;
 	char * nick = 0;

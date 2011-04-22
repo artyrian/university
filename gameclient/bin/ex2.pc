@@ -1,0 +1,36 @@
+{
+	$i := 10;
+
+	if ( ($i < 9) | ($i > 15) ) then
+	{
+		$player [1] := ?money ($i);
+	};
+
+	buy ($i, (200 + 49 - 14) / (5 + $i) );
+
+	while ( $i > 2 ) do 
+	{
+		$arr   	 [$i] := 10*$i + 5; 
+	};
+
+
+	sell ($i + 2, 2500*$i);
+
+	turn ();
+
+	if ( $j + $k < 100 ) then
+	{
+		$j := $j - $k - 100;
+	};
+
+	print ("check string", $i + 5);			
+
+	if ( $j < 10 ) then
+		if ( $k < 5 ) then
+			print ("he-he");
+
+	while ( $i < 10 ) do
+	{
+		$array [ $i + 1 ] := 10 * $k;
+	};
+}
