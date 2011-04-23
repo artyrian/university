@@ -859,8 +859,13 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-	robot->buy (i2->get (), i1->get ()); 
-	printf ("Here called buy (%lli, %lli).\n", i2->get (), i1->get ());
+/*
+	int p_i2 = i2->get ();
+	int p_i1 = i1->get ();
+	robot->buy (p_i2, p_i1); 
+*/
+	robot->buy (i2->get (), i1->get ());
+	//printf ("Here called buy (%lli, %lli).\n", i2->get (), i1->get ());
 	
 	delete operand1;
 	delete operand2;
@@ -1036,6 +1041,28 @@ print () const
 
 //----------------------------------------------------------
 
+PolizFunMyId:: PolizFunMyId (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
+PolizElem * PolizFunMyId:: 
+evaluate_fun (PolizItem ** stack) const
+{
+	return new PolizInt ( robot->convert_to_int (robot->my_id()) );
+}
+
+
+void PolizFunMyId:: 
+print () const
+{
+	printf ("! POLIZ_MY_ID\t\t");
+}
+
+//----------------------------------------------------------
+
+
 PolizFunCurMonth:: PolizFunCurMonth (Game * robot_ptr)
 {
 	robot = robot_ptr;
@@ -1045,10 +1072,7 @@ PolizFunCurMonth:: PolizFunCurMonth (Game * robot_ptr)
 PolizElem * PolizFunCurMonth:: 
 evaluate_fun (PolizItem ** stack) const
 {
-	robot->cur_month ();
-	printf ("Here called cur_month ()\n");
-	
-	return 0;
+	return new PolizInt ( robot->cur_month () );
 }
 
 
@@ -1069,10 +1093,7 @@ PolizFunPlayers:: PolizFunPlayers (Game * robot_ptr)
 PolizElem * PolizFunPlayers:: 
 evaluate_fun (PolizItem ** stack) const
 {
-	robot->players ();
-	printf ("Here called players ()\n");
-	
-	return 0;
+	return new PolizInt (robot->players ());
 }
 
 
@@ -1093,10 +1114,7 @@ PolizFunActivePlayers:: PolizFunActivePlayers (Game * robot_ptr)
 PolizElem * PolizFunActivePlayers:: 
 evaluate_fun (PolizItem ** stack) const
 {
-	robot->active_players ();
-	printf ("Here called acitve_players ()\n");
-	
-	return 0;
+	return new PolizInt (robot->active_players ());
 }
 
 
@@ -1115,10 +1133,7 @@ PolizFunSupply:: PolizFunSupply (Game * robot_ptr)
 PolizElem * PolizFunSupply:: 
 evaluate_fun (PolizItem ** stack) const
 {
-	robot->supply ();
-	printf ("Here called supply ()\n");
-	
-	return 0;
+	return new PolizInt (robot->supply ());
 }
 
 
@@ -1138,10 +1153,9 @@ PolizFunRawPrice:: PolizFunRawPrice (Game * robot_ptr)
 PolizElem * PolizFunRawPrice:: 
 evaluate_fun (PolizItem ** stack) const
 {
-	robot->raw_price ();
-	printf ("Here called raw_price ()\n");
-	
-	return 0;
+	int res = robot->raw_price ();
+	printf ("Test print: raw_price give me : %d.\n", res);
+	return new PolizInt (res);
 }
 
 
@@ -1160,10 +1174,7 @@ PolizFunDemand:: PolizFunDemand (Game * robot_ptr)
 PolizElem * PolizFunDemand:: 
 evaluate_fun (PolizItem ** stack) const
 {
-	robot->demand ();
-	printf ("Here called demand ()\n");
-	
-	return 0;
+	return new PolizInt (robot->demand ());
 }
 
 
@@ -1183,10 +1194,7 @@ PolizFunProductionPrice:: PolizFunProductionPrice (Game * robot_ptr)
 PolizElem * PolizFunProductionPrice:: 
 evaluate_fun (PolizItem ** stack) const
 {
-	robot->production_price ();
-	printf ("Here called production_price ()\n");
-	
-	return 0;
+	return new PolizInt (robot->production_price ());
 }
 
 

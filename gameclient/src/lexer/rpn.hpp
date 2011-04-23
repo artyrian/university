@@ -304,6 +304,15 @@ public:
 
 //----------------------------------------------------------
 
+class PolizFunMyId : public PolizFunction {
+	Game * robot;
+public:
+	PolizFunMyId (Game * robot);
+	PolizElem * evaluate_fun ( PolizItem ** stack) const;
+	void print () const;
+};
+
+
 class PolizFunCurMonth : public PolizFunction {
 	Game * robot;
 public:

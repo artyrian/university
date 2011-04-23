@@ -40,6 +40,7 @@ enum type_of_lex {
 	LEX_BUILD,	
 	LEX_TURN,			// 
 	LEX_PRINT,
+	LEX_MY_ID,
 	LEX_CUR_MONTH,
 	LEX_PLAYERS,
 	LEX_ACTIVE_PLAYERS,

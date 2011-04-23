@@ -73,6 +73,7 @@ void ListPlayer::add (Player *pl)
 	ListElem *elem = newplayer (pl); 
 	ListElem *last = findlast (); 
 	elem->number = ++ cnt;
+	pl->number = elem->number;
 
 	if ( first == 0 ) {
 		first = elem;
@@ -101,7 +102,7 @@ Player * ListPlayer::find (int player_num) const
 {
 	ListElem *cur = first;
 	while ( cur != 0 ) {
-		if ( player_num ==  cur->number  ) {
+		if ( player_num ==  cur->p->number  ) {
 			return cur->p;
 		}
 		cur = cur->next;

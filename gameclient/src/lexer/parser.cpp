@@ -280,7 +280,11 @@ void Parser:: W ()
 
 void Parser:: Z ()
 {
-	if ( cur_lex.type == LEX_CUR_MONTH ) {
+	if ( cur_lex.type == LEX_MY_ID ) {
+		arg0 ();
+		rpn.add_to_list ( new PolizFunMyId (robot) );
+	}
+	else if ( cur_lex.type == LEX_CUR_MONTH ) {
 		arg0 ();
 		rpn.add_to_list ( new PolizFunCurMonth (robot) );
 	}

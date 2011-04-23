@@ -185,9 +185,10 @@ type_of_lex TableLexem:: lex_compare [] =
 const char * TableLexem:: function [] =
 {
 	""
+	"?my_id",
 	"?cur_month",
 	"?players",
-	"?a_players",
+	"?active_players",
 	"?supply",
 	"?raw_price",
 	"?demand",
@@ -196,7 +197,7 @@ const char * TableLexem:: function [] =
 	"?raw",
 	"?production",
 	"?factories",
-	"?a_factories",
+	"?auto_factories",
 	"?manufactured",
 	"?result_raw_sold",
 	"?result_raw_price",
@@ -209,6 +210,7 @@ const char * TableLexem:: function [] =
 type_of_lex TableLexem:: lex_function [] =
 {
 	LEX_NULL,
+	LEX_MY_ID,
 	LEX_CUR_MONTH,
 	LEX_PLAYERS,
 	LEX_ACTIVE_PLAYERS,

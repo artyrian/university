@@ -59,6 +59,7 @@ void Game:: login (char * nick, char * mode, int num)
 	}
 
 	startinfo ();
+	market ();
 }
 
 void Game::setnick (char *n)
@@ -300,17 +301,15 @@ void Game::market ()
 
 void Game::info () const
 {
-	char str[10] = "info";
+	char str [10] = "info";
 
 	q.sendstr (str);
 }
 
-void Game::buy (int count, int cost)
+void Game:: buy (int count, int cost)
 {
-	char str[20];
-//	
-	cost = mrk.raw_cost;
-//
+	char str [80];
+
 	sprintf (str, "buy %d %d", count, cost);
 
 	q.sendstr (str);
@@ -321,11 +320,7 @@ void Game::buy (int count, int cost)
 
 void Game::sell (int count, int cost)
 {
-	char str[20];
-
-//	
-	cost = mrk.prod_cost;
-//
+	char str [80];
 
 	sprintf (str, "sell %d %d", count, cost);
 
@@ -337,6 +332,7 @@ void Game::sell (int count, int cost)
 void Game::prod (int count)
 {
 	char str[20];
+
 	sprintf (str, "prod %d", count);
 
 	q.sendstr (str);
@@ -476,6 +472,12 @@ char * Game:: convert_to_char (int player_num) const
 {
 	Player * pl = lp->find (player_num);
 	return pl->nick;
+}
+
+int Game:: convert_to_int (const char * str) const
+{
+	Player * pl = lp->find (str);
+	return pl->number;
 }
 	
 Game::~Game ()

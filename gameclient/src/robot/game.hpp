@@ -31,6 +31,8 @@ class Game {
 	void bankrupt (char *nick);
 
 	void checkok ();
+
+	void startinfo ();
 public:
 	Game (char *ip, int port);
 
@@ -40,7 +42,6 @@ public:
 	void create () const;
 	void waitplayers (int maxpl);
 	void waitstart ();
-	void startinfo ();
 	void getinfo ();
 	void waitendturn ();
 	void readqueue ();
@@ -76,6 +77,7 @@ public:
 	int result_prod_price (const char *nick) const;
 
 	char * convert_to_char (int player_num) const;
+	int convert_to_int (const char * str) const;
 
 	~Game ();
 };

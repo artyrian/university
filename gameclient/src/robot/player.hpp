@@ -4,6 +4,7 @@
 
 struct Player {
 	char *nick;
+	int number;
 	int raw;
 	int prod;
 	int money;
