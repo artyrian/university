@@ -45,7 +45,6 @@ print () const
 void PolizNop:: 
 evaluate (PolizItem ** stack, PolizItem ** cur_cmd) const
 {
-//	printf ("call nop.\n");
 	*cur_cmd = (* cur_cmd)->next;
 }
 
@@ -859,13 +858,8 @@ evaluate_fun (PolizItem ** stack) const
 		throw PolizExceptionNotInt (operand2);
 	}
 
-/*
-	int p_i2 = i2->get ();
-	int p_i1 = i1->get ();
-	robot->buy (p_i2, p_i1); 
-*/
+
 	robot->buy (i2->get (), i1->get ());
-	//printf ("Here called buy (%lli, %lli).\n", i2->get (), i1->get ());
 	
 	delete operand1;
 	delete operand2;
@@ -904,7 +898,6 @@ evaluate_fun (PolizItem ** stack) const
 	}
 
 	robot->sell (i2->get (), i1->get ()); 
-	printf ("Here called sell (%lli, %lli).\n", i2->get (), i1->get ());
 	
 	delete operand1;
 	delete operand2;
@@ -937,7 +930,6 @@ evaluate_fun (PolizItem ** stack) const
 	}
 
 	robot->prod (i1->get ());
-	printf ("Here called prod (%lli).\n", i1->get ());
 	
 	delete operand1;
 
@@ -963,7 +955,6 @@ PolizElem * PolizFunBuild::
 evaluate_fun (PolizItem ** stack) const
 {
 	robot->build ();
-	printf ("Here called build ().\n");
 	
 	return 0;
 }
@@ -988,7 +979,6 @@ PolizElem * PolizFunTurn::
 evaluate_fun (PolizItem ** stack) const
 {
 	robot->turn ();
-	printf ("Here called turn ().\n");
 	
 	return 0;
 }
@@ -1154,7 +1144,6 @@ PolizElem * PolizFunRawPrice::
 evaluate_fun (PolizItem ** stack) const
 {
 	int res = robot->raw_price ();
-	printf ("Test print: raw_price give me : %d.\n", res);
 	return new PolizInt (res);
 }
 
@@ -1222,7 +1211,6 @@ evaluate_fun (PolizItem ** stack) const
 	
 	long long int res = robot->money ( 
 		robot->convert_to_char ( i1->get() ) );
-	printf (" Here called money (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1254,7 +1242,6 @@ evaluate_fun (PolizItem ** stack) const
 	
 	long long int res = robot->raw ( 
 		robot->convert_to_char ( i1->get() ) );
-	printf (" Here called raw (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1286,7 +1273,6 @@ evaluate_fun (PolizItem ** stack) const
 	
 	long long int res = robot->production ( 
 			robot->convert_to_char ( i1->get () ) );
-	printf (" Here called production (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1320,7 +1306,6 @@ evaluate_fun (PolizItem ** stack) const
 	
 	long long int res = robot->factories ( 
 		robot->convert_to_char ( i1->get () ) );
-	printf (" Here called factories (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1354,7 +1339,6 @@ evaluate_fun (PolizItem ** stack) const
 	
 	long long int res = robot->auto_factories ( 
 		robot->convert_to_char ( i1->get () ) );
-	printf (" Here called auto_factories (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1388,7 +1372,6 @@ evaluate_fun (PolizItem ** stack) const
 	
 	long long int res = robot->manufactured ( 
 		robot->convert_to_char ( i1->get () ) );
-	printf (" Here called manufactured (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1420,7 +1403,6 @@ evaluate_fun (PolizItem ** stack) const
 	
 	long long int res = robot->result_raw_sold ( 
 		robot->convert_to_char ( i1->get () ) );
-	printf (" Here called result_raw_sold (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1455,7 +1437,6 @@ evaluate_fun (PolizItem ** stack) const
 	
 	long long int res = robot->result_raw_price ( 
 		robot->convert_to_char ( i1->get () ) );
-	printf (" Here called result_raw_PRICE (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1487,7 +1468,6 @@ evaluate_fun (PolizItem ** stack) const
 	
 	long long int res = robot->result_prod_bought ( 
 		robot->convert_to_char ( i1->get () ) );
-	printf (" Here called result_prod_bought (%lli)", i1->get ());
 
 	delete operand1;
 
@@ -1520,7 +1500,6 @@ evaluate_fun (PolizItem ** stack) const
 	
 	long long int res = robot->result_prod_price ( 
 		robot->convert_to_char ( i1->get () ) );
-	printf (" Here called result_prod_price (%lli)", i1->get ());
 
 	delete operand1;
 

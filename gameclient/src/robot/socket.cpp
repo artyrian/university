@@ -141,7 +141,7 @@ char *Socket:: getmsg ()
 		cnt--;
 	}
 	
-	printf ("R:[%s].\n", msg);
+//	printf ("R:[%s].\n", msg);
 
 	return msg;
 }

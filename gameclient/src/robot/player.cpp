@@ -5,38 +5,49 @@
 #include <string.h>
 
 
-Player::Player (char *n, int r, int pr, int m, int pl, int apl, int l_prod)
-	: 	nick(n), 
-		raw(r),
-		prod(pr),
-		money(m),
-		plants(pl),
-		autoplants(apl),
-		last_prod (l_prod),
-		factive (1)
+Player:: Player (char *n, int r, int pr, 
+	int m, int pl, int apl, int l_prod
+)
 {
+	nick = n; 
+	raw = r;
+	prod = pr;
+	money = m;
+	plants = pl;
+	autoplants = apl;
+	last_prod = l_prod;
+	factive = 1;
 }
 
 
 /* This operator only for parsed copy!!!
  */
-void Player::operator= (Player *p)
+Player * Player:: copy (const Player *p)
 {
+	number = p->number;
 	raw = p->raw;
 	prod = p->prod;
 	money = p->money;
 	plants = p->plants;
 	autoplants = p->autoplants;
 	last_prod = prod - last_prod;
+
+	return (this);
 }
 
-Player::~Player ()
+void Player:: print () const
+{
+	printf ("number:%d,money:%d, raw:%d;\n",
+		number, money, raw);
+}
+
+Player:: ~Player ()
 {
 	delete [] nick;
 }
 
 
-ListPlayer::ListPlayer ()
+ListPlayer:: ListPlayer ()
 	: first (0), cnt (1)
 {
 }
@@ -48,6 +59,7 @@ ListPlayer::ListElem * ListPlayer:: newplayer (Player *pl)
 	class ListElem *elem = new ListElem;
 
 	elem->p = pl;  
+	elem->p->number = cnt++;
 	elem->next = 0;
 	
 	return elem;
@@ -72,8 +84,6 @@ void ListPlayer::add (Player *pl)
 {
 	ListElem *elem = newplayer (pl); 
 	ListElem *last = findlast (); 
-	elem->number = ++ cnt;
-	pl->number = elem->number;
 
 	if ( first == 0 ) {
 		first = elem;
@@ -84,7 +94,7 @@ void ListPlayer::add (Player *pl)
 
 
 
-Player * ListPlayer::find (const char *nick) const
+Player * ListPlayer:: find (const char *nick) const
 {
 	ListElem *cur = first;
 	while ( cur != 0 ) {
@@ -94,11 +104,12 @@ Player * ListPlayer::find (const char *nick) const
 		cur = cur->next;
 	}
 
-	printf ("Not found.\n");
+	printf ("Not found player with nick [%s].\n",
+		nick);
 	return 0;
 }
 
-Player * ListPlayer::find (int player_num) const
+Player * ListPlayer:: find (int player_num) const
 {
 	ListElem *cur = first;
 	while ( cur != 0 ) {
@@ -108,15 +119,16 @@ Player * ListPlayer::find (int player_num) const
 		cur = cur->next;
 	}
 
-	printf ("Not found.\n");
+	printf ("Not found player with number [%d].\n",
+		player_num);
 	return 0;
 }
 
 
 
-Player * ListPlayer::parse (char *str) const
+Player * ListPlayer:: parse (char *str) const
 {
-	char *trash, *nick;
+	char * trash, * nick;
 	int raw, prod, money, plant, autoplant, l_prod;
 
 	raw = prod = money = plant = autoplant = -1; 
@@ -124,7 +136,6 @@ Player * ListPlayer::parse (char *str) const
 	trash = new char [15];
 	nick = new char [20];
 
-	printf ("Start parse.\n");
 	sscanf ( str, "%s%s%s%d%d%d%d%d", 
 			trash, trash, 
 			nick, &raw, &prod, &money, &plant, &autoplant
@@ -144,8 +155,19 @@ Player * ListPlayer::parse (char *str) const
 }
 
 
+void ListPlayer:: print () const
+{
+	ListElem * cur = first;
 
-ListPlayer::~ListPlayer() 
+	while ( cur != 0 ) {
+		cur->p->print ();
+		cur = cur -> next;
+	}
+
+}
+
+
+ListPlayer:: ~ListPlayer() 
 {
 	while ( first != 0 ) {
 		struct ListElem *cur = first;

@@ -1,13 +1,27 @@
 {
-	$I = ?my_id ();
- 	while ( ?active_players () <> 1)
+ 	while ( ?active_players () > 1)
 	{
-		if ( ?money (I) - ?raw_price () * ?factories () > 0 )  {
-			buy (?factories (I), ?raw_price ());
-		}
-		sell (?factories (I), ?production_price ());
-		prod ( ?factories (I);
+		$my_factories = ?factories ( ?my_id () );
+		
+		$raw_price = ?raw_price ();
+		if ( 1 ) {
+			buy ( $my_factories, $raw_price );
+		};
+
+		$prod_price = ?production_price ();
+		sell ( $my_factories, $prod_price );
+
+		prod ( $my_factories );
 
 		turn ();
+
 	};
+
+	if ( ?money (?my_id ()) > 0 )  {
+		print ("I'm win! :) Money:", ?money (?my_id()) );
+	};
+	if ( ?money (?my_id ()) <= 0 )  {
+		print ("I'm loser! :(");
+	};
+
 }

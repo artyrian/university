@@ -77,7 +77,7 @@ void Game::setnick (char *n)
 }
 
 
-void Game::joinroom (int r)
+void Game:: joinroom (int r)
 {
 	room = r;
 	char str[32];
@@ -94,7 +94,7 @@ void Game::joinroom (int r)
 }
 
 
-void Game::create () const
+void Game:: create () const
 {
 	char str[16];
 
@@ -103,7 +103,7 @@ void Game::create () const
 }
 
 
-void Game::waitplayers (int maxpl)
+void Game:: waitplayers (int maxpl)
 {
 	char str[16];
 	char msg[1024];
@@ -126,7 +126,7 @@ void Game::waitplayers (int maxpl)
 }
 
 
-void Game::waitstart ()
+void Game:: waitstart ()
 {
 	do {
 	} while ( strncmp (q.gettype ('&'), "& START", 7) != 0 );
@@ -135,15 +135,15 @@ void Game::waitstart ()
 }
 
 
-void Game::quit ()
+void Game:: quit ()
 {
-	char str[10];
+	char str [10];
 	sprintf (str, ".quit");
 	q.sendstr (str);
 }
 
 
-void Game::startinfo ()
+void Game:: startinfo ()
 {
 	char msg[80];
 
@@ -173,7 +173,7 @@ void Game::startinfo ()
 }
 
 
-void Game::getinfo ()
+void Game:: getinfo ()
 {
 	char msg[80];
 
@@ -183,15 +183,18 @@ void Game::getinfo ()
 		strcpy (msg, q.gettype('&'));
 
 		if ( strncmp (msg, "& INFO", 6) == 0 ) {
-			struct Player * parsed_pl (lp->parse (msg));
-			struct Player * pl (lp->find (parsed_pl->nick)); 
-			pl = parsed_pl;
+			struct Player * parsed_pl = lp->parse (msg);
+
+			//
+			struct Player * pl = lp->find (parsed_pl->nick); 
+			pl->copy (parsed_pl);
+
 			delete parsed_pl;
 		}
 
 	} while ( strncmp (msg, "& PLAYERS", 9) != 0 );
 	
-	char trash[10];
+	char trash [10];
 	int watchers;
 
 	inf.players = inf.active_players = watchers = -1;
@@ -203,10 +206,15 @@ void Game::getinfo ()
 	}
 
 	inf.players = watchers + inf.active_players;
+
+	printf ("Here print list players:\n");
+	lp->print ();
+	printf ("End of print list players:\n");
+
 }
 
 
-void Game::waitendturn ()
+void Game:: waitendturn ()
 {
 	char msg[1024];
 
@@ -245,7 +253,7 @@ void Game::waitendturn ()
 }
 
 
-void Game::readqueue ()
+void Game:: readqueue ()
 {
 	char msgq[1024];
 
@@ -268,7 +276,7 @@ void Game::readqueue ()
 }
 
 
-void Game::market ()
+void Game:: market ()
 {
 	char str[10] = "market";
 
@@ -299,7 +307,7 @@ void Game::market ()
 	}
 }
 
-void Game::info () const
+void Game:: info () const
 {
 	char str [10] = "info";
 
@@ -318,7 +326,7 @@ void Game:: buy (int count, int cost)
 }
 
 
-void Game::sell (int count, int cost)
+void Game:: sell (int count, int cost)
 {
 	char str [80];
 
@@ -329,7 +337,7 @@ void Game::sell (int count, int cost)
 	checkok ();
 }
 
-void Game::prod (int count)
+void Game:: prod (int count)
 {
 	char str[20];
 
@@ -341,13 +349,13 @@ void Game::prod (int count)
 }
 
 
-void Game::build () const
+void Game:: build () const
 {
 	char str [10] = "build";
 	q.sendstr (str);
 }
 
-void Game::turn ()
+void Game:: turn ()
 {
 	char str [10] = "turn";
 
@@ -355,9 +363,7 @@ void Game::turn ()
 
 	waitendturn ();
 
-	getinfo ();		// ATT
-
-	// here ready to say who am i
+	getinfo ();
 
 	// new month
 	readqueue ();
@@ -367,7 +373,7 @@ void Game::turn ()
 }
 
 
-void Game::checkok ()
+void Game:: checkok ()
 {
 	char str[80];
 
@@ -381,87 +387,102 @@ void Game::checkok ()
 }
 
 
-char* Game::my_id () const
+char* Game:: my_id () const
 {
 	return nick;
 }
 
-int Game::cur_month () const
+int Game:: cur_month () const
 {
 	return month;
 }
-int Game::players () const
+
+int Game:: players () const
 {
 	return inf.players;
 }
-int Game::active_players () const 
+
+int Game:: active_players () const 
 {
 	return inf.active_players;
 }
-int Game::supply () const
+
+int Game:: supply () const
 {
 	return mrk.raw_count;
 }
-int Game::raw_price () const
+
+int Game:: raw_price () const
 {
 	return mrk.raw_cost;
 }
-int Game::demand () const 
+
+int Game:: demand () const 
 {
 	return mrk.prod_count;
 }
-int Game::production_price () const
+
+int Game:: production_price () const
 {
 	return mrk.prod_cost;
 }
 
-int Game::money (const char *nick) const
+int Game:: money (const char *nick) const
 {
 	Player *pl = lp->find (nick);
 	return pl->money;
 }
-int Game::raw (const char *nick) const
+
+int Game:: raw (const char *nick) const
 {
 	Player *pl = lp->find (nick);
 	return pl->raw;
 }
-int Game::production (const char *nick) const
+
+int Game:: production (const char *nick) const
 {
 	Player *pl = lp->find (nick);
 	return pl->prod;	
 }
-int Game::factories (const char *nick) const 
+
+int Game:: factories (const char *nick) const 
 {
 	Player *pl = lp->find (nick);
 	return pl->plants;
 }
-int Game::auto_factories (const char *nick) const 
+
+int Game:: auto_factories (const char *nick) const 
 {
 	Player *pl = lp->find (nick);
 	return pl->autoplants;
 }
-int Game::manufactured (const char *nick) const
+
+int Game:: manufactured (const char *nick) const
 {
 	Player *pl = lp->find (nick);
 	int manufactured = pl->prod - pl->last_prod + pl->sold;
 	return manufactured;
 }
-int Game::result_raw_sold (const char *nick) const
+
+int Game:: result_raw_sold (const char *nick) const
 {
 	Player *pl = lp->find (nick);
 	return pl->bought;
 }
-int Game::result_raw_price (const char *nick) const
+
+int Game:: result_raw_price (const char *nick) const
 {
 	Player *pl = lp->find (nick);
 	return pl->bought_price;
 }
-int Game::result_prod_bought (const char *nick) const
+
+int Game:: result_prod_bought (const char *nick) const
 {
 	Player *pl = lp->find (nick);
 	return pl->sold;
 }
-int Game::result_prod_price (const char *nick) const
+
+int Game:: result_prod_price (const char *nick) const
 {
 	Player *pl = lp->find (nick);
 	return pl->sold_price;
