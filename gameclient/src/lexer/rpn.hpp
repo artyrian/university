@@ -375,6 +375,14 @@ public:
 	void print () const;
 };
 
+class PolizFunActive : public PolizFunction {
+	Game * robot;
+public:
+	PolizFunActive (Game * robot);
+	PolizElem * evaluate_fun (PolizItem ** stack) const;
+	void print () const;
+};
+
 
 class PolizFunMoney : public PolizFunction {
 	Game * robot;

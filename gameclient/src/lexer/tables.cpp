@@ -193,6 +193,7 @@ const char * TableLexem:: function [] =
 	"?raw_price",
 	"?demand",
 	"?production_price",
+	"?active",
 	"?money",		// 13
 	"?raw",
 	"?production",
@@ -218,6 +219,7 @@ type_of_lex TableLexem:: lex_function [] =
 	LEX_RAW_PRICE,
 	LEX_DEMAND,
 	LEX_PRODUCTION_PRICE,
+	LEX_ACTIVE,
 	LEX_MONEY,
 	LEX_RAW,
 	LEX_PRODUCTION,

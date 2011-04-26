@@ -45,7 +45,12 @@ public:
 	Player * find (int player_num) const ;
 	Player * parse (char *str) const;
 
+	void disable_all ();
+	void enable (Player * player);
+
 	void print () const;
+
+	void month_expense ();
 
 	~ListPlayer ();
 };

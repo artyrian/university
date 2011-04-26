@@ -4,35 +4,44 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+const int prod_creating_cost = 2000;
 
-Game::Game (char *ip, int port)
+
+Game:: Game (char *ip, int port)
 	: q(ip, port), month (1)
 {
 	lp = new ListPlayer;
 }
 
-void Game::bought (char *nick, int bought, int price)
+void Game:: bought (char *nick, int amount, int price)
 {
-	Player *pl = lp->find (nick);
-	pl->bought = bought;
+	Player * pl = lp->find (nick);
+
+	pl->bought = amount;
 	pl->bought_price = price;
+	
+	pl->money -= amount * price;
+	pl->raw += amount;
 }
 
-void Game::sold (char *nick, int sold, int price)
+void Game:: sold (char *nick, int amount, int price)
 {
 	Player *pl = lp->find (nick);
-	pl->sold = sold;
+
+	pl->sold = amount;
 	pl->sold_price = price;
+
+	pl->money += amount * price;
+	pl->prod -= amount;
 }
 
-void Game::bankrupt (char *nick)
+void Game:: bankrupt (char *nick)
 {
 	Player *pl = lp->find (nick);
 	pl->factive = 0;
 }
 
-
-int Game::checkactive (char *nick)
+int Game:: checkactive (char *nick)
 {
 	Player *pl = lp->find (nick);
 	return pl->factive;
@@ -62,7 +71,7 @@ void Game:: login (char * nick, char * mode, int num)
 	market ();
 }
 
-void Game::setnick (char *n)
+void Game:: setnick (char *n)
 {
 	nick = n;
 
@@ -131,7 +140,7 @@ void Game:: waitstart ()
 	do {
 	} while ( strncmp (q.gettype ('&'), "& START", 7) != 0 );
 
-	printf ("GAME START!\n");
+	printf ("Game is starting.\n");
 }
 
 
@@ -153,8 +162,9 @@ void Game:: startinfo ()
 		strcpy (msg, q.gettype('&'));
 
 		if ( strncmp (msg, "& INFO", 6) == 0 ) {
-			struct Player *pl = lp->parse (msg);
-			lp->add (pl);
+			struct Player * player = lp->parse (msg);
+			lp->add (player);
+			lp->enable (player);
 		}
 	} while ( strncmp (msg, "& PLAYERS", 9) != 0 );
 	
@@ -175,23 +185,21 @@ void Game:: startinfo ()
 
 void Game:: getinfo ()
 {
-	char msg[80];
+	char msg [80];
 
 	info ();
 
+	lp->disable_all ();
 	do {
 		strcpy (msg, q.gettype('&'));
 
 		if ( strncmp (msg, "& INFO", 6) == 0 ) {
 			struct Player * parsed_pl = lp->parse (msg);
-
-			//
-			struct Player * pl = lp->find (parsed_pl->nick); 
-			pl->copy (parsed_pl);
-
+			struct Player * player = lp->find (parsed_pl->nick); 
+			lp->enable (player);
+			player->copy (parsed_pl);
 			delete parsed_pl;
 		}
-
 	} while ( strncmp (msg, "& PLAYERS", 9) != 0 );
 	
 	char trash [10];
@@ -206,20 +214,15 @@ void Game:: getinfo ()
 	}
 
 	inf.players = watchers + inf.active_players;
-
-	printf ("Here print list players:\n");
-	lp->print ();
-	printf ("End of print list players:\n");
-
 }
 
 
 void Game:: waitendturn ()
 {
-	char msg[1024];
+	char msg [1024];
 
-	char trash[10];
-	char nick[20];
+	char trash [10];
+	char nick [20];
 	int amount = -1;
 	int price = -1;
 
@@ -244,12 +247,13 @@ void Game:: waitendturn ()
 			sscanf (msg, "%s%s%s", trash, trash, nick);
 			bankrupt (nick);
 		}
-		
 	} while ( strncmp (msg, "& ENDTURN", 9) != 0 );
 
-	month++;
+	lp->month_expense ();
 
-	printf ("NEXT TURN. Now will start %dth month.\n", month);
+	++ month;
+
+//	printf ("NEXT TURN. Now will start %dth month.\n", month);
 }
 
 
@@ -258,7 +262,7 @@ void Game:: readqueue ()
 	char msgq[1024];
 
 	while ( q.getcount () != 0 ) {
-		printf ("Now in queue %d message.\n", q.getcount ());
+//		printf ("Now in queue %d message.\n", q.getcount ());
 
 		strcpy (msgq, q.getmsgq ());	
 
@@ -346,6 +350,11 @@ void Game:: prod (int count)
 	q.sendstr (str);
 	
 	checkok ();
+
+	Player * player = lp->find (nick);
+	player->money -= count * prod_creating_cost;
+	player->raw -= count;
+	player->prod += count;
 }
 
 
@@ -363,13 +372,13 @@ void Game:: turn ()
 
 	waitendturn ();
 
-	getinfo ();
 
 	// new month
 	readqueue ();
 	getinfo ();
-
-	market ();
+	if ( active_players () >= 2 ) {
+		market ();
+	}
 }
 
 
@@ -387,7 +396,7 @@ void Game:: checkok ()
 }
 
 
-char* Game:: my_id () const
+char * Game:: my_id () const
 {
 	return nick;
 }
@@ -425,6 +434,12 @@ int Game:: demand () const
 int Game:: production_price () const
 {
 	return mrk.prod_cost;
+}
+
+int Game:: active (const char * nick) const
+{
+	Player *pl = lp->find (nick);
+	return pl->factive;
 }
 
 int Game:: money (const char *nick) const
@@ -501,7 +516,7 @@ int Game:: convert_to_int (const char * str) const
 	return pl->number;
 }
 	
-Game::~Game ()
+Game:: ~Game ()
 {
 	delete lp;
 }

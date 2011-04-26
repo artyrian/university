@@ -312,6 +312,10 @@ void Parser:: Z ()
 		arg0 ();
 		rpn.add_to_list ( new PolizFunProductionPrice (robot) );
 	}
+	else if ( cur_lex.type == LEX_ACTIVE ) {
+		arg1 ();
+		rpn.add_to_list ( new PolizFunActive (robot) );
+	}
 	else if ( cur_lex.type == LEX_MONEY ) {
 		arg1 ();
 		rpn.add_to_list ( new PolizFunMoney (robot) );

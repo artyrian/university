@@ -1,5 +1,5 @@
 {
- 	while ( ?active_players () > 1)
+ 	while ( ?money (?my_id() ) > 0 )
 	{
 		$my_factories = ?factories ( ?my_id () );
 		
@@ -39,10 +39,5 @@
 
 	};
 
-	if ( ?money (?my_id ()) > 0 )  {
-		print ("I'm win! :)");
-	};
-	if ( ?money (?my_id ()) <= 0 )  {
-		print ("I'm loser! :(");
-	};
+	print ("my money is ", ?money (?my_id ()));
 }

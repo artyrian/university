@@ -45,7 +45,7 @@ void QueueMsg::remove ()
 	if ( first == last ) {
 		last = next;
 	}
-	printf ("Now delete [%s].\n", first->str);
+//	printf ("Now delete [%s].\n", first->str);
 	delete [] first->str;
 	delete first;
 	first = next;
@@ -84,7 +84,7 @@ char * QueueMsg::gettype (int type)
 	do {
 		strcpy (msg, ch.getmsg ());
 		if ( (msg[0] != type) && (comment (msg[0]) == 0)) {
-			printf ("Put to queue:[%s].\n", msg);
+//			printf ("Put to queue:[%s].\n", msg);
 			add (msg);	
 		}
 	} while ( msg[0] != type );

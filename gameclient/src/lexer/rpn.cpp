@@ -1194,6 +1194,38 @@ print () const
 }
 
 
+PolizFunActive:: PolizFunActive (Game * robot_ptr)
+{
+	robot = robot_ptr;
+}
+
+
+PolizElem * PolizFunActive:: 
+evaluate_fun (PolizItem ** stack) const
+{
+	PolizElem * operand1 = pop (stack);
+	PolizInt * i1 = dynamic_cast <PolizInt *> (operand1);
+	if ( !i1 ) { 
+		throw PolizExceptionNotInt (operand1);
+	}
+	
+	long long int res = robot->active ( 
+		robot->convert_to_char ( i1->get() ) );
+
+	delete operand1;
+
+	return new PolizInt (res);
+}
+
+
+void PolizFunActive:: 
+print () const
+{
+	printf ("! POLIZ_ACTIVE\t\t");
+}
+
+
+
 PolizFunMoney:: PolizFunMoney (Game * robot_ptr)
 {
 	robot = robot_ptr;

@@ -152,6 +152,6 @@ void Socket:: sendstr (char *str) const
 	char strn[32];
 
 	sprintf (strn, "%s\n", str);
-	printf ("Now send:[%s].\n", strn);
+//	printf ("Now send:[%s].\n", strn);
 	write (sd, strn, strlen(strn));
 }

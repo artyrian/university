@@ -20,8 +20,8 @@ class Game {
 	} inf;
 
 	QueueMsg q;
-	ListPlayer *lp;
-	char *nick;
+	ListPlayer * lp;
+	char * nick;
 	int room;
 	int month;
 
@@ -34,7 +34,7 @@ class Game {
 
 	void startinfo ();
 public:
-	Game (char *ip, int port);
+	Game (char * ip, int port);
 
 	void login (char * nick, char * mode, int num);
 	void setnick (char *nick);
@@ -57,7 +57,7 @@ public:
 	void build () const;
 	void turn ();
 
-	char* my_id () const;
+	char * my_id () const;
 	int cur_month () const;
 	int players () const;
 	int active_players () const;
@@ -65,6 +65,7 @@ public:
 	int raw_price () const;
 	int demand () const;
 	int production_price () const;
+	int active (const char *nick) const;
 	int money (const char *nick) const;
 	int raw (const char *nick) const;
 	int production (const char *nick) const;
