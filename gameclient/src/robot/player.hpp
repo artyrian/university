@@ -19,7 +19,8 @@ struct Player {
 	int factive;
 
 	Player (char *n, int r, int pr, int m, int pl, int apl, int l_prod);
-	void operator= (Player *);
+	Player * copy (const Player *);
+	void print () const;
 	~Player ();
 };
 
@@ -28,7 +29,6 @@ struct Player {
 class ListPlayer {
 	struct ListElem {
 		Player *p;
-		int number;
 		ListElem *next;
 	};
 
@@ -45,6 +45,7 @@ public:
 	Player * find (int player_num) const ;
 	Player * parse (char *str) const;
 
+	void print () const;
 
 	~ListPlayer ();
 };

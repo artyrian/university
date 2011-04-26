@@ -1,0 +1,48 @@
+{
+ 	while ( ?active_players () > 1)
+	{
+		$my_factories = ?factories ( ?my_id () );
+		
+		$raw_price = ?raw_price ();
+		if ( 1 ) {
+			buy ( $my_factories, $raw_price + $diff_raw_price );
+		};
+
+		$prod_price = ?production_price ();
+		sell ( $my_factories, $prod_price - $diff_prod_price );
+
+		prod ( $my_factories );
+
+		turn ();
+
+
+		$max = ?result_raw_price ( 1 ); 
+		$min = ?result_prod_price ( 1 ); 
+
+		for ( $i = 1, $i <= ?active_players (), $i = $i + 1 ) 
+		{ 
+			if ( $max < ?result_raw_price ($i)  ) {
+				$max = ?result_raw_price ($i);
+			};
+			if ( $min > ?result_prod_price ($i) ) {
+				$min = ?result_prod_price ($i);
+			};
+
+		};
+
+		if ( (?raw_price () - $max) >= $diff_raw_price  ) {
+			$diff_raw_price = ?raw_price () - $max + 1; 
+		};
+		if ( (?production_price () - $min ) >= $diff_prod_price ) {
+			$diff_prod_price = ?production_price () - $min + 1;
+		};
+
+	};
+
+	if ( ?money (?my_id ()) > 0 )  {
+		print ("I'm win! :)");
+	};
+	if ( ?money (?my_id ()) <= 0 )  {
+		print ("I'm loser! :(");
+	};
+}

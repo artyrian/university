@@ -69,40 +69,22 @@ void parse_arguments (int argc, char ** argv,
 
 		switch (c) {
 			case 'i' :
-				printf ("option %c with value '%s'\n", 
-					c, optarg
-				);
 				(*ip) = optarg;
 				break;
 			case 'p' : 
-				printf ("option %c with value '%s'\n", 
-					c, optarg
-				);
 				port = optarg;
 				break;
 			case 'n' :
-				printf ("option %c with value '%s'\n", 
-					c, optarg
-				);
 				(*nick) = optarg;
 				break;
 			case 'm' :
-				printf ("option %c with value '%s'\n", 
-					c, optarg
-				);
 				(*mode) = optarg;
 				break;
 
 			case 'c' :
-				printf ("option %c with value '%s'\n", 
-					c, optarg
-				);
 				num = optarg;
 				break;
 			case 's' :
-				printf ("option %c with value '%s'\n", 
-					c, optarg
-				);
 				(*script) = optarg;
 				break;
 			default :
@@ -119,27 +101,6 @@ void parse_arguments (int argc, char ** argv,
 	(*num_int) = atoi (num);
 } // Parse paramets;
 
-
-
-/*
-void login (Game & g, char * nick, char * mode, int num)
-{
-	g.setnick (nick);
-
-	if ( strcpy (mode, "create") ) {
-		g.create ();
-		g.waitplayers (num);
-	} 
-	if ( strcpy (mode, "join") ) {
-		g.joinroom (num);
-		g.waitstart ();
-	}
-	else {
-		printf ("Error in check mode.");	
-		exit (EXIT_FAILURE);
-	}
-}
-*/
 
 
 int main (int argc, char ** argv)
