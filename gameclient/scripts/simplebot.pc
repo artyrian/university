@@ -1,9 +1,13 @@
 {
+	$I = ?my_id ();
  	while ( ?active_players () <> 1)
 	{
-		buy (2, ?raw_price ());
-		sell (2, ?production_price ());
-		prod (2);
+		if ( ?money (I) - ?raw_price () * ?factories () > 0 )  {
+			buy (?factories (I), ?raw_price ());
+		}
+		sell (?factories (I), ?production_price ());
+		prod ( ?factories (I);
+
 		turn ();
 	};
 }
