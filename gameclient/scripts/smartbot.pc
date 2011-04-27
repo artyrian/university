@@ -1,6 +1,7 @@
 {
 	$diff_raw_price = 0;
 	$diff_prod_price = 0;
+	$cnt_buy = 1;
 
  	while ( ?money (?my_id() ) > 0 )
 	{
@@ -19,6 +20,8 @@
 		$raw_price = ?raw_price ();
 		if ( ?money (?my_id ()) - ?raw_price () * $my_factories > 0 ) {
 			buy ( $my_factories, $raw_price + $diff_raw_price );
+			$buy [ $cnt_buy ] = $raw_price + $diff_raw_price;
+			$cnt_buy = $cnt_buy + 1;
 		};
 
 		$prod_price = ?production_price ();
@@ -52,4 +55,10 @@
 	};
 
 	print ("my money is ", ?money (?my_id ()));
+
+	print ("History of selling production:");
+	for ($i = 1 , $i <= $cnt_buy , $i = $i + 1 ) {
+		print ($i, " month: buy price = ", $buy [ $i ] );
+	};
 }
+
