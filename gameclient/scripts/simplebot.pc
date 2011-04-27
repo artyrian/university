@@ -1,16 +1,23 @@
 {
  	while ( (?money (?my_id ()) > 0) & (?active_players () > 1) )
 	{
+		print ("Current month is ", ?cur_month (), ".");
+		print ("Available supply: ", ?supply (), ", price: ", ?raw_price ());
+		print ("Available demand: ", ?demand (), ", price: ", ?production_price ());
+
 		$my_factories = ?factories ( ?my_id () );
 		
 		if ( ?money (?my_id ()) - ?raw_price () * $my_factories > 0 ) {
 			buy ( $my_factories, ?raw_price () );
+			print ("Now buy ", $my_factories, " by ", ?raw_price (), "$.");
 		};
 
 		sell ( ?production (?my_id()), ?production_price () );
+		print ("Now sell  ", $my_factories, " by ", ?production_price (), "$.");
 
 		if ( ?money (?my_id ()) - 2000 * $my_factories > 0 ) {
 			prod ( $my_factories );
+			print ("In this month I creating ", $my_factories, " prods.");
 		};
 
 		turn ();

@@ -2,15 +2,13 @@
 	$diff_raw_price = 0;
 	$diff_prod_price = 0;
 	$cnt_buy = 1;
+	$cnt_sell = 1;
 
- 	while ( ?money (?my_id() ) > 0 )
+ 	while ( (?money (?my_id() ) > 0) & ( ?active_players () > 1 ))
 	{
-		if ( ?supply () < 2 * ?active_players () ) {
-			$diff_raw_price = $diff_raw_price + 1; 
-		};
-		if ( ?demand () < 2 * ?active_players () ) {
-			$diff_prod_price = $diff_prod_price + 1; 
-		};
+		print ("Current month is ", ?cur_month (), ".");
+		print ("Available supply: ", ?supply (), ", price: ", ?raw_price ());
+		print ("Available demand: ", ?demand (), ", price: ", ?production_price ());
 		print ("This time:");
 		print ("$diff_raw_price:", $diff_raw_price);
 		print ("$diff_prod_price:", $diff_prod_price);
@@ -25,8 +23,16 @@
 		};
 
 		$prod_price = ?production_price ();
+
 		sell ( ?production (?my_id()), $prod_price - $diff_prod_price );
+		$sell [ $cnt_sell ] = $prod_price - $diff_prod_price;
+		$cnt_sell = $cnt_sell + 1;
+
+		$fabric_count [ ?cur_month () ] = $my_factories;
+
 		prod ( $my_factories );
+		print ("In this month I creating ", $my_factories, " prods.");
+
 		turn ();
 
 
@@ -46,19 +52,27 @@
 			};
 		};
 
-		if ( ($max - $raw_price) > $diff_raw_price  ) {
-			$diff_raw_price = $max - $raw_price; 
+		if ( (($max - $raw_price) > $diff_raw_price) |
+			($diff_raw_price = 0) ) {
+			$diff_raw_price = $max - $raw_price + 1; 
 		};
-		if ( ($prod_price - $min ) > $diff_prod_price ) {
-			$diff_prod_price = $prod_price - $min;
+		if ( (($prod_price - $min ) > $diff_prod_price) |
+			($diff_prod_price = 0)	) {
+			$diff_prod_price = $prod_price - $min + 1;
 		};
 	};
 
 	print ("my money is ", ?money (?my_id ()));
 
-	print ("History of selling production:");
-	for ($i = 1 , $i <= $cnt_buy , $i = $i + 1 ) {
-		print ($i, " month: buy price = ", $buy [ $i ] );
+	print ("History of buying production:");
+	for ($i = 1 , $i < $cnt_buy , $i = $i + 1 ) {
+		print ($i, " month: buy price = ", $buy [ $i ], " count :", $fabric_count [$i] );
 	};
-}
 
+	print ("History of selling production:");
+	for ($i = 1 , $i < $cnt_sell  , $i = $i + 1 ) {
+		print ($i, " month: sell price = ", $sell [ $i ], " count :", $fabric_count [$i] );
+	};
+
+	print ("Money:", ?money (?my_id()) );
+}
