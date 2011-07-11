@@ -4,7 +4,7 @@
 
 int main (int argc, char ** argv)
 {
-	printf ("Program: c-shell (univercsity). Refactoring. [v.:0.0]\n");
+	printf ("Program: c-shell (univercsity). Refactoring. [v.:0.01]\n");
 	fill_list ();
 
 	return 0;
