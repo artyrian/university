@@ -4,8 +4,14 @@
 
 int main (int argc, char ** argv)
 {
-	printf ("Program: c-shell (univercsity). Refactoring. [v.:0.01]\n");
-	fill_list ();
+	ListElem * list_lexems;
+	TreeCmd * tree_cmd;
+
+	printf ("Program: c-shell (university). Refactoring. [v.:0.01]\n");
+
+	list_lexems = fill_list ();
+
+	tree_cmd = parse (list_lexems);
 
 	return 0;
 }
